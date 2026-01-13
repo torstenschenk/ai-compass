@@ -40,7 +40,7 @@ class Gui_Report(RootModel):
 if __name__ == '__main__':
 
     # Examples: (numbering convention: human readable)
-    questions = {1: {'Dimension': 'Strategy & Business Vision',
+    questioniare = {1: {'Dimension': 'Strategy & Business Vision',
                      'Header': 'Leadership Alignment',
                      'Question': 'How is AI prioritized in management meetings?',
                      'Type': 'Statement',
@@ -57,9 +57,9 @@ if __name__ == '__main__':
                  # ...
                 }
 
-    print(Gui_Questions.model_validate(questions))
+    print(Gui_Questions.model_validate(questioniare))
 
-    responses = {1: {
+    response = {1: {
                     'Company_url': 'https://www.accenture.com/de-de',
                     'Email': 'it@accenture.com',
                     'Response': {3:1}
@@ -72,7 +72,7 @@ if __name__ == '__main__':
                  # ...
                 }
     
-    print(Gui_Response.model_validate(responses))
+    print(Gui_Response.model_validate(response))
 
     report = {
                 'Final_score': 0.173,
@@ -88,4 +88,5 @@ if __name__ == '__main__':
             }
 
     print(Gui_Report.model_validate(report))
+    # format json output
     print(Gui_Report.model_validate(report).model_dump_json(indent=2))
