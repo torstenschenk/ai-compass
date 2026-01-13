@@ -60,16 +60,17 @@ if __name__ == '__main__':
     print(Gui_Questions.model_validate(questionaire))
 
     response = {
-                    'Company_url': 'https://www.accenture.com/de-de',
-                    'Email': 'it@accenture.com',
-                    'Response': {1: {3:1}, 
-                                 2: {3:1, 5:2}}
-                                 # ...
+                'Company_url': 'https://www.accenture.com/de-de',
+                'Email': 'it@accenture.com',
+                'Response': {1: {3:1}, 
+                             2: {3:1, 5:2}}
+                             # ...
                }
         
     print(Gui_Response.model_validate(response))
 
-    report = {'Final_score': 0.173,
+    report = {
+                'Final_score': 0.173,
                 'Category_scores': {'Strategy & Business Vision': 0.2,
                                     'People & Culture': 0.1,
                                     'Data Readiness & Literacy': 0.03,

@@ -7,3 +7,5 @@ fastapi==0.109.0
 groq==1.0.0
 #sqlalchemy==2.0.25
 #uvicorn
+pydantic==2.6.0
+typing-extensions==4.15.0
