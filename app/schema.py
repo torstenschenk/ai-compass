@@ -23,27 +23,27 @@ class Gui_Response(RootModel):
 
 if __name__ == '__main__':
 
-    questions = {0: {'Dimension': 'Strategy & Business Vision',
+    questions = {1: {'Dimension': 'Strategy & Business Vision',
                      'Header': 'Leadership Alignment',
                      'Question': 'How is AI prioritized in management meetings?',
                      'Type': 'Statement',
                      'Optional': 'False', 
-                     'Answers': {0:'Not a topic / Ignored', 1:'Rare mention in meetings', 2:'Occasional discussion', 3:'Regular agenda item', 4:'Core strategic pillar'}
+                     'Answers': {1:'Not a topic / Ignored', 2:'Rare mention in meetings', 3:'Occasional discussion', 4:'Regular agenda item', 5:'Core strategic pillar'}
                     },
-                 1: {'Dimension': 'Governance & Compliance',
+                 2: {'Dimension': 'Governance & Compliance',
                      'Header': 'Guidelines',
                      'Question': 'Do you have an internal "AI Code of Conduct"?',
                      'Type': 'Choice',
                      'Optional': 'False',
-                     'Answers': {0:'No plan', 1:'Theoretical idea', 2:'Case-by-case choice', 3:'Defined scaling path', 4:'Automated deployment'}
+                     'Answers': {1:'No plan', 2:'Theoretical idea', 3:'Case-by-case choice', 4:'Defined scaling path', 5:'Automated deployment'}
                     }
                 }
 
     print(Gui_Questions.model_validate(questions))
 
-    responses = {0: {'Response': {3:1}
+    responses = {1: {'Response': {3:1}
                     },
-                 1: {'Response': {0:1, 7:1}
+                 2: {'Response': {1:1, 4:1}
                     }
                 }
     
