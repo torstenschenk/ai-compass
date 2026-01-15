@@ -1,0 +1,29 @@
+COMPANY ANALYSIS SUMMARY
+========================
+
+Total Companies: 500
+Unique Industries: 7
+Unique Cities: 7
+
+Top 5 Industries:
+industry
+Manufacturing    83
+Retail           77
+Construction     76
+Healthcare       75
+Finance          73
+
+Top 5 Cities:
+city
+D�sseldorf    82
+Munich        81
+Hamburg       80
+Berlin        69
+Stuttgart     68
+
+Size Statistics:
+       number_of_employees
+count                  500
+unique                   4
+top                  18264
+freq                   132

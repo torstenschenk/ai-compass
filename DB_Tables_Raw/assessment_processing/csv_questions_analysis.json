@@ -1,0 +1,400 @@
+{
+  "total_rows": 500,
+  "total_columns": 40,
+  "question_columns_count": 33,
+  "questions": [
+    {
+      "column_index": 7,
+      "question_text": "How is AI prioritized in management meetings?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Rare mention in meetings",
+        "Not a topic / Ignored",
+        "Core strategic pillar",
+        "Occasional discussion",
+        "Regular agenda item"
+      ]
+    },
+    {
+      "column_index": 8,
+      "question_text": "Does a documented AI strategy or roadmap exist?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "None / No plan",
+        "Rough ideas shared",
+        "Formalized document",
+        "High-level draft exists",
+        "Approved & detailed"
+      ]
+    },
+    {
+      "column_index": 9,
+      "question_text": "How is AI funding and investment handled?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "No budget available",
+        "Case-by-case funding",
+        "Dedicated Dept. budget",
+        "Ad-hoc project funds",
+        "Fixed annual AI budget"
+      ]
+    },
+    {
+      "column_index": 10,
+      "question_text": "What is your goal regarding AI vs. competitors?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Avoidance / Refusal",
+        "Proactive innovator",
+        "Late adopter",
+        "Fast Follower",
+        "Market Leader"
+      ]
+    },
+    {
+      "column_index": 11,
+      "question_text": "How do employees generally react to the topic of AI?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Fear / Resistance",
+        "Skeptical / Passive",
+        "Neutral / Cautious",
+        "Interested / Open",
+        "Proactive excitement"
+      ]
+    },
+    {
+      "column_index": 12,
+      "question_text": "To what extent are AI capabilities and technical literacy established across your workforce? E.g. expertise in machine learning and NLP, as well as general AI literacy for non-technical staff.",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Unaware / Non-Existent - We lack clarity on our current AI proficiency, and there are no identifiable AI skills or initiatives within the workforce.",
+        "Isolated Proficiency - AI knowledge is siloed within a few individuals; significant skill gaps across most departments currently hinder broader adoption.",
+        "Strategic Expert Leadership - AI expertise is a core competency company-wide; internal specialists lead R&D, mentor staff, and drive industry-leading innovation.",
+        "Foundational Competency - Core team members possess foundational AI skills, and structured upskilling programs are underway to prepare the broader workforce.",
+        "Advanced Operational Capability - Advanced AI practitioners are integrated into multiple roles, supported by continuous training that keeps pace with industry trends."
+      ]
+    },
+    {
+      "column_index": 13,
+      "question_text": "How often do employees receive AI training?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Never / None",
+        "Occasional webinars",
+        "Continuous learning",
+        "Irregular workshops",
+        "Planned curriculums"
+      ]
+    },
+    {
+      "column_index": 14,
+      "question_text": "Is it \"okay\" to fail with an AI pilot project?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Failure is punished",
+        "Blame culture",
+        "Learning from errors",
+        "Fail-fast encouraged",
+        "Failure is tolerated"
+      ]
+    },
+    {
+      "column_index": 15,
+      "question_text": "What types of business data do you actively collect? (Select all that apply)",
+      "unique_answer_count": 232,
+      "sample_answers": [
+        "Website/app usage analytics",
+        "Customer interactions (emails, chats, calls), Customer feedback and reviews, Sales and transaction data",
+        "Sales and transaction data, Customer feedback and reviews",
+        "Customer interactions (emails, chats, calls), Employee/HR data",
+        "Limited data collection (Exclusive option), Financial and operational metrics, Sales and transaction data"
+      ]
+    },
+    {
+      "column_index": 16,
+      "question_text": "Do you currently use any of these technologies? (Select all that apply)",
+      "unique_answer_count": 222,
+      "sample_answers": [
+        "Business intelligence tools (Tableau, Power BI, etc.), Cloud platforms (AWS, Azure, Google Cloud), CRM systems (Salesforce, HubSpot, etc.)",
+        "E-commerce platforms (Shopify, WooCommerce, etc.)",
+        "CRM systems (Salesforce, HubSpot, etc.), None of the above (Exclusive option), Cloud platforms (AWS, Azure, Google Cloud)",
+        "Internal (on-premise) servers",
+        "CRM systems (Salesforce, HubSpot, etc.)"
+      ]
+    },
+    {
+      "column_index": 17,
+      "question_text": "Describe the \"cleanliness\" of your business data.",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Messy / Siloed",
+        "Partially cleaned",
+        "Basic digital records",
+        "High-quality/Auto-sync",
+        "Standardized formats"
+      ]
+    },
+    {
+      "column_index": 18,
+      "question_text": "How comfortable is your team with data insights?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Basic tool awareness",
+        "Struggling / No skill",
+        "Data-driven experts",
+        "Analytical mindsets",
+        "Comfortable with KPIs"
+      ]
+    },
+    {
+      "column_index": 19,
+      "question_text": "How rigorously does your organization validate the technical and regulatory feasibility of an AI use case before committing resources?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Minimal / Unsure – We do not have a formal feasibility check; projects are often started based on excitement or intuition without verifying data or compliance requirements first.",
+        "Reactive Assessment – We perform basic checks only after a project has started, often leading to delays or \"stuck\" projects when data or legal issues unexpectedly emerge.",
+        "Optimized Strategic Filtering – We use a standardized, data-driven validation engine that ensures every initiative is perfectly aligned with business goals, technical capabilities, and compliance standards from the start.",
+        "Structured Validation – We use a clear \"Go/No-Go\" process for every use case that validates data readiness, process alignment, and regulatory compliance before any budget is released.",
+        "Basic Due Diligence – We have an informal \"Pre-Check\" for major projects where we verify if the necessary data exists and if there are obvious legal hurdles."
+      ]
+    },
+    {
+      "column_index": 20,
+      "question_text": "How many AI use cases are currently active?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Not started",
+        "Multiple live apps",
+        "Theory / Brainstorm",
+        "1-2 Active Pilots",
+        "AI embedded in product"
+      ]
+    },
+    {
+      "column_index": 21,
+      "question_text": "Do you measure the financial impact of AI projects?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "No tracking",
+        "Cost tracking only",
+        "Qualitative impact",
+        "Defined KPI tracking",
+        "Strict Financial ROI"
+      ]
+    },
+    {
+      "column_index": 22,
+      "question_text": "To what extent does AI address concrete bottlenecks in your core business operations rather than experimental topics?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Some AI use cases touch core processes, but they are not focused on the most critical constraints.",
+        "AI initiatives are mostly exploratory and disconnected from core business bottlenecks.",
+        "AI is a strategic lever to remove or redefine core business bottlenecks and shapes how the business competes.",
+        "AI systematically targets high-impact bottlenecks in core business operations and delivers measurable improvements.",
+        "AI is applied to known bottlenecks in the core business, with mixed or unproven impact."
+      ]
+    },
+    {
+      "column_index": 23,
+      "question_text": "Are core processes documented and repeatable?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Rough checklists",
+        "Knowledge in heads",
+        "Fully digital workflows",
+        "Standard SOPs",
+        "Partially documented"
+      ]
+    },
+    {
+      "column_index": 24,
+      "question_text": "How structured is your approach to planning, implementing, and delivering AI-related projects?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "High-Velocity Delivery – Our implementation engine is highly efficient; we can rapidly move from a \"Proof of Concept\" to a live tool with minimal friction and clear ROI tracking.",
+        "Individual Initiative – Project delivery depends on the effort of specific individuals; while some projects succeed, we lack a repeatable \"playbook\" for the whole team.",
+        "Undefined / Ad-hoc – We do not have a set process for AI projects; tasks are handled as they arise without formal planning or clear ownership.",
+        "Targeted & Results-Oriented – We use a process specifically adapted for AI (e.g., early prototyping and data-readiness checks), ensuring we don't waste resources on unfeasible ideas.",
+        "Basic Standardization – We use a consistent workflow (e.g., simple task tracking or weekly sprints) that allows us to manage AI projects with predictable timelines."
+      ]
+    },
+    {
+      "column_index": 25,
+      "question_text": "How long to implement a new digital tool?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "7 - 12 Months",
+        "> 1 Year",
+        "3 - 6 Months",
+        "< 4 Weeks",
+        "1 - 2 Months"
+      ]
+    },
+    {
+      "column_index": 26,
+      "question_text": "Is there a defined path to move AI idea to production?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "No plan",
+        "Automated deployment",
+        "Theoretical idea",
+        "Case-by-case choice",
+        "Defined scaling path"
+      ]
+    },
+    {
+      "column_index": 27,
+      "question_text": "Do you have an internal \"AI Code of Conduct\"?",
+      "unique_answer_count": 4,
+      "sample_answers": [
+        "Informal rules",
+        "In progress / Draft",
+        "Audited Governance",
+        "Implemented policy"
+      ]
+    },
+    {
+      "column_index": 28,
+      "question_text": "How strictly is data handled according to the EU AI Act?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "High Risk / Unknown",
+        "Minimal compliance",
+        "Full sovereignty",
+        "Basic GDPR active",
+        "Privacy-by-design"
+      ]
+    },
+    {
+      "column_index": 29,
+      "question_text": "Who is responsible for AI outcomes and errors?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "No one responsible",
+        "Dedicated AI Officer",
+        "Vague / individual assignments",
+        "Shared responsibility",
+        "Clear Dept. lead"
+      ]
+    },
+    {
+      "column_index": 30,
+      "question_text": "What disclosure requirements exist for external partners?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Unknown",
+        "Defined by Partners",
+        "High Disclosure",
+        "Minimal",
+        "Medium"
+      ]
+    },
+    {
+      "column_index": 31,
+      "question_text": "To what extent do you use Cloud infrastructure?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Fully On-Premise",
+        "Modernized On-Prem",
+        "Hybrid Cloud setup",
+        "Cloud-Native",
+        "Cloud-first approach"
+      ]
+    },
+    {
+      "column_index": 32,
+      "question_text": "What types of AI development tools are currently available in your organization? (Select all that apply)",
+      "unique_answer_count": 150,
+      "sample_answers": [
+        "A combination of pre-built and custom AI tools, Cloud-based AI services (e.g., managed AI/ML platforms)",
+        "A combination of pre-built and custom AI tools, Not sure, Custom AI or machine learning development tools",
+        "A combination of pre-built and custom AI tools",
+        "Not sure, A combination of pre-built and custom AI tools",
+        "Not sure"
+      ]
+    },
+    {
+      "column_index": 33,
+      "question_text": "How easily can you scale new software company-wide?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Manual/Painful",
+        "Labor intensive",
+        "Standard IT process",
+        "Instant/Auto-scaling",
+        "Modular & easy"
+      ]
+    },
+    {
+      "column_index": 34,
+      "question_text": "Why are you doing this AI assessment?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "External Pressure – We are responding to external hype or competitor moves without a clear internal goal.",
+        "Resource Optimization – We want to identify where AI can reduce costs or automate repetitive manual tasks.",
+        "Competitive Advantage – We are seeking to define a market-leading position through high-impact AI innovation.",
+        "Strategic Clarity – We need a professional roadmap to align AI initiatives with our core business objectives.",
+        "Readiness Check – We aim to evaluate our technical infrastructure and workforce skills for upcoming scaling."
+      ]
+    },
+    {
+      "column_index": 35,
+      "question_text": "Which business challenge is your top priority? (Select all that apply)",
+      "unique_answer_count": 212,
+      "sample_answers": [
+        "Personalizing customer experiences",
+        "Improving customer service efficiency, Streamlining document processing, Better data analysis and insights",
+        "Streamlining document processing, Better data analysis and insights, Automating repetitive tasks",
+        "Improving customer service efficiency, Better data analysis and insights",
+        "Better data analysis and insights"
+      ]
+    },
+    {
+      "column_index": 36,
+      "question_text": "How is AI influencing your organization’s strategy?",
+      "unique_answer_count": 5,
+      "sample_answers": [
+        "Reactive – We acknowledge the trend but only respond to external pressures on an ad-hoc basis.",
+        "Exploratory – We monitor trends and have initiated pilot projects to address specific needs.",
+        "Innovative – We leverage AI to redefine our business model and set industry standards.",
+        "Strategic – AI is a key planning driver with a formal roadmap for systematic integration.",
+        "No Impact – We have not assessed AI trends and have no documented strategy regarding them."
+      ]
+    },
+    {
+      "column_index": 37,
+      "question_text": "Who is the primary driver of AI within your organization? (Select all that apply)",
+      "unique_answer_count": 234,
+      "sample_answers": [
+        "IT / Technology Department",
+        "IT / Technology Department, No Clear Internal Driver, Executive Leadership / Board",
+        "Sales & Marketing, Executive Leadership / Board",
+        "Data Science / Analytics Specialists, Operations & Supply Chain",
+        "Individual Employees / Early Adopters"
+      ]
+    },
+    {
+      "column_index": 38,
+      "question_text": "Are you in charge of AI initiatives?",
+      "unique_answer_count": 3,
+      "sample_answers": [
+        "No",
+        "Sometimes",
+        "Yes"
+      ]
+    },
+    {
+      "column_index": 39,
+      "question_text": "Which option best describes your position and decision authority? (Select all that apply)",
+      "unique_answer_count": 239,
+      "sample_answers": [
+        "Executive / C-level",
+        "Senior Management, Product / Process Owner",
+        "Operational Staff / Domain Expert, Data / AI Specialist",
+        "Data / AI Specialist",
+        "External Consultant / Advisor, Business Analyst / Strategy / Innovation role, Project / Program Manager"
+      ]
+    }
+  ]
+}

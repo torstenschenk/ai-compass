@@ -1,0 +1,155 @@
+================================================================================
+DETAILED MISMATCH ANALYSIS FOR 4 MISSING QUESTIONS
+================================================================================
+
+
+================================================================================
+QUESTION 13
+================================================================================
+Question Text (DB): How rigorously does your organization validate the technical and regulatory feasibility of an AI use case before committing resources?
+Type: Statement
+
+--- DATABASE ANSWERS (5) ---
+ID 67: 'Minimal / Unsure � We do not have a formal feasibility check; projects are often started based on excitement or intuition without verifying data or compliance requirements first.'
+ID 68: 'Reactive Assessment � We perform basic checks only after a project has started, often leading to delays or "stuck" projects when data or legal issues unexpectedly emerge.'
+ID 69: 'Basic Due Diligence � We have an informal "Pre-Check" for major projects where we verify if the necessary data exists and if there are obvious legal hurdles.'
+ID 70: 'Structured Validation � We use a clear "Go/No-Go" process for every use case that validates data readiness, process alignment, and regulatory compliance before any budget is released.'
+ID 71: 'Optimized Strategic Filtering � We use a standardized, data-driven validation engine that ensures every initiative is perfectly aligned with business goals, technical capabilities, and compliance standards from the start.'
+
+--- CSV COLUMN ---
+Name: How rigorously does your organization validate the technical and regulatory feasibility of an AI use case before committing resources?
+
+--- UNIQUE CSV ANSWERS (5) ---
+'Minimal / Unsure – We do not have a formal feasibility check; projects are often started based on excitement or intuition without verifying data or compliance requirements first.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 67: 'Minimal / Unsure � W...'
+'Reactive Assessment – We perform basic checks only after a project has started, often leading to delays or "stuck" projects when data or legal issues unexpectedly emerge.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 68: 'Reactive Assessment ...'
+'Optimized Strategic Filtering – We use a standardized, data-driven validation engine that ensures every initiative is perfectly aligned with business goals, technical capabilities, and compliance standards from the start.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 71: 'Optimized Strategic ...'
+'Structured Validation – We use a clear "Go/No-Go" process for every use case that validates data readiness, process alignment, and regulatory compliance before any budget is released.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 70: 'Structured Validatio...'
+'Basic Due Diligence – We have an informal "Pre-Check" for major projects where we verify if the necessary data exists and if there are obvious legal hurdles.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 69: 'Basic Due Diligence ...'
+
+================================================================================
+QUESTION 18
+================================================================================
+Question Text (DB): How structured is your approach to planning, implementing, and delivering AI-related projects?
+
+Type: Statement
+
+--- DATABASE ANSWERS (5) ---
+ID 92: 'Undefined / Ad-hoc � We do not have a set process for AI projects; tasks are handled as they arise without formal planning or clear ownership.'
+ID 93: 'Individual Initiative � Project delivery depends on the effort of specific individuals; while some projects succeed, we lack a repeatable "playbook" for the whole team.'
+ID 94: 'Basic Standardization � We use a consistent workflow (e.g., simple task tracking or weekly sprints) that allows us to manage AI projects with predictable timelines.'
+ID 95: 'Targeted & Results-Oriented � We use a process specifically adapted for AI (e.g., early prototyping and data-readiness checks), ensuring we don't waste resources on unfeasible ideas.'
+ID 96: 'High-Velocity Delivery � Our implementation engine is highly efficient; we can rapidly move from a "Proof of Concept" to a live tool with minimal friction and clear ROI tracking.'
+
+--- CSV COLUMN ---
+Name: How structured is your approach to planning, implementing, and delivering AI-related projects?
+
+--- UNIQUE CSV ANSWERS (5) ---
+'High-Velocity Delivery – Our implementation engine is highly efficient; we can rapidly move from a "Proof of Concept" to a live tool with minimal friction and clear ROI tracking.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 96: 'High-Velocity Delive...'
+'Individual Initiative – Project delivery depends on the effort of specific individuals; while some projects succeed, we lack a repeatable "playbook" for the whole team.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 93: 'Individual Initiativ...'
+'Undefined / Ad-hoc – We do not have a set process for AI projects; tasks are handled as they arise without formal planning or clear ownership.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 92: 'Undefined / Ad-hoc �...'
+'Targeted & Results-Oriented – We use a process specifically adapted for AI (e.g., early prototyping and data-readiness checks), ensuring we don't waste resources on unfeasible ideas.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 95: 'Targeted & Results-O...'
+'Basic Standardization – We use a consistent workflow (e.g., simple task tracking or weekly sprints) that allows us to manage AI projects with predictable timelines.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 94: 'Basic Standardizatio...'
+
+================================================================================
+QUESTION 28
+================================================================================
+Question Text (DB): Why are you doing this AI assessment?
+Type: Statement
+
+--- DATABASE ANSWERS (5) ---
+ID 143: 'External Pressure � We are responding to external hype or competitor moves without a clear internal goal.'
+ID 144: 'Resource Optimization � We want to identify where AI can reduce costs or automate repetitive manual tasks.'
+ID 145: 'Strategic Clarity � We need a professional roadmap to align AI initiatives with our core business objectives.'
+ID 146: ' Readiness Check � We aim to evaluate our technical infrastructure and workforce skills for upcoming scaling.'
+ID 147: 'Competitive Advantage � We are seeking to define a market-leading position through high-impact AI innovation.'
+
+--- CSV COLUMN ---
+Name: Why are you doing this AI assessment?
+
+--- UNIQUE CSV ANSWERS (5) ---
+'External Pressure – We are responding to external hype or competitor moves without a clear internal goal.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 143: 'External Pressure � ...'
+'Resource Optimization – We want to identify where AI can reduce costs or automate repetitive manual tasks.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 144: 'Resource Optimizatio...'
+'Competitive Advantage – We are seeking to define a market-leading position through high-impact AI innovation.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 147: 'Competitive Advantag...'
+'Strategic Clarity – We need a professional roadmap to align AI initiatives with our core business objectives.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 145: 'Strategic Clarity � ...'
+'Readiness Check – We aim to evaluate our technical infrastructure and workforce skills for upcoming scaling.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+
+================================================================================
+QUESTION 30
+================================================================================
+Question Text (DB): How is AI influencing your organization�s strategy?
+Type: Choice
+
+--- DATABASE ANSWERS (5) ---
+ID 156: 'No Impact � We have not assessed AI trends and have no documented strategy regarding them.'
+ID 157: 'Reactive � We acknowledge the trend but only respond to external pressures on an ad-hoc basis.'
+ID 158: 'Exploratory � We monitor trends and have initiated pilot projects to address specific needs.'
+ID 159: 'Strategic � AI is a key planning driver with a formal roadmap for systematic integration.'
+ID 160: 'Innovative � We leverage AI to redefine our business model and set industry standards.'
+
+--- CSV COLUMN ---
+Name: How is AI influencing your organization’s strategy?
+
+--- UNIQUE CSV ANSWERS (5) ---
+'Reactive – We acknowledge the trend but only respond to external pressures on an ad-hoc basis.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+'Exploratory – We monitor trends and have initiated pilot projects to address specific needs.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 158: 'Exploratory � We mon...'
+'Innovative – We leverage AI to redefine our business model and set industry standards.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 160: 'Innovative � We leve...'
+'Strategic – AI is a key planning driver with a formal roadmap for systematic integration.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 159: 'Strategic � AI is a ...'
+'No Impact – We have not assessed AI trends and have no documented strategy regarding them.'
+  Mismatch Analysis:
+    -> NO MATCH FOUND. Closest DB options:
+       Starts same as ID 156: 'No Impact � We have ...'

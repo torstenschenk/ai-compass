@@ -1,0 +1,59 @@
+--- Analyzing Cluster Definitions (5 Clusters - LOGICAL SCALE) ---
+
+Cluster Centroids (Mean Score per Dimension):
+dimension_name             Data Readiness & Literacy  Governance & Compliance  People & Culture  Processes & Scaling  Strategy & Business Vision  Tech Infrastructure  Use Cases & Business Value
+Cluster_Name                                                                                                                                                                                     
+1 - Laggards                                2.524061                 3.556889          3.354122             3.373264                    3.450842             2.785965                    3.368100
+2 - Data-Rich / Tech-Poor                   2.102125                 2.353469          2.156550             2.232398                    2.192084             2.261439                    2.185253
+3 - Middle Pack                             2.943230                 3.709895          3.429881             3.442544                    3.364700             3.198338                    3.450255
+4 - Tech Specialists                        2.339669                 2.959680          2.698710             2.718875                    2.708364             2.515789                    2.718968
+5 - Leaders                                 3.335796                 4.359123          4.199293             4.192123                    4.239518             3.845854                    4.195404
+
+--- PCA Component Interpretation ---
+
+PCA Component 1 Breakdown:
+dimension_name
+Strategy & Business Vision    0.392691
+Processes & Scaling           0.390049
+Governance & Compliance       0.389987
+People & Culture              0.389085
+Use Cases & Business Value    0.388213
+Data Readiness & Literacy     0.352029
+Tech Infrastructure           0.339919
+
+PCA Component 2 Breakdown:
+dimension_name
+Tech Infrastructure           0.918579
+Use Cases & Business Value   -0.061591
+Strategy & Business Vision   -0.080580
+Governance & Compliance      -0.105924
+Processes & Scaling          -0.117649
+People & Culture             -0.153300
+Data Readiness & Literacy    -0.312033
+
+--- Interpretation ---
+
+Cluster 1 - Laggards:
+  - Strongest: Governance & Compliance, Strategy & Business Vision (3.56)
+  - Weakest:   Tech Infrastructure, Data Readiness & Literacy (2.52)
+  - Count:     72 companies
+
+Cluster 2 - Data-Rich / Tech-Poor:
+  - Strongest: Governance & Compliance, Tech Infrastructure (2.35)
+  - Weakest:   People & Culture, Data Readiness & Literacy (2.10)
+  - Count:     98 companies
+
+Cluster 3 - Middle Pack:
+  - Strongest: Governance & Compliance, Use Cases & Business Value (3.71)
+  - Weakest:   Tech Infrastructure, Data Readiness & Literacy (2.94)
+  - Count:     57 companies
+
+Cluster 4 - Tech Specialists:
+  - Strongest: Governance & Compliance, Use Cases & Business Value (2.96)
+  - Weakest:   Tech Infrastructure, Data Readiness & Literacy (2.34)
+  - Count:     200 companies
+
+Cluster 5 - Leaders:
+  - Strongest: Governance & Compliance, Strategy & Business Vision (4.36)
+  - Weakest:   Tech Infrastructure, Data Readiness & Literacy (3.34)
+  - Count:     73 companies

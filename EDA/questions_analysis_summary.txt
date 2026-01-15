@@ -1,0 +1,46 @@
+QUESTION ANALYSIS SUMMARY
+=========================
+
+--- Q1 (Statement) ---
+Text: How is AI prioritized in management meetings?
+Total Selections: 500
+Answer Frequencies:
+  - Rare mention in meetings: 179 (35.8%)
+  - Occasional discussion: 117 (23.4%)
+  - Not a topic / Ignored: 100 (20.0%)
+  - Regular agenda item: 67 (13.4%)
+  - Core strategic pillar: 37 (7.4%)
+
+--- Q3 (Choice) ---
+Text: How is AI funding and investment handled?
+Total Selections: 500
+Answer Frequencies:
+  - Case-by-case funding: 175 (35.0%)
+  - Ad-hoc project funds: 122 (24.4%)
+  - No budget available: 110 (22.0%)
+  - Dedicated Dept. budget: 67 (13.4%)
+  - Fixed annual AI budget: 26 (5.2%)
+
+--- Q2 (Slider) ---
+Text: Does a documented AI strategy or roadmap exist?
+Total Selections: 500
+Answer Frequencies:
+  - Rough ideas shared: 156 (31.2%)
+  - High-level draft exists: 128 (25.6%)
+  - None / No plan: 100 (20.0%)
+  - Formalized document: 77 (15.4%)
+  - Approved & detailed: 39 (7.8%)
+
+--- Q9 (Checklist) ---
+Text: What types of business data do you actively collect? (Select all that apply)
+Total Selections: 1088
+Answer Frequencies:
+  - Financial and operational metrics: 153 (14.1%)
+  - Limited data collection (Exclusive option): 141 (13.0%)
+  - Customer interactions (emails, chats, calls): 140 (12.9%)
+  - Employee/HR data: 139 (12.8%)
+  - Customer feedback and reviews: 138 (12.7%)
+  - Product data: 131 (12.0%)
+  - Sales and transaction data: 123 (11.3%)
+  - Website/app usage analytics: 123 (11.3%)
+

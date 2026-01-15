@@ -1,0 +1,72 @@
+Tables Found: ['cluster_profiles', 'dimensions', 'response_items', 'questions', 'answers', 'companies', 'responses']
+
+=== Table: cluster_profiles ===
+Columns: ['cluster_id (bigint)', 'score_min (real)', 'score_max (real)', 'cluster_name (character varying)']
+Sample Data:
+ cluster_id              cluster_name  score_min  score_max
+          1        The Traditionalist        1.0        1.5
+          2 The Experimental Explorer        1.6        2.5
+          3    The Structured Builder        2.6        3.5
+
+==============================
+
+=== Table: dimensions ===
+Columns: ['dimension_id (integer)', 'dimension_weight (double precision)', 'dimension_name (character varying)']
+Sample Data:
+ dimension_id             dimension_name  dimension_weight
+            1 Strategy & Business Vision              25.0
+            2           People & Culture              15.5
+            3  Data Readiness & Literacy              18.5
+
+==============================
+
+=== Table: response_items ===
+Columns: ['item_id (integer)', 'response_id (integer)', 'question_id (integer)', 'answers (ARRAY)']
+Sample Data:
+ item_id  response_id  question_id answers
+       1            1            1     [2]
+       2            1            2     [6]
+       3            1            3    [11]
+
+==============================
+
+=== Table: questions ===
+Columns: ['dimension_id (integer)', 'weight (double precision)', 'optional (boolean)', 'question_id (integer)', 'question_text (character varying)', 'header (character varying)', 'type (character varying)']
+Sample Data:
+ question_id  dimension_id               header                                   question_text      type  weight  optional
+           1             1 Leadership Alignment   How is AI prioritized in management meetings? Statement     4.5     False
+           2             1              Clarity Does a documented AI strategy or roadmap exist?    Slider     4.5     False
+           3             1    Budget Allocation       How is AI funding and investment handled?    Choice     4.0     False
+
+==============================
+
+=== Table: answers ===
+Columns: ['answer_id (integer)', 'question_id (integer)', 'answer_level (integer)', 'answer_weight (double precision)', 'answer_text (character varying)']
+Sample Data:
+ answer_id  question_id              answer_text  answer_level  answer_weight
+         1            1    Not a topic / Ignored             1            1.0
+         2            1 Rare mention in meetings             2            2.0
+         3            1    Occasional discussion             3            3.0
+
+==============================
+
+=== Table: companies ===
+Columns: ['company_id (integer)', 'industry (character varying)', 'website (character varying)', 'number_of_employees (character varying)', 'city (character varying)', 'company_name (character varying)', 'email (text)']
+Sample Data:
+ company_id     industry                  website number_of_employees       city      company_name email
+          3 Construction www.skyline-solutions.de                500+  Stuttgart Skyline Solutions  None
+          4 Construction   www.skyline-digital.de             251-500    Hamburg   Skyline Digital  None
+          6  Hospitality www.quantum-solutions.de                500+ D�sseldorf Quantum Solutions  None
+
+==============================
+
+=== Table: responses ===
+Columns: ['response_id (integer)', 'company_id (integer)', 'created_at (timestamp with time zone)', 'cluster_id (bigint)', 'total_score (character varying)']
+Sample Data:
+ response_id  company_id        total_score                       created_at  cluster_id
+         265           3 2.3372000000000006 2026-01-13 07:23:33.270113+00:00           2
+         194           4 2.0858000000000008 2026-01-13 07:23:33.270113+00:00           2
+         239           6 1.9390000000000007 2026-01-13 07:23:33.270113+00:00           2
+
+==============================
+

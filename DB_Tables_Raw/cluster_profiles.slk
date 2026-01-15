@@ -1,0 +1,91 @@
+ID;PWXL;N;E
+P;PGeneral
+P;P0
+P;P0.00
+P;P#,##0
+P;P#,##0.00
+P;P#,##0_);;\(#,##0\)
+P;P#,##0_);;[Red]\(#,##0\)
+P;P#,##0.00_);;\(#,##0.00\)
+P;P#,##0.00_);;[Red]\(#,##0.00\)
+P;P"$"#,##0_);;\("$"#,##0\)
+P;P"$"#,##0_);;[Red]\("$"#,##0\)
+P;P"$"#,##0.00_);;\("$"#,##0.00\)
+P;P"$"#,##0.00_);;[Red]\("$"#,##0.00\)
+P;P0%
+P;P0.00%
+P;P0.00E+00
+P;P##0.0E+0
+P;P#\ ?/?
+P;P#\ ??/??
+P;Pm/d/yyyy
+P;Pd\-mmm\-yy
+P;Pd\-mmm
+P;Pmmm\-yy
+P;Ph:mm\ AM/PM
+P;Ph:mm:ss\ AM/PM
+P;Ph:mm
+P;Ph:mm:ss
+P;Pm/d/yyyy\ h:mm
+P;Pmm:ss
+P;Pmm:ss.0
+P;P@
+P;P[h]:mm:ss
+P;P_("$"* #,##0_);;_("$"* \(#,##0\);;_("$"* "-"_);;_(@_)
+P;P_(* #,##0_);;_(* \(#,##0\);;_(* "-"_);;_(@_)
+P;P_("$"* #,##0.00_);;_("$"* \(#,##0.00\);;_("$"* "-"??_);;_(@_)
+P;P_(* #,##0.00_);;_(* \(#,##0.00\);;_(* "-"??_);;_(@_)
+P;P"Yes";;"Yes";;"No"
+P;P"True";;"True";;"False"
+P;P"On";;"On";;"Off"
+P;P[$(0-2]\ #,##0.00_);;[Red]\([$(0-2]\ #,##0.00\)
+P;FCalibri;M220;L9
+P;FCalibri;M220;L9
+P;FCalibri;M220;L9
+P;FCalibri;M220;L9
+P;ECalibri;M220;L9
+P;ECalibri Light;M360;L55
+P;ECalibri;M300;SB;L55
+P;ECalibri;M260;SB;L55
+P;ECalibri;M220;SB;L55
+P;ECalibri;M220;L18
+P;ECalibri;M220;L21
+P;ECalibri;M220;L61
+P;ECalibri;M220;L63
+P;ECalibri;M220;SB;L64
+P;ECalibri;M220;SB;L53
+P;ECalibri;M220;L53
+P;ECalibri;M220;SB;L10
+P;ECalibri;M220;L11
+P;ECalibri;M220;SI;L24
+P;ECalibri;M220;SB;L9
+P;ECalibri;M220;L10
+P;ESegoe UI;M200;L9
+F;P0;DG0G8;M300
+B;Y6;X4;D0 0 5 3
+O;L;D;V0;K47;G100 0.001
+C;Y1;X1;K"cluster_id"
+C;X2;K"cluster_name"
+C;X3;K"score_min"
+C;X4;K"score_max"
+C;Y2;X1;K1
+C;X2;K"The Traditionalist"
+C;X3;K1
+C;X4;K1.5
+C;Y3;X1;K2
+C;X2;K"The Experimental Explorer"
+C;X3;K1.6
+C;X4;K2.5
+C;Y4;X1;K3
+C;X2;K"The Structured Builder"
+C;X3;K2.6
+C;X4;K3.5
+C;Y5;X1;K4
+C;X2;K"The Operational Scaler"
+C;X3;K3.6
+C;X4;K4.5
+C;Y6;X1;K5
+C;X2;K"The AI-Driven Leader"
+C;X3;K4.6
+C;X4;K5
+E
