@@ -1,0 +1,29 @@
+SCORES ANALYSIS SUMMARY
+=======================
+
+Overall Statistics:
+count    500.000000
+mean       2.501904
+std        0.756007
+min        1.234000
+25%        2.008150
+50%        2.266100
+75%        2.955700
+max        4.520200
+
+Scores by Industry (Mean):
+industry
+Construction     2.640576
+Healthcare       2.608557
+Manufacturing    2.587275
+Hospitality      2.553493
+Retail           2.479408
+Logistics        2.348477
+Finance          2.266767
+
+Number of Outliers: 3
+Outlier Companies:
+          company_name  total_score       industry
+487  Quantum Logistics       4.5202      Logistics
+489        Vantage SME       4.4998   Construction
+495   Zenith Solutions       4.4720  Manufacturing

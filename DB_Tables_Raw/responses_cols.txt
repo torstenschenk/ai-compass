@@ -1,0 +1,4 @@
+'response_id' (integer)
+'company_id' (integer)
+'created_at' (timestamp with time zone)
+'total_score' (character varying)

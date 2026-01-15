@@ -1,0 +1,246 @@
+{
+  "companies": {
+    "columns": [
+      {
+        "column_name": "company_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "industry",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "website",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "number_of_employees",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "city",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "company_name",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "cluster_profile",
+        "data_type": "character varying"
+      }
+    ],
+    "sample_data": [
+      {
+        "company_id": 3,
+        "industry": "Construction",
+        "website": "www.skyline-solutions.de",
+        "number_of_employees": "500+",
+        "city": "Stuttgart",
+        "company_name": "Skyline Solutions",
+        "cluster_profile": "2. The Curious Experimenter"
+      },
+      {
+        "company_id": 4,
+        "industry": "Construction",
+        "website": "www.skyline-digital.de",
+        "number_of_employees": "251-500",
+        "city": "Hamburg",
+        "company_name": "Skyline Digital",
+        "cluster_profile": "2. The Curious Experimenter"
+      },
+      {
+        "company_id": 6,
+        "industry": "Hospitality",
+        "website": "www.quantum-solutions.de",
+        "number_of_employees": "500+",
+        "city": "D\ufffdsseldorf",
+        "company_name": "Quantum Solutions",
+        "cluster_profile": "2. The Curious Experimenter"
+      }
+    ]
+  },
+  "questions": {
+    "columns": [
+      {
+        "column_name": "question_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "dimension_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "header",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "question_text",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "type",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "weight",
+        "data_type": "double precision"
+      },
+      {
+        "column_name": "optional",
+        "data_type": "boolean"
+      }
+    ],
+    "sample_data": [
+      {
+        "question_id": 1,
+        "dimension_id": 1,
+        "header": "Leadership Alignment",
+        "question_text": "How is AI prioritized in management meetings?",
+        "type": "Statement",
+        "weight": 4.5,
+        "optional": false
+      },
+      {
+        "question_id": 2,
+        "dimension_id": 1,
+        "header": "Clarity",
+        "question_text": "Does a documented AI strategy or roadmap exist?",
+        "type": "Slider",
+        "weight": 4.5,
+        "optional": false
+      },
+      {
+        "question_id": 3,
+        "dimension_id": 1,
+        "header": "Budget Allocation",
+        "question_text": "How is AI funding and investment handled?",
+        "type": "Choice",
+        "weight": 4.0,
+        "optional": false
+      }
+    ]
+  },
+  "answers": {
+    "columns": [
+      {
+        "column_name": "answer_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "question_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "answer_text",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "answer_level",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "answer_weight",
+        "data_type": "double precision"
+      }
+    ],
+    "sample_data": [
+      {
+        "answer_id": 1,
+        "question_id": 1,
+        "answer_text": "Not a topic / Ignored",
+        "answer_level": 1,
+        "answer_weight": 1.0
+      },
+      {
+        "answer_id": 2,
+        "question_id": 1,
+        "answer_text": "Rare mention in meetings",
+        "answer_level": 2,
+        "answer_weight": 2.0
+      },
+      {
+        "answer_id": 3,
+        "question_id": 1,
+        "answer_text": "Occasional discussion",
+        "answer_level": 3,
+        "answer_weight": 3.0
+      }
+    ]
+  },
+  "dimensions": {
+    "columns": [
+      {
+        "column_name": "dimension_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "dimension_name",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "dimension_weight",
+        "data_type": "double precision"
+      }
+    ],
+    "sample_data": [
+      {
+        "dimension_id": 1,
+        "dimension_name": "Strategy & Business Vision",
+        "dimension_weight": 25.0
+      },
+      {
+        "dimension_id": 2,
+        "dimension_name": "People & Culture",
+        "dimension_weight": 15.5
+      },
+      {
+        "dimension_id": 3,
+        "dimension_name": "Data Readiness & Literacy",
+        "dimension_weight": 18.5
+      }
+    ]
+  },
+  "responses": {
+    "columns": [
+      {
+        "column_name": "response_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "company_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "total_score",
+        "data_type": "character varying"
+      },
+      {
+        "column_name": "created_at",
+        "data_type": "timestamp with time zone"
+      }
+    ],
+    "sample_data": []
+  },
+  "response_items": {
+    "columns": [
+      {
+        "column_name": "item_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "response_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "question_id",
+        "data_type": "integer"
+      },
+      {
+        "column_name": "answers",
+        "data_type": "text"
+      }
+    ],
+    "sample_data": []
+  }
+}

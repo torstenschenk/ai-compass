@@ -1,0 +1,7 @@
+'company_id' (integer)
+'industry' (character varying)
+'website' (character varying)
+'number_of_employees' (character varying)
+'city' (character varying)
+'company_name' (character varying)
+'cluster_profile' (character varying)
