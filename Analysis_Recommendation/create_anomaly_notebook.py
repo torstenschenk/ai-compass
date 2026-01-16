@@ -175,15 +175,33 @@ cells = [
     nbf.v4.new_markdown_cell("## 4. EXECUTIVE BRIEFING (LLM-READY)"),
     nbf.v4.new_code_cell(f"""def synthesize_executive_briefing(company_id):
     findings = detect_strategic_gaps(company_id)
+    
+    # Extract detailed scores for context
+    scores = df_features.loc[company_id, [c for c in df_features.columns if not c.startswith('gap_')]].drop('rounded_avg', errors='ignore')
+    avg_scores = df_features[[c for c in df_features.columns if not c.startswith('gap_')]].mean()
+    
+    strongest = scores.idxmax()
+    weakest = scores.idxmin()
+    
     return f\"\"\"
-    ### 🎖️ Executive Briefing (Draft)
+    ### 🎖️ Executive Briefing (Enhanced Context for LLM)
     
-    Our analysis reveals a critical strategic pattern: **{{findings[0].split('**')[1] if '**' in findings[0] else findings[0]}}**. 
-    In the context of the SME landscape, this indicates that your growth path should prioritize 
-    **{{findings[1].split('**')[1] if '**' in findings[1] else findings[1]}}** to unlock ROI.
+    **Analysis Metadata for AI Consultant:**
+    - **Target Company ID:** {{company_id}}
+    - **Current Maturity Profile:** {{scores.to_dict()}}
+    - **Benchmark Averages:** {{avg_scores.to_dict()}}
+    - **Primary Anchor Area (Strength):** {{strongest}} (Score: {{scores[strongest]:.1f}})
+    - **Primary Bottleneck Area (Weakness):** {{weakest}} (Score: {{scores[weakest]:.1f}})
     
-    By addressing these specific 'Silent Killers' now, you ensure that future technology investments 
-    translate into measurable business value.
+    **Detected Strategic Findings:**
+    1. {{findings[0]}}
+    2. {{findings[1]}}
+    
+    **Narrative Synthesis Prompt (Draft):**
+    \"You are a Tier-1 AI Strategy Consultant. Based on the profile above, synthesize a professional 2-3 paragraph 
+    briefing for the CEO. Highlight how their existing strength in {{strongest}} acts as a strategic lever 
+    to mitigate the risk of {{findings[0].split('**')[1] if '**' in findings[0] else 'identified structural gaps'}}. 
+    Focus specifically on the ROI of balancing these dimensions and provide a clear 'First Move' recommendation.\"
     \"\"\"
 
 cid = df_features.index[42]
