@@ -1,0 +1,89 @@
+========================================================
+VERIFICATION: 5 CLUSTER REPRESENTATIVES
+========================================================
+
+--- Cluster 0: 4 - The Operational Scaler ---
+Representative Company ID: 46
+Profile Scores:
+  Data Readiness & Literacy: 2.71
+  Governance & Compliance: 3.02
+  People & Culture: 3.48
+  Processes & Scaling: 3.58
+  Strategy & Business Vision: 2.99
+  Tech Infrastructure: 3.40
+  Use Cases & Business Value: 3.61
+
+Analysis Output:
+  Detected Anomalies: ['Critical Imbalance: Processes & Scaling (3.6) is ahead of Governance & Compliance (3.0). (Z=1.7)']
+  Rec. Focus Area:    Governance & Compliance
+  Rec. Rationale:     Mature peers are 0.61 points ahead in this dimension.
+------------------------------------------------------------
+
+--- Cluster 1: 1 - The Traditionalist ---
+Representative Company ID: 31
+Profile Scores:
+  Data Readiness & Literacy: 3.02
+  Governance & Compliance: 1.99
+  People & Culture: 2.42
+  Processes & Scaling: 3.22
+  Strategy & Business Vision: 1.99
+  Tech Infrastructure: 2.09
+  Use Cases & Business Value: 2.01
+
+Analysis Output:
+  Detected Anomalies: ['Critical Imbalance: Data Readiness & Literacy (3.0) is ahead of Use Cases & Business Value (2.0). (Z=2.8)', 'Critical Imbalance: Processes & Scaling (3.2) is ahead of Governance & Compliance (2.0). (Z=3.1)']
+  Rec. Focus Area:    Governance & Compliance
+  Rec. Rationale:     Mature peers are 0.60 points ahead in this dimension.
+------------------------------------------------------------
+
+--- Cluster 2: 2 - The Experimental Explorer ---
+Representative Company ID: 3
+Profile Scores:
+  Data Readiness & Literacy: 2.25
+  Governance & Compliance: 2.57
+  People & Culture: 3.43
+  Processes & Scaling: 2.78
+  Strategy & Business Vision: 3.25
+  Tech Infrastructure: 2.35
+  Use Cases & Business Value: 2.75
+
+Analysis Output:
+  Detected Anomalies: []
+  Rec. Focus Area:    None
+  Rec. Rationale:     You are a top performer in your peer group.
+------------------------------------------------------------
+
+--- Cluster 3: 5 - The AI-Driven Leader ---
+Representative Company ID: 17
+Profile Scores:
+  Data Readiness & Literacy: 3.37
+  Governance & Compliance: 4.42
+  People & Culture: 3.99
+  Processes & Scaling: 3.93
+  Strategy & Business Vision: 4.59
+  Tech Infrastructure: 3.61
+  Use Cases & Business Value: 4.56
+
+Analysis Output:
+  Detected Anomalies: []
+  Rec. Focus Area:    None
+  Rec. Rationale:     You are a top performer in your peer group.
+------------------------------------------------------------
+
+--- Cluster 4: 3 - The Structured Builder ---
+Representative Company ID: 32
+Profile Scores:
+  Data Readiness & Literacy: 2.56
+  Governance & Compliance: 3.40
+  People & Culture: 3.40
+  Processes & Scaling: 3.35
+  Strategy & Business Vision: 3.23
+  Tech Infrastructure: 3.11
+  Use Cases & Business Value: 3.45
+
+Analysis Output:
+  Detected Anomalies: []
+  Rec. Focus Area:    Processes & Scaling
+  Rec. Rationale:     Mature peers are 0.22 points ahead in this dimension.
+------------------------------------------------------------
+

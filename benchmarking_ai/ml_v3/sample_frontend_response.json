@@ -1,0 +1,68 @@
+{
+  "status": "success",
+  "meta": {
+    "api_version": "v3.0",
+    "generated_at": "2026-01-16T07:30:00Z"
+  },
+  "data": {
+    "company_profile": {
+      "company_id": 31,
+      "industry": "Manufacturing",
+      "size": "50-200"
+    },
+    "assessment_results": {
+      "total_score": 2.39,
+      "dimension_scores": {
+        "Data Readiness & Literacy": 3.02,
+        "Governance & Compliance": 1.99,
+        "People & Culture": 2.42,
+        "Processes & Scaling": 3.22,
+        "Strategy & Business Vision": 1.99,
+        "Tech Infrastructure": 2.09,
+        "Use Cases & Business Value": 2.01
+      }
+    },
+    "ai_compass_intelligence": {
+      "cluster_segment": {
+        "id": 1,
+        "name": "The Traditionalist",
+        "description": "Early stage of AI maturity. Often characterized by siloed experiments or legacy infrastructure. Focus is needed on foundational strategy and literacy to unlock value."
+      },
+      "structural_anomalies": [
+        {
+          "type": "Critical Imbalance",
+          "severity": "High",
+          "message": "Data Readiness & Literacy (3.0) is significantly ahead of Use Cases & Business Value (2.0).",
+          "risk_description": "You are collecting data but not using it. This creates a 'Data Swamp' risk where investment in storage yields no ROI."
+        },
+        {
+          "type": "Critical Imbalance",
+          "severity": "High",
+          "message": "Processes & Scaling (3.2) is significantly ahead of Governance & Compliance (2.0).",
+          "risk_description": "You are scaling processes without safety rails. This increases the risk of technical debt or regulatory failure."
+        }
+      ],
+      "strategic_recommendation": {
+        "focus_area": "Use Cases & Business Value",
+        "rationale": "Your peers are 42% ahead of you in this area.",
+        "context": "Companies in your structural peer group who have successfully moved to the next level did so by prioritizing this dimension."
+      },
+      "peer_benchmarking": {
+        "description": "Comparison against 'Next Level' peers (15-30% more mature)",
+        "chart_data": {
+          "user_scores": [3.02, 1.99, 2.42, 3.22, 1.99, 2.09, 2.01],
+          "peer_average_scores": [3.15, 2.45, 2.80, 3.40, 2.50, 2.65, 2.85],
+          "labels": [
+            "Data Readiness",
+            "Governance",
+            "People & Culture",
+            "Processes",
+            "Strategy",
+            "Tech Infra",
+            "Use Cases"
+          ]
+        }
+      }
+    }
+  }
+}
