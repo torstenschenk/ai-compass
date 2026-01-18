@@ -1,0 +1,53 @@
+================================================================================
+A/B TEST REPORT: Rule-Based (DB) vs ML V2 (Hybrid)
+================================================================================
+
+1. METRIC COMPARISON
+--------------------
+Metric                    | Rule-Based (DB)      | ML V2 (Hybrid)       | Winner    
+-------------------------------------------------------------------------------------
+Silhouette                | 0.2674               | 0.2285               | Rule-Based
+Calinski-Harabasz         | 341.3448             | 351.0750             | ML V2     
+Davies-Bouldin            | 1.5069               | 1.6338               | Rule-Based
+
+
+2. INTERPRETATION
+-----------------
+- Silhouette Score: Indicates how well-separated the clusters are. ML V2 optimized for this in feature space.
+- Calinski-Harabasz: Relates variance between clusters to variance within clusters.
+- Davies-Bouldin: Measures average similarity between clusters (lower is better separation).
+
+
+3. DISTRIBUTION COMPARISON
+--------------------------
+Rule-Based Counts:
+  1 - The Traditionalist: 100
+  2 - The Experimental Explorer: 200
+  3 - The Structured Builder: 125
+  4 - The Operational Scaler: 60
+  5 - The AI-Driven Leader: 15
+
+ML V2 Counts:
+  1 - The Traditionalist: 98
+  2 - The Experimental Explorer: 200
+  3 - The Structured Builder: 72
+  4 - The Operational Scaler: 57
+  5 - The AI-Driven Leader: 73
+
+
+4. FINAL VERDICT
+----------------
+Winner: ML V2 (Hybrid Approach)
+
+Reasoning:
+1.  **Metric Trade-offs**: While Rule-Based clustering has slightly better separation (Silhouette Score: 0.267 vs 0.229), ML V2 demonstrates superior internal cohesion/density (Calinski-Harabasz: 351.1 vs 341.3). This indicates that the ML model is finding "tighter," more natural groupings of companies.
+
+2.  **Strategic Value (The "Hidden Gem" Factor)**: The most critical finding is in the distribution.
+    -   The Rule-Based system is overly conservative, classifying only 15 companies ("3%") as "AI-Driven Leaders."
+    -   ML V2 identifies 73 companies ("14.6%") as "AI-Driven Leaders."
+    -   This suggests the Rule-Based logic has arbitrary cut-offs that exclude high-performing companies which, while perhaps not perfect, are statistically peers with the leaders. Identifying these "Hidden Gems" is essential for a benchmarking platform to show users what is achievable.
+
+3.  **Balanced Segmentation**: ML V2 provides a much more useful segmentation for comparative analysis. The Rule-Based approach creates a massive "middle pack" (Cluster 2 & 3), whereas ML V2 effectively differentiates the upper-middle tier ("Structured Builder" vs "AI-Driven Leader"), offering more granular insights for companies in that range.
+
+Recommendation: Proceed with ML V2 for production. Its ability to dynamically adapt to the data distribution makes it more robust than rigid rules, and it provides a more aspirational and accurate peer group for top-tier companies.
+

@@ -1,0 +1,87 @@
+================================================================================
+COMPANY-LEVEL OVERLAP ANALYSIS: "The Experimental Explorer" Cluster
+================================================================================
+Generated: 2026-01-16
+Analysis: Detailed comparison of company assignments between ML v2 and Database
+
+================================================================================
+
+SUMMARY STATISTICS
+--------------------------------------------------------------------------------
+ML v2 Total Companies:          200
+Database Total Companies:       200
+Overlapping Companies:          194 (97.0%)
+Companies Only in ML v2:        6 (3.0%)
+Companies Only in Database:     6 (3.0%)
+
+================================================================================
+
+KEY FINDING
+--------------------------------------------------------------------------------
+Despite both systems assigning exactly 200 companies to "The Experimental 
+Explorer" cluster, they are NOT the same 200 companies.
+
+✓ 194 companies (97%) are consistently assigned to this cluster by both systems
+✗ 12 companies (6%) differ in their assignments
+
+This indicates strong but not perfect agreement between the ML v2 unsupervised
+clustering approach and the database's rule-based/manual assignment method.
+
+================================================================================
+
+DETAILED BREAKDOWN
+--------------------------------------------------------------------------------
+
+COMPANIES ONLY IN ML v2 (6 companies):
+Company IDs: 9, 112, 316, 429, 852, 1157
+
+These companies were assigned to "The Experimental Explorer" by the ML v2 
+model but were assigned to a different cluster in the database.
+
+COMPANIES ONLY IN DATABASE (6 companies):
+Company IDs: 150, 972, 975, 1050, 1056, 1072
+
+These companies were assigned to "The Experimental Explorer" in the database
+but were assigned to a different cluster by the ML v2 model.
+
+================================================================================
+
+INTERPRETATION
+--------------------------------------------------------------------------------
+
+HIGH AGREEMENT (97%):
+The 97% overlap demonstrates strong consistency between the two methods. This
+suggests that:
+- Both systems identify similar patterns in company data
+- The "Experimental Explorer" archetype has relatively clear boundaries
+- ML v2's unsupervised approach validates the database assignments
+
+MINOR DISCREPANCIES (3%):
+The 6 companies that differ in each direction likely represent:
+- Edge cases near cluster boundaries
+- Companies with mixed characteristics spanning multiple archetypes
+- Differences between ML v2's multi-dimensional distance-based clustering
+  and the database's rule-based thresholds
+
+METHODOLOGY COMPARISON:
+- ML v2: Uses K-Means to find natural groupings in 7-dimensional space,
+  then maps clusters to archetypes via rank-based assignment
+- Database: Likely uses predefined score thresholds or manual classification
+  based on business rules
+
+The high overlap validates both approaches while the small differences 
+highlight the value of ML v2's data-driven boundary detection.
+
+================================================================================
+
+RECOMMENDATION
+--------------------------------------------------------------------------------
+The 97% agreement rate is excellent and suggests that:
+
+1. The ML v2 model is performing well and aligning with domain expertise
+2. The 12 differing companies should be reviewed to understand if they are
+   truly edge cases or if one method is more accurate
+3. This level of agreement supports using ML v2 for automated, scalable
+   cluster assignment while maintaining confidence in the results
+
+================================================================================
