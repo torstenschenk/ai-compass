@@ -22,7 +22,7 @@ class Response_Data(BaseModel):
     Company_url: str
     Email: str
     City: str
-    Employees: int
+    Employees: str
     Industry: str
     Response: Dict[int, Dict[int, int]]
 
@@ -66,7 +66,7 @@ if __name__ == '__main__':
                 'Company_url': 'https://www.accenture.com/de-de',
                 'Email': 'it@accenture.com',
                 'City': 'München',
-                'Employees': 10000,
+                'Employees': '10000',
                 'Industry': 'IT',
                 'Response': {1: {3:1}, 
                              2: {3:1, 5:2}}
