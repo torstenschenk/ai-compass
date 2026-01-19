@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\SpicedProjects\Projects\ai-compass\benchmarking_ai\ml_v4\verify_representatives.py", line 116, in <module>
+    generate_report()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\SpicedProjects\Projects\ai-compass\benchmarking_ai\ml_v4\verify_representatives.py", line 14, in generate_report
+    q_matrix, d_matrix, profiles, q_meta = dp.create_matrices(dfs)
+                                           ~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\SpicedProjects\Projects\ai-compass\benchmarking_ai\ml_v4\data_pipeline.py", line 82, in create_matrices
+    responses = dfs['responses']
+                ~~~^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+Verifying ML v4 on Cluster Representatives...
+Connection Error: could not translate host name "db.vxlbohrtynivparbdahm.supabase.co" to address: Name or service not known
+
