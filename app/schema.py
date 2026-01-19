@@ -21,6 +21,9 @@ class Gui_Questions(RootModel):
 class Response_Data(BaseModel):
     Company_url: str
     Email: str
+    City: str
+    Employees: str
+    Industry: str
     Response: Dict[int, Dict[int, int]]
 
 class Gui_Response(RootModel):
@@ -62,6 +65,9 @@ if __name__ == '__main__':
     response = {
                 'Company_url': 'https://www.accenture.com/de-de',
                 'Email': 'it@accenture.com',
+                'City': 'München',
+                'Employees': '10000',
+                'Industry': 'IT',
                 'Response': {1: {3:1}, 
                              2: {3:1, 5:2}}
                              # ...
