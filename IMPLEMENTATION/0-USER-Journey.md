@@ -35,7 +35,19 @@
 ---
 
 ## 2) Company Snapshot (Create Assessment)
-
+**Fields**
+1. **Company Name** (text input) — required
+2. **Industry** (dropdown) — required  
+   - Example values (MVP): Manufacturing, Retail, Healthcare, Finance, Services, Logistics, IT/Software, Other
+3. Website (text) 
+4. **Employee Band** (dropdown) 
+   - Classic ranges:
+      - 1–10
+      - 11–50
+      - 51–250
+      - 251–1000
+      - 1000+
+5.  City (text)
 
 ## 3) Load Questionnaire (Schema-driven)
 
@@ -211,4 +223,5 @@
 ## 8) Primary Happy Path (One-line)
 
 Landing Page → Company Snapshot → Wizard (one-question screens + async autosave) → Results → Download PDF
+
 
