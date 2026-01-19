@@ -17,8 +17,9 @@
 
 8.5 Roadmap
 
-8.6 Expert Consultation & Next Steps (CHRIS) dann (SINAN)
+8.6 Expert Consultation & Next Steps (CHRIS - DONE) dann (SINAN)
 
-8.7 Download Report (CHRIS) dann (SINAN)
+8.7 Download Report (CHRIS - DONE) dann (SINAN)
 
 10. PDF Export (SINAN)
+
