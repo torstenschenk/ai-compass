@@ -2,16 +2,16 @@
 
 **Scope decisions locked in (per your latest inputs):**
 - ✅ Autosave: **yes (asynchronous)**
-- ✅ Language: **English only** (no language switch)                            *?1
+- ✅ Language: **English only** (no language switch)
 - ✅ Token: **store locally** (browser storage recommended: localStorage*)
-- ✅ History: **no**                                                           *?2
-- ✅ Snapshot fields: **Company Name (text)**, **Industry (dropdown)**, Website(text), City(text), **Employee Band (dropdown: classic ranges)**
+- ✅ Snapshot fields: **Company Name (text)**, **Industry (dropdown)**, **Website (text)**, **City(text)**, **Employee Band (dropdown: classic ranges)**
 - ✅ Export: **PDF only**
 - ✅ Completion: **Automatic** — assessment becomes **completed when the last question is answered**
 - ✅ Wizard UI: **One question per screen**
-- ✅ Final button label: **Finish** (instead of Next) on the last question or Optional Questions after that finish
-- ✅ Terminology: question scores based on levels are used for calculating the ai-maturity and after put into 5 company cluster
+- ✅ Final button label: On the last required question, the button is Finish (instead of Next). After finishing the required section, the user can optionally continue via Optional Questions to answer additional (non-mandatory) questions. The optional section also ends with Finish, which then triggers the final calculation/results generation.
+- ✅ Terminology: For each answered question, a level-based score is calculated using the answer’s points and the question weight stored in the database. These scores are aggregated to compute the AI maturity score, which is then mapped into one of five company clusters.
 
+  
 ---
 
 ## 1) Entry & Start
@@ -266,6 +266,7 @@
 ## 10) Primary Happy Path (One-line)
 
 Landing Page → Company Snapshot → Wizard (one-question screens + async autosave) → Results → Download PDF
+
 
 
 
