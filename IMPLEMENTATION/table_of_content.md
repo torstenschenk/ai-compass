@@ -5,7 +5,7 @@
 5. Load Questionnaire (SINAN)
 6. Survey (SINAN)
 7. Completion (SINAN)
-8. Results Page (Analysis and Recommendations) (CHRIS) dann (SINAN)
+8. Results Page (Analysis and Recommendations) (CHRIS DONE) dann (SINAN)
 
 8.1. Header: Title & Subtitle, Overall score (1–5) + cluster profile + percentile
 
@@ -22,4 +22,5 @@
 8.7 Download Report (CHRIS - DONE) dann (SINAN)
 
 10. PDF Export (SINAN)
+
 
