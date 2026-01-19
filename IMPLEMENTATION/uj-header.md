@@ -11,7 +11,17 @@
 * 5. Completion (Automatic at the last question)
 * 5.1 Finish Action
 * 6. Results Page (Analysis and Recommendations)
-* 6.1 Results Page
+* 6.1 navigation
+* 6.2 header
+* 6.3 Title & subtitle
+* 6.4 Overall score (0–100) + cluster profile + percentile
+* 6.5 cluster profile (Bar chart -> sorted low → high)
+* 6.6 The Multi-Dimensional Maturity Profile (Radar chart all 7 dimensions)
+* 6.7 Strategic gap analysis
+* 6.8 Roadmap
+* 6.9 Expert Consultation & Next Steps
+* 6.10 Download Report
+* 6.11 footer
 * 7. PDF Export (Only Export Channel)
 * 7.1 Download PDF
 * 8. Primary Happy Path (One-line)
