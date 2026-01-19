@@ -4,25 +4,30 @@
 - ✅ Autosave: **yes (asynchronous)**
 - ✅ Language: **English only** (no language switch)                            *?1
 - ✅ Token: **store locally** (browser storage recommended: localStorage*)
-- ✅ History: **yes**                                                           *?2
-- ✅ Snapshot fields: **Company Name (text)**, **Industry (dropdown)**, **Employee Band (dropdown: classic ranges)**
+- ✅ History: **no**                                                           *?2
+- ✅ Snapshot fields: **Company Name (text)**, **Industry (dropdown)**, Website(text), City(text), **Employee Band (dropdown: classic ranges)**
 - ✅ Export: **PDF only**
 - ✅ Completion: **Automatic** — assessment becomes **completed when the last question is answered**
 - ✅ Wizard UI: **One question per screen**
-- ✅ Final button label: **Finish** (instead of Next) on the last question
-- ✅ Terminology: maturity levels are called **clusters** in the UI
+- ✅ Final button label: **Finish** (instead of Next) on the last question or Optional Questions after that finish
+- ✅ Terminology: question scores based on levels are used for calculating the ai-maturity and after put into 5 company cluster
 
 ---
 
 ## 1) Entry & Start
 
-### 1.1 Landing / Home
+### 1.1 Landingpage / Home
 **User intent:** Get quick, credible clarity on AI readiness and next steps.
 
 **UI elements**
-- Value proposition: deterministic scoring, explainable drivers, benchmark context, executive-ready PDF
-- CTA: **Start Assessment**
-- Secondary CTA (optional): **View Sample PDF** (static)
+- Value proposition:  scoring, explainable drivers, benchmark context, executive-ready 
+   - navigation
+   - hero section
+   - value proposition
+   - three step process
+   - outcome preview
+   - CTA: **Start Assessment**
+   - footer
 
 **Outcome**
 - User starts the assessment flow.
@@ -38,13 +43,16 @@
 1. **Company Name** (text input) — required
 2. **Industry** (dropdown) — required  
    - Example values (MVP): Manufacturing, Retail, Healthcare, Finance, Services, Logistics, IT/Software, Other
-3. **Employee Band** (dropdown) — required  
-   - Classic ranges, e.g.:
-   - 1–10
-   - 11–50
-   - 51–250
-   - 251–1000
-   - 1000+
+3. Website (text) 
+4. **Employee Band** (dropdown) 
+   - Classic ranges:
+      - 1–10
+      - 11–50
+      - 51–250
+      - 251–1000
+      - 1000+
+5.  City (text)
+
 
 **Actions**
 - Button: **Create Assessment**
@@ -108,12 +116,12 @@
 **UI (per screen)**
 - **Dimension title** as header (always visible)
 - **Progress / Status Bar**:
-  - Shows all 7 dimensions
-  - For each dimension: answered questions count, and completion status
-  - Example: `Data Maturity 2/3` (complete indicator when all answered)
+  - Shows all 7 dimensions tbd
+  - For each overall: answered questions count, and completion status
+  - Example: `overall 2/3` (complete indicator when all answered)
 - **One question only**
-  - Single choice → radio
-  - Multi choice → selectable chips/tags
+  - Single choice (statement, slider, choice) → radio
+  - Multi choice (checklist) → selectable chips/tags
 
 **Navigation controls**
 - Buttons: **Back** and **Next**
@@ -121,7 +129,11 @@
 - **Next/Finish is disabled** until:
   - Radio: an option is selected
   - Multi choice: at least one option is checked (and within max_select if applicable)
+ 
+- additional button Optional questions after last optional question finish button instead of next
+- buttons are always enabled
 
+  
 ---
 
 ### 4.2 Async Autosave Rules (non-blocking UX)
@@ -197,32 +209,23 @@
 
 ---
 
-## 6) Results Dashboard (Decision Clarity)
+## 6) Results Page (Analysis and Recommendations)
 
 ### 6.1 Results Page
-**Goal:** Provide immediate clarity and action plan.
+**Goal:** Recive instant analysis on AI-Readyness and provide immediate roadmap and action plan.
 
 **UI components**
-- Overall score (0–100) + **cluster (1–5)**  *(label in UI: “Cluster”, not “Level”)*
-- Dimension scores table (7 items) + **cluster** per dimension
-- Radar chart (all 7 dimensions)
-- Bar chart (sorted low → high)
-- Top Focus Areas (lowest 3 dimensions)
-- Drivers per dimension (2–3 lowest-scoring questions):
-  - question text
-  - selected labels (array)
-  - points
-
-**Benchmark panel**
-- peer cluster label
-- percentile
-- mismatch note (if mismatch_flag=true)
-
-**Recommendations panel**
-- Executive summary
-- Quick wins (0–30 days)
-- Roadmap: 90 days / 6 months / 12 months
-- Risks
+- navigation
+- header
+  - Title & subtitle
+  - Overall score (0–100) + **cluster profile** + percentile
+- cluster profile (Bar chart -> sorted low → high)
+- The Multi-Dimensional Maturity Profile (Radar chart all 7 dimensions)
+- Strategic gap analysis
+- Roadmap
+- Expert Consultation & Next Steps
+- Download Report 
+- footer
 
 **Data source**
 - `GET /api/v1/assessments/{assessment_id}?token={access_token}`
@@ -245,81 +248,25 @@
 
 **PDF contents**
 - Title page (company name, date, questionnaire version/hash)
-- Overall score + **cluster**
-- Dimension breakdown + drivers
-- Benchmark section
-- Recommendations
+- header
+  - Title & subtitle
+  - Overall score (0–100) + **cluster profile** + percentile
+- cluster profile (Bar chart -> sorted low → high)
+- The Multi-Dimensional Maturity Profile (Radar chart all 7 dimensions)
+- Strategic gap analysis
+- Roadmap
+- Expert Consultation & Next Steps
 - Footer with versions:
   - scoring_engine_version, ml_model_version, llm_prompt_version, llm_model_name
 
 **Outcome**
 - User has a shareable report.
 
----
-
-## 8) History (Multiple Assessments per Company)
-
-### 8.1 History List
-**Goal:** Allow users to view and reopen prior assessments.
-
-**UI**
-- List items show:
-  - company name
-  - created_at / completed_at
-  - overall score + cluster (if completed)
-  - status (draft/completed)
-  - actions: **Open**, **Download PDF** (if completed)
-
-**Backend**
-- `GET /api/v1/assessments?company_name=...&limit=...&offset=...&status=...&token={access_token}`
-  - If you don’t want filtering initially:
-    - `GET /api/v1/assessments?limit=20&offset=0&token={access_token}`
-
-**Outcome**
-- User can run multiple assessments over time and retrieve them reliably.
-
----
-
-## 9) Key UX Rules (MVP)
-
-1. **English only**: no language switching.
-2. **One question per screen**: dimension is always visible as header.
-3. **Async autosave**: UI remains responsive; background saving with retry.
-4. **Next/Finish gated by answer**:
-   - Radio: selection required
-   - Multi: at least one checked required
-5. **Completion is automatic**:
-   - No separate “Review & Complete”
-   - Completion happens via **Finish** on the last question
-6. **PDF is the only export**.
-7. **Auditability is visible**: show questionnaire hash/version somewhere (e.g., small “Details” section).
-
----
 
 ## 10) Primary Happy Path (One-line)
 
-Home → Company Snapshot → Wizard (one-question screens + async autosave) → Finish → Results → Download PDF → History
+Landing Page → Company Snapshot → Wizard (one-question screens + async autosave) → Results → Download PDF
 
 
 
 
-
----
-Legende:
-- localStorage = Browser Storage (recommended because it is persistent also if the user closes the browser)
-- sessionStorage = Browser Storage (not recommended because it is only persistent for the current session)
-
-
----
-Questions:
-  - Option A: `Authorization: Bearer {access_token}`
-  - Option B: `?token={access_token}`
-  difference between the two options: 
-    - Option A: is more secure, has less risk of being exposed and is more reliable 
-    - Option B: is less secure, has more risk of being exposed and is less reliable 
-
-- *?1
-    did we need more than one language?
-- *?2
-    did we want to have a history of the assessments?
-    
