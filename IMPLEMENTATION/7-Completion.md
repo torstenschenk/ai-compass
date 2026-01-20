@@ -50,7 +50,7 @@ Run as a single transaction where possible. If a step fails, the assessment must
 
 ### Step 2 — Deterministic scoring (source of truth)
 
-* Compute overall score (0–100) and per-dimension scores.
+* Compute overall score (1-5) and per-dimension scores.
 * Map overall score to **cluster 1–5** using your agreed rule logic.
 * Persist:
 
