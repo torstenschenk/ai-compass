@@ -6,10 +6,10 @@
 - ✅ Token: **store locally** (browser storage recommended: localStorage*)
 - ✅ Snapshot fields: **Company Name (text)**, **Industry (dropdown)**, **Website (text)**, **City(text)**, **Employee Band (dropdown: classic ranges)**
 - ✅ Export: **PDF only**
-- ✅ Completion: **Automatic** — assessment becomes **completed when the last question is answered**
+- ✅ Completion: **Automatic** — response becomes **completed when the last question is answered**
 - ✅ Wizard UI: **One question per screen**
 - ✅ Final button label: On the last required question, the button is Finish (instead of Next). After finishing the required section, the user can optionally continue via Optional Questions to answer additional (non-mandatory) questions. The optional section also ends with Finish, which then triggers the final calculation/results generation.
-- ✅ Terminology: For each answered question, a level-based score is calculated using the answer’s points and the question weight stored in the database. These scores are aggregated to compute the AI maturity score, which is then mapped into one of five company clusters.
+- ✅ Terminology: For each answered question, a level-based score is calculated using the answer's points (from `answers` table) and the question weight (from `questions` table) stored in the database. These scores are aggregated to compute the AI maturity score, which is then mapped into one of five company clusters (stored in `cluster_profiles` table).
 
   
 ---
@@ -34,7 +34,7 @@
 
 ---
 
-## 2) Company Snapshot (Create Assessment)
+## 2) Company Snapshot (Create Response)
 **Fields**
 1. **Company Name** (text input) — required
 2. **Industry** (dropdown) — required  
@@ -49,23 +49,25 @@
       - 1000+
 5.  City (text)
 
-## 3) Load Questionnaire (Schema-driven)
+## 3) Load Questionnaire (DB-driven)
 
 ### 3.1 Questionnaire Fetch
-**Goal:** Load the currently active questionnaire schema (English).
+**Goal:** Load the questionnaire dynamically from the database (English).
 
 **Backend**
-- `GET /api/v1/questionnaires`
+- `GET /api/v1/questionnaire`
+- Assembles questionnaire from DB tables:
+  - `dimensions` → `questions` → `answers`
 
 **Client behavior**
-- Cache schema in memory (or short-lived cache), keyed by `questionnaire_hash`.
+- Cache questionnaire in memory (or sessionStorage).
 
 **Outcome**
-- UI can render the wizard from schema (no hardcoded IDs).
+- UI can render the wizard from DB-driven structure (no hardcoded IDs).
 
 ---
 
-## 4) Assessment Wizard (7 Dimensions, One Question per Screen, Async Autosave)
+## 4) Response Wizard (7 Dimensions, One Question per Screen, Async Autosave)
 
 ### 4.1 Wizard Structure (One-question screens)
 **Goal:** Let the user focus on a single decision at a time; keep progress transparent.
@@ -111,57 +113,54 @@
 
 ### 4.3 Persisting Responses (analytics-safe, uniquely stored)
 **Backend**
-- `POST /api/v1/assessments/{assessment_id}/responses?token={access_token}`
+- Autosave writes to **session state** (not DB) during wizard
+- On completion: `POST /api/v1/responses/{response_id}/items?token={access_token}`
   - Body example:
     ```json
     {
-      "responses": [
+      "items": [
         {
-          "question_key": "sbv_01_strategy_defined",
-          "selected_option_keys": ["sbv_01_o3"]
+          "question_id": 10,
+          "answer_ids": [101]
         }
       ]
     }
     ```
 
 **Backend rules**
-- Validate question/option keys exist in the assessment’s questionnaire hash/version
-- Upsert per question for this assessment
-- Persist all entities uniquely so future analysis is always possible:
-  - questionnaire (versioned)
-  - dimension
-  - question
-  - option
-  - response + selections
+- Validate question_id exists in `questions` table
+- Validate answer_ids belong to question_id (from `answers` table)
+- Upsert per (response_id, question_id) in `response_items` table
+- Store answers as integer array
 
 **Outcome**
-- Every answered question is persisted in a structured, queryable format.
+- Every answered question is persisted in `response_items` table for scoring and analysis.
 
 ---
 
 ## 5) Completion (Automatic at the last question)
 
 ### 5.1 Finish Action
-**Goal:** User completes the assessment without a separate review step.
+**Goal:** User completes the response without a separate review step.
 
 **Trigger**
-- User clicks **Finish** on the last question (only enabled if answered and saved)
+- User clicks **Finish** on the last question (only enabled if answered and saved to session)
 
 **Backend**
-- `POST /api/v1/assessments/{assessment_id}/complete?token={access_token}`
+- `POST /api/v1/responses/{response_id}/complete?token={access_token}`
 
 **Backend orchestration**
-1. Deterministic scoring → store in `maturity_scores`
-2. ML benchmarking (K-Means) → store in `benchmark_cluster_result`
-3. LLM recommendations (Groq) → strict JSON validation → cache in `llm_enrichment_cache`
-   - If invalid / failure: deterministic fallback template
-4. Update assessment `status=completed`, set `completed_at`
+1. Persist session state → write all answers to `response_items` table
+2. Deterministic scoring → compute from `response_items` + `answers` + `questions` + `dimensions`
+3. Store `responses.total_score` and `responses.cluster_id` (matched from `cluster_profiles`)
+4. ML benchmarking computed dynamically when results requested
+5. LLM recommendations (optional) → fallback if unavailable
 
 **Outcome**
 - User is redirected to the Results page immediately after completion.
 
 **Failure states**
-- If final save is not confirmed: Finish remains disabled / blocked with “Waiting for save…”
+- If session save not confirmed: Finish remains disabled / blocked with "Waiting for save…"
 - LLM unavailable: completion still succeeds using fallback recommendations
 
 ---
@@ -185,7 +184,7 @@
 - footer
 
 **Data source**
-- `GET /api/v1/assessments/{assessment_id}?token={access_token}`
+- `GET /api/v1/responses/{response_id}?token={access_token}`
 
 **Outcome**
 - User sees “where we are” and “what to do next” without ambiguity.
@@ -200,8 +199,8 @@
 **Action**
 - Button: **Download PDF**
 
-**Backend (Option B)**
-- `GET /api/v1/assessments/{assessment_id}/pdf?token={access_token}`
+**Backend**
+- `GET /api/v1/responses/{response_id}/pdf?token={access_token}`
 
 **PDF contents**
 - Title page (company name, date, questionnaire version/hash)

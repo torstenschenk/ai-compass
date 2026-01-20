@@ -1,7 +1,7 @@
-# Survey (Assessment Wizard)
+# Survey (Response Wizard)
 
 ## Purpose
-Render the assessment as a **one-question-per-screen wizard** with **async autosave** and a clear progress/status bar across **7 dimensions**, including an optional questions section after required questions.
+Render the response collection as a **one-question-per-screen wizard** with **async autosave** and a clear progress/status bar across **7 dimensions**, including an optional questions section after required questions.
 
 ## UI Contract (per screen)
 
@@ -13,7 +13,7 @@ Render the assessment as a **one-question-per-screen wizard** with **async autos
 - For each dimension show:
   - `answered_count / total_count`
   - completion indicator when `answered_count == total_count`
-- Show progress bar for overall assessment.
+- Show progress bar for overall response.
 
 ### Question Body
 - Render exactly **one question** at a time.
@@ -25,12 +25,12 @@ Render the assessment as a **one-question-per-screen wizard** with **async autos
 - Buttons:
   - `Back`
   - `Next` (for required questions, except last required)
-  - `Finish` (on last required question triggers final calculation/results generation without optional questions)
+  - `Finish` (on last required question)
 - After required section is finished:
   - show button `Optional Questions` to continue with optional questions
 - Optional section:
   - uses `Back` + `Next`
-  - last optional question uses `Finish` (triggers final calculation/results generation with optional questions)
+  - last optional question uses `Finish` (triggers final calculation/results generation)
 
 ### Button enable/disable rules
 - `Back` is enabled if `current_index > 0` within the current section.
@@ -41,37 +41,48 @@ Render the assessment as a **one-question-per-screen wizard** with **async autos
 
 ---
 
-## Async Autosave (non-blocking)
+## Async Autosave (non-blocking, session state only)
 
 ### Behavior
 On every answer change:
 1) Update UI state immediately
-2) Trigger async save in background
+2) Save to session state (not DB yet)
 3) Show save state indicator:
-   - `Saving…` → `Saved ✓` → `Save failed (retrying…)`
+   - `Saving to session...` → `Saved ✓` → `Save failed (retrying...)`
+
+### Important: Session State Until Completion
+- All answers are stored in **session state** (memory/sessionStorage) during the wizard
+- Answers are **NOT written to database** until survey is completed
+- On completion, all session state answers are persisted to `response_items` table
 
 ### Retry
-- Retry transient failures with exponential backoff.
+- Retry transient session storage failures
 - If still failing:
   - show clear error
-  - **block Finish** (required/optional) until the last save for the current question is confirmed as saved.
+  - **block Finish** (required/optional) until successfully saved to session
 
 ### Rule
-- Navigation can continue while saving is in-flight.
-- **Completion cannot be triggered** unless the last required (or last optional) question is saved successfully.
+- Navigation can continue while saving to session is in-flight.
+- **Completion cannot be triggered** unless all answers are successfully saved to session state.
 
-## Persisting Responses (Backend Contract)
+---
+
+## Persisting Response Items (Backend Contract)
 
 ### Endpoint
-`POST /api/v1/assessments/{assessment_id}/responses?token={access_token}`
+`POST /api/v1/responses/{response_id}/items?token={access_token}`
 
-### Body (single question or batch)
+### Body (batch of answered questions)
 ```json
 {
-  "responses": [
+  "items": [
     {
-      "question_key": "...  (e.g. sbv_01_strategy_defined)",
-      "selected_option_keys": ["...", "..."]
+      "question_id": 10,
+      "answer_ids": [101]
+    },
+    {
+      "question_id": 11,
+      "answer_ids": [205, 207]
     }
   ]
 }
@@ -80,27 +91,28 @@ On every answer change:
 ### Backend rules
 
 #### Validate:
+- Each `question_id` exists in the `questions` table
+- All `answer_ids` belong to the corresponding `question_id` (FK validation)
 
-- `question_key` exists in the assessment’s 
-- `all selected_option_keys` belong to that question
+#### Upsert per (response_id, question_id):
+- Insert or update `response_items`:
+  - `response_id` = from URL parameter
+  - `question_id` = from payload
+  - `answers` = integer array of `answer_ids`
+- For single choice: exactly one answer_id in array
+- For multi choice: 1..n answer_ids in array
 
-##### Upsert per (assessment_id, question_key):
-
-- `assessment_answers` (1 row per question)
-- `assessment_answer_selections` (1 row per selected option)
-
-#### Store data so it stays queryable forever:
-
-- `dimensions`
-- `questions`
-- `options`
-- `responses + selections`
+#### Store data queryably:
+- `response_items` rows link to:
+  - `responses` (via `response_id`)
+  - `questions` (via `question_id`)
+- Answer IDs in the integer array link to `answers` table for scoring
 
 ### Response
 ```json 
 {
   "ok": true,
-  "saved_questions": ["..."],
+  "saved_items_count": 2,
   "server_timestamp": "2026-01-20T10:00:00Z"
 }
 ```
@@ -109,66 +121,69 @@ On every answer change:
 ```json
 {
   "ok": false,
-  "error": "Invalid question_key: sbv_01_strategy_defined"
+  "error": "Invalid answer_id: 999 does not belong to question_id: 10"
 }
 ```
 
-### Required vs Optional Questions
-Question data requirement
-Each question must indicate whether it is required or optional:
-- required: true|false (recommended)
+---
 
-#### Wizard logic
-- Required section = all questions where required == true
-- Optional section = all questions where required == false
+## Required vs Optional Questions
 
-#### Completion Trigger (Wizard -> Results)
+### Question data requirement
+Each question indicates whether it is required or optional via the `optional` field from `questions` table:
+- `optional = false` → required question
+- `optional = true` → optional question
 
-  ##### Required section Finish:
+### Wizard logic
+- **Required section** = all questions where `optional = false`
+- **Optional section** = all questions where `optional = true`
 
-- marks required section completed
-- if user does NOT go to optional questions → triggers results generation (7-Completion.md)
-- if user clicks Optional Questions → continue without final calculation
+### Completion Trigger (Wizard → Results)
 
-##### Optional section Finish:
+#### Required section Finish:
+Endpoint: `POST /api/v1/responses/{response_id}/finish-required?token={access_token}`
+- Marks required section as completed
+- **Does NOT save to database yet** (still in session state)
+- User can either:
+  - Navigate to optional questions (continue without DB write)
+  - Trigger final completion (writes to DB and calculates results)
 
-- triggers final calculation/results generation (7-Completion.md)
+#### Optional section Finish:
+Endpoint: `POST /api/v1/responses/{response_id}/complete?token={access_token}`
+- Triggers final calculation/results generation (see 7-Completion.md)
+- **This is when session state is persisted to database**
 
-
+---
 
 ## Frontend Contract
-# frontend_state_models.md
 
 ## Goal
-Define the minimal, implementable frontend state objects to run the wizard with:
+Define the minimal frontend state objects to run the wizard with:
 - one-question-per-screen
-- async autosave with retries
+- async save to session state
 - dimension progress UI
 - required + optional sections with separate Finish behavior
-
-No code, only data shapes + invariants.
 
 ---
 
 ## 1) WizardState (single source of truth for UI)
 
 ### Shape
-- `assessmentId: string`
+- `responseId: number`
 - `token: string` (loaded from localStorage)
-- `schemaHash: string`
 
 - `section: "required" | "optional"`
-- `requiredQuestionKeys: string[]` (ordered)
-- `optionalQuestionKeys: string[]` (ordered)
+- `requiredQuestions: Question[]` (ordered, where `optional=false`)
+- `optionalQuestions: Question[]` (ordered, where `optional=true`)
 
 - `currentIndex: number`  
-  - index into the active section array (`requiredQuestionKeys` or `optionalQuestionKeys`)
+  - index into the active section array
 
-- `answers: Record<string, AnswerState>`
-  - keyed by `question_key`
+- `answers: Record<number, AnswerState>`
+  - keyed by `question_id`
 
-- `saveStatus: Record<string, SaveState>`
-  - keyed by `question_key`
+- `saveStatus: Record<number, SaveState>`
+  - keyed by `question_id`
 
 - `ui:`
   - `globalError?: string`
@@ -177,83 +192,42 @@ No code, only data shapes + invariants.
   - `completionBlocked: boolean`
     - true if last question save is not confirmed or has a persistent error
 
-### AnswerState (per question_key)
-- `questionKey: string`
-- `selectedOptionKeys: string[]` (empty allowed while unanswered)
-- `lastChangedAt: number` (ms epoch; used to ignore outdated saves)
+### AnswerState (per question_id)
+- `questionId: number`
+- `selectedAnswerIds: number[]` (empty allowed while unanswered)
+- `lastChangedAt: number` (ms epoch)
 
-### SaveState (per question_key)
+### SaveState (per question_id)
 - `state: "idle" | "dirty" | "saving" | "saved" | "error"`
 - `lastSaveAttemptAt?: number`
 - `retryCount: number`
-- `lastServerTimestamp?: string`
 - `errorMessage?: string`
 
 ### Invariants
-- One question screen renders only `activeQuestionKey = sectionKeys[ currentIndex ]`
+- One question screen renders only `activeQuestion = sectionQuestions[currentIndex]`
 - `Next/Finish` enabled **only if**:
   - current question is valid (selection rules) AND
-  - `saveStatus[currentQuestionKey].state` is `"saved"` (or `"saving"` is allowed for navigation, but not for finishing)
+  - `saveStatus[currentQuestionId].state` is `"saved"` to session
 - `Finish` (required last question):
-  - allowed only when current is valid+saved
-  - then either:
-    - trigger completion immediately (if user skips optional), OR
-    - enable `showOptionalEntry = true`
+  - allowed only when current is valid+saved to session
+  - enables `showOptionalEntry = true`
+  - can trigger completion which persists to DB
 - `Finish` (optional last question):
-  - allowed only when current is valid+saved
-  - triggers completion
+  - allowed only when current is valid+saved to session
+  - triggers completion (persists session state to DB)
 
 ---
 
-## 2) SaveQueue (async autosave scheduler)
+## 2) ProgressModel (for status bar)
 
-## Purpose
-Manage background persistence without blocking UI, with retry + stale-request protection.
-
-### Shape
-- `pending: Map<string, QueueItem>` keyed by `question_key`
-- `inFlight: Set<string>` keyed by `question_key`
-- `maxRetries: number` (e.g. 5)
-- `baseDelayMs: number` (e.g. 400)
-- `maxDelayMs: number` (e.g. 8000)
-
-### QueueItem
-- `questionKey: string`
-- `payload: { question_key: string, selected_option_keys: string[] }`
-- `clientVersion: number`  
-  - monotonic per question (or use `lastChangedAt`) to detect stale responses
-- `enqueuedAt: number`
-
-### Processing rules
-- Debounce per question (e.g. 300–600ms): only latest payload per question is kept.
-- Only one in-flight save per question at a time.
-- If a newer change arrives while saving:
-  - keep it queued; after current save finishes, send the newest payload.
-- On success:
-  - mark `SaveState.state = "saved"` and clear retry info
-- On failure:
-  - classify transient vs persistent
-  - transient → retry with exponential backoff
-  - persistent → `SaveState.state = "error"` and surface `errorMessage`
-- Stale response rule:
-  - if response corresponds to an older `clientVersion/lastChangedAt`, ignore it.
-
-### Endpoint contract used by SaveQueue
-`POST /api/v1/assessments/{assessment_id}/responses?token={token}`
-- batch allowed, but SaveQueue can send single-question payloads.
-
----
-
-## 3) ProgressModel (for status bar + gating logic)
-
-## Purpose
+### Purpose
 Compute per-dimension progress and overall progress from questionnaire structure + answers.
 
 ### Inputs
-- `questionMetaByKey: Record<string, { dimensionKey: string, required: boolean }>`
-- `dimensionOrder: string[]` (ordered keys)
-- `dimensionTitles: Record<string, string>`
-- `dimensionQuestionKeys: Record<string, string[]>` (ordered keys)
+- `questionMetaById: Record<number, { dimensionId: number, optional: boolean }>`
+- `dimensionOrder: number[]` (ordered dimension IDs)
+- `dimensionNames: Record<number, string>`
+- `dimensionQuestions: Record<number, number[]>` (ordered question IDs per dimension)
 - `answers: WizardState.answers`
 
 ### Outputs
@@ -262,8 +236,8 @@ Compute per-dimension progress and overall progress from questionnaire structure
 - `overallOptional: { answered: number, total: number }`
 
 ### DimensionProgress
-- `dimensionKey: string`
-- `title: string`
+- `dimensionId: number`
+- `name: string`
 - `requiredAnswered: number`
 - `requiredTotal: number`
 - `optionalAnswered: number`
@@ -272,31 +246,27 @@ Compute per-dimension progress and overall progress from questionnaire structure
 
 ### Answered definition
 A question counts as answered when:
-- `answers[q].selectedOptionKeys.length > 0`  
-AND (if applicable) `min_select/max_select` rules are satisfied.
-
-### Used for
-- Status bar display (counts + completion)
-- Determine:
-  - last required question reached and completed
-  - whether to enable optional entry button
-  - whether Finish may trigger completion
+- `answers[questionId].selectedAnswerIds.length > 0`
 
 ---
 
-## 4) Minimal completion gate (strict MVP rule)
+## 3) Completion gate (strict MVP rule)
 
-Completion can be triggered only if:
-- Required section:
-  - all required questions are answered (valid)
-  - and for every required question: `saveStatus[q].state == "saved"`
-- Optional section (if entered):
-  - same rule applies for optional questions that were shown/answered
-  - and last optional question is saved
+### Completion can be triggered only if:
 
-Pragmatic MVP option:
-- Only enforce “saved” for the current question and allow earlier “saving” states,
-  but before calling `/complete` run a final flush:
-  - `await saveQueue.drain()` (conceptually) then call complete.
-  - save the answers in the session/state until the survey is not completed
-  - once the survey is completed push the data to the database
+#### Required section:
+- All required questions are answered (valid)
+- All required questions saved to session state (`saveStatus[q].state == "saved"`)
+
+#### Optional section (if entered):
+- Same rule applies for optional questions
+- Last optional question is saved to session
+- Completion triggers write from session state to database
+
+### Implementation approach:
+- Maintain all answers in session/state until survey completion
+- On calling `/complete`:
+  - Send all session state answers to backend
+  - Backend writes entire batch to `response_items` table
+  - Backend computes scores and cluster
+  - Backend updates `responses` table with `total_score` and `cluster_id`

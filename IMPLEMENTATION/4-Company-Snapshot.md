@@ -1,7 +1,7 @@
-## 2) Company Snapshot (Create Assessment)
+## 2) Company Snapshot (Create Response)
 
 ### 2.1 Company Snapshot Form
-**Goal:** Capture minimal context + create a draft assessment session.
+**Goal:** Capture minimal context + create a draft response session.
 
 **Fields**
 1. **Company Name** (text input) — required
@@ -22,34 +22,45 @@
 - Button: **Start Assessment**
 
 **Backend**
-- `POST /api/v1/assessments`
+- `POST /api/v1/responses`
   - Body:
     ```json
     {
-      "company_meta": {
+      "company": {
         "company_name": "Acme Ltd",
         "industry": "IT/Software",
-        "employee_band": "51-250"
-      },
-      "lang": "en"
+        "website": "https://acme.com",
+        "city": "Berlin",
+        "number_of_employees": "51-250",
+        "email": "contact@acme.com"
+      }
     }
     ```
   - Response:
     ```json
     {
-      "assessment_id": "...",
+      "response_id": 123,
       "access_token": "..."
     }
     ```
 
+**Backend behavior**
+- Creates row in `companies` table with provided company fields
+- Creates row in `responses` table:
+  - `company_id` = newly created company ID
+  - `total_score` = NULL (initially)
+  - `cluster_id` = NULL (initially)
+  - `created_at` = NOW()
+- Returns `response_id` and `access_token`
+
 **Client behavior**
 - Store `access_token` locally (e.g., localStorage):
-  - `ai_compass_access_token:{assessment_id} = token`
+  - `ai_compass_access_token:{response_id} = token`
 - Navigate directly into the questionnaire wizard.
 
 **Outcome**
-- Assessment is created in DB with `status=draft`.
+- Response is created in DB with NULL scores (to be computed on completion).
 
 **Failure states**
 - Validation: missing fields → inline errors
-- API error → “Could not create assessment” + retry
+- API error → "Could not create response" + retry
