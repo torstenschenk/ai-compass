@@ -11,17 +11,6 @@ export function Navigation() {
           </div>
           <span className="text-xl font-semibold text-gray-900">AI Compass</span>
         </div>
-        <div className="flex items-center gap-6">
-          <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">
-            How it works
-          </a>
-          <a href="#benefits" className="text-gray-600 hover:text-gray-900 transition-colors">
-            Benefits
-          </a>
-          <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-            Get Started
-          </button>
-        </div>
       </div>
     </nav>
   );

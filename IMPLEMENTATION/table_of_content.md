@@ -1,3 +1,5 @@
+change assesment to response
+
 1. Landingpage (CHRIS)
 2. Navigation (CHRIS)
 3. Footer (CHRIS)

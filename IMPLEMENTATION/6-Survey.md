@@ -81,8 +81,8 @@ On every answer change:
 
 #### Validate:
 
-- `question_key` exists in the assessment’s questionnaire_version_id
-- `all selected_option_keys` belong to that question and questionnaire version
+- `question_key` exists in the assessment’s 
+- `all selected_option_keys` belong to that question
 
 ##### Upsert per (assessment_id, question_key):
 
@@ -91,7 +91,6 @@ On every answer change:
 
 #### Store data so it stays queryable forever:
 
-- `questionnaire version`
 - `dimensions`
 - `questions`
 - `options`
@@ -101,7 +100,7 @@ On every answer change:
 ```json 
 {
   "ok": true,
-  "saved_questions": ["sbv_01_strategy_defined"],
+  "saved_questions": ["..."],
   "server_timestamp": "2026-01-20T10:00:00Z"
 }
 ```
@@ -115,7 +114,7 @@ On every answer change:
 ```
 
 ### Required vs Optional Questions
-Questionnaire data requirement
+Question data requirement
 Each question must indicate whether it is required or optional:
 - required: true|false (recommended)
 
@@ -156,7 +155,6 @@ No code, only data shapes + invariants.
 ### Shape
 - `assessmentId: string`
 - `token: string` (loaded from localStorage)
-- `questionnaireVersionId: string`
 - `schemaHash: string`
 
 - `section: "required" | "optional"`
@@ -300,4 +298,5 @@ Pragmatic MVP option:
 - Only enforce “saved” for the current question and allow earlier “saving” states,
   but before calling `/complete` run a final flush:
   - `await saveQueue.drain()` (conceptually) then call complete.
-
+  - save the answers in the session/state until the survey is not completed
+  - once the survey is completed push the data to the database

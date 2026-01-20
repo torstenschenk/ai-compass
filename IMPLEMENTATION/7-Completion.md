@@ -3,16 +3,12 @@
 ## Goal
 Complete the assessment directly from the wizard (no review step). Completion runs only when the last **required** or last **optional** question is answered **and saved**.
 
----
-
 ## Trigger (Frontend)
 - User clicks **Finish** on the last question of the active section.
 - Button is enabled only if:
   - current question is valid (selection rules met)
   - current question save state is `saved`
   - no pending saves for required questions (strict MVP: all required are `saved`)
-
----
 
 ## Endpoint
 **POST** `/api/v1/assessments/{assessment_id}/complete?token={access_token}`
@@ -43,7 +39,7 @@ Run as a single transaction where possible. If a step fails, the assessment must
 
 * Assessment exists and token is valid.
 * Assessment is `draft`.
-* All **required** questions for this assessment’s `questionnaire_version_id` are answered (and selections valid).
+* All **required** questions for this assessment’s are answered (and selections valid).
 * (Optional section) If your product supports optional questions:
 
   * optional answers are allowed to be partial; they should not block completion unless the UI forced them.
@@ -59,7 +55,7 @@ Run as a single transaction where possible. If a step fails, the assessment must
   * `assessment_drivers` (top drivers per dimension, if part of MVP)
 
 ### Step 3 — ML benchmarking (optics only)
-
+@hamza
 * Use the saved answers/scores to produce:
 
   * `benchmark_cluster_id`
@@ -76,7 +72,7 @@ Run as a single transaction where possible. If a step fails, the assessment must
 
   * produce deterministic fallback recommendations.
 * Persist to `llm_enrichment_cache` (keyed by inputs + prompt_version).
-
+@hamza
 ### Step 5 — Mark assessment completed
 
 * Update `assessments`:
@@ -84,25 +80,21 @@ Run as a single transaction where possible. If a step fails, the assessment must
   * `status = 'completed'`
   * `completed_at = now()`
 
----
-
 ## Failure handling rules
 
 * If required answers are missing or invalid:
 
   * return `409 Conflict` with a machine-readable list of missing/invalid question_keys
 * If scoring fails (unexpected):
-
   * return `500` and keep assessment in `draft`
 * If ML fails:
-
   * either (recommended) store a safe fallback benchmark payload (e.g., percentile null, mismatch_note),
   * or skip benchmark write but still complete (your choice; document it)
+@hamza
 * If LLM fails:
-
   * always complete using fallback recommendations
 
----
+- if fails inform the user and save the whole state to make the calculation later again
 
 ## Frontend behavior on success
 
@@ -110,8 +102,6 @@ Run as a single transaction where possible. If a step fails, the assessment must
 
   * `GET /api/v1/assessments/{assessment_id}?token={access_token}` for rendering
 * Enable PDF download from results page.
-
----
 
 ## Frontend behavior on “not ready” (strict gating)
 

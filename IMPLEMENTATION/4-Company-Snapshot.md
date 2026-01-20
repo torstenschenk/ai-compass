@@ -19,7 +19,7 @@
 
 
 **Actions**
-- Button: **Create Assessment**
+- Button: **Start Assessment**
 
 **Backend**
 - `POST /api/v1/assessments`

@@ -4,10 +4,7 @@
 **Goal:** Load the currently active questionnaire schema (English) so the React wizard can render **all questions dynamically** (no hardcoded IDs).
 
 **Backend**
-- `GET /api/v1/questionnaires`
-
-**Client behavior**
-- Cache schema in memory (or short-lived cache), keyed by `questionnaire_hash`.
+- `GET /api/v1/questions`
 
 **Outcome**
 - UI can render the wizard from schema (no hardcoded IDs).
@@ -15,20 +12,16 @@
 ## Response (minimum required shape)
 ```json
 {
-  "questionnaire_version_id": "uuid",
-  "schema_hash": "sha256",
-  "questionnaire_id": "ai-compass",
   "lang": "en",
-  "version": "YYYY-MM-DD",
   "dimensions": [
     {
-      "dimension_key": "data_foundation",
-      "title": "Data Foundation",
+      "dimension_key": "...",
+      "title": "...",
       "display_order": 2,
       "weight": 1.0,
       "questions": [
         {
-          "question_key": "df_01_data_quality",
+          "question_key": "...",
           "question_text": "…",
           "question_type": "single_choice | multi_choice | tags",
           "render_type": "radio | chips | checklist | slider",
@@ -39,7 +32,7 @@
           "display_order": 1,
           "options": [
             {
-              "option_key": "df_01_o1",
+              "option_key": "...",
               "label": "…",
               "points": 0,
               "display_order": 1
