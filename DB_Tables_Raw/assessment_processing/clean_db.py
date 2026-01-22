@@ -2,7 +2,11 @@ import psycopg2
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+from pathlib import Path
+
+# Load environment variables from project root
+env_path = Path(__file__).resolve().parents[2] / '.env'
+load_dotenv(dotenv_path=env_path)
 
 conn = psycopg2.connect(
     user=os.getenv("user"),

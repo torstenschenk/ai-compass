@@ -28,11 +28,12 @@ class InferenceEngine:
             print(f"Warning: Models not loaded. {e}")
             self.loaded = False
 
-    def run_analysis(self, company_dim_series, company_question_df):
+    def run_analysis(self, company_dim_series, company_question_df, company_industry=None):
         """
         Runs full analysis for a single company.
         company_dim_series: pd.Series of dimension scores.
         company_question_df: pd.DataFrame of question details.
+        company_industry: String, optional industry for percentile benchmarking.
         """
         if not self.loaded:
             return {"error": "Models not loaded"}
@@ -42,11 +43,30 @@ class InferenceEngine:
         df_input = company_dim_series.to_frame().T 
         c_ids, c_names, coords = self.ce.predict(df_input)
         
+        # Extract Semantic ID from name (e.g. "5 - Leader" -> 5) to match frontend expectation
+        raw_name = c_names[0]
+        semantic_id = 0
+        try:
+             # Assuming format "N - Name"
+             if " - " in raw_name:
+                 semantic_id = int(raw_name.split(" - ")[0])
+             else:
+                 # Fallback if just "Cluster N"
+                 semantic_id = int(c_ids[0]) + 1 
+        except:
+             semantic_id = int(c_ids[0]) + 1
+             
         cluster_info = {
-            "cluster_id": int(c_ids[0]),
-            "cluster_name": c_names[0],
+            "cluster_id": semantic_id, 
+            "cluster_name": raw_name,
             "coordinates": coords[0].tolist()
         }
+        
+        # 1.5 Percentile Calculation
+        percentile_info = None
+        if company_industry:
+            total_score = company_dim_series.mean()
+            percentile_info = self.ce.calculate_industry_percentile(total_score, company_industry)
         
         # 2. Strategic Gap Analysis
         findings = self.sga.analyze(company_dim_series, company_question_df)
@@ -66,7 +86,8 @@ class InferenceEngine:
             "strategic_findings": findings,
             "executive_briefing": narrative,
             "roadmap": roadmap,
-            "roadmap_briefing": briefing
+            "roadmap_briefing": briefing,
+            "percentile": percentile_info
         }
 
 if __name__ == "__main__":
