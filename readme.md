@@ -146,6 +146,20 @@ Each dimension maps to **Level 1–5** with clear criteria. These level definiti
 
 ---
 
+## Running the Application Prototype
+
+The **Application Prototype (v1)** is located in `Application_Prototype/mvp_v1`. It includes a FastAPI backend and a React frontend.
+
+### Quick Start
+1. `cd Application_Prototype/mvp_v1`
+2. **Setup:** Run `setup.bat` (Windows) or `./setup.sh` (Mac/Linux) to install all dependencies.
+3. **Start:** Run `start.bat` (Windows) or `./start.sh` (Mac/Linux) to launch the app.
+4. **Stop:** Run `stop.bat` (Windows) or `./stop.sh` (Mac/Linux) to stop the servers.
+
+For more details, see the [Application Prototype README](Application_Prototype/README.md).
+
+---
+
 ## Benchmarking approach (LLM + ML)
 
 **LLM responsibilities (strict JSON outputs)**
@@ -166,26 +180,13 @@ Benchmarking can start using synthetic profiles. If used, the product should sta
 
 ## Repository structure (suggested)
 
-```text
-.
-├── apps/
-│   ├── web/                # Streamlit UI
-│   └── api/                # FastAPI backend
-├── packages/
-│   ├── core/               # scoring, schemas, question logic
-│   ├── rag/                # vector store, retrieval, KB ingestion
-│   └── ml/                 # clustering, embeddings, benchmarking
-├── data/
-│   ├── kb/                 # curated framework + playbooks
-│   └── synthetic/          # synthetic SME profiles for benchmarking (MVP)
-├── infra/
-│   ├── docker/             # Dockerfiles, compose, env templates
-│   └── migrations/         # DB migrations (Alembic or similar)
-├── scripts/
-│   ├── setup.sh            # install + init db + seed kb
-│   └── start.sh            # start stack
-└── docs/
-    ├── framework.md        # maturity dimensions + level definitions
-    ├── prompts.md          # prompt contracts + JSON schemas
-    └── privacy-security.md # data handling rules
-
+├── Application_Prototype/
+│   └── mvp_v1/             # Working prototype
+│       ├── backend/        # FastAPI
+│       ├── frontend/       # React + Vite
+│       ├── setup.bat / .sh # Environment setup
+│       ├── start.bat / .sh # Launch application
+│       └── stop.bat / .sh  # Close application
+├── benchmarking_ai/
+│   └── ml_v5/              # Current ML models & engine
+├── scripts/                # Utility & data migration scripts
