@@ -13,7 +13,8 @@ build/
 # -------------------------
 # Node Module
 # -------------------------
-Application_Prototype\mvp_v1\frontend\node_modules
+Application_Prototype/mvp_v1/frontend/node_modules/
+
 
 # -------------------------
 # Virtual Environments
