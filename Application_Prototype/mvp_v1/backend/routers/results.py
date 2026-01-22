@@ -96,6 +96,10 @@ def get_results(response_id: int, db: Session = Depends(get_db)):
             else:
                 max_w = row['max_possible_weight']
                 ratio = row['sum_selected_weight'] / max_w if max_w > 0 else 0
+            
+            # Clamp ratio to 1.0 to prevent scoring overflow (Logic Fix)
+            ratio = min(1.0, ratio)
+            
             return (ratio * row['question_weight']) / 100
 
         grouped_q['question_score_contrib'] = grouped_q.apply(calculate_question_score, axis=1)

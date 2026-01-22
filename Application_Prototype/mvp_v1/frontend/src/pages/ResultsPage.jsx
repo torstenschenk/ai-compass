@@ -11,6 +11,7 @@ import { ResultsHero } from '../components/results/ResultsHero';
 import { ClusterProfile } from '../components/results/ClusterProfile';
 import { MaturityProfile } from '../components/results/MaturityProfile';
 import { GapAnalysis } from '../components/results/GapAnalysis';
+import { ExecutiveBriefing } from '../components/results/ExecutiveBriefing';
 import { Roadmap } from '../components/results/Roadmap';
 import { ExpertConsultation } from '../components/results/ExpertConsultation';
 import { DownloadCTA } from '../components/results/DownloadCTA';
@@ -76,6 +77,7 @@ export default function ResultsPage() {
                 <ResultsHero data={data} />
                 <ClusterProfile data={data} />
                 <MaturityProfile data={data} />
+                <ExecutiveBriefing data={data} />
                 <GapAnalysis data={data} />
                 <Roadmap data={data} />
                 <ExpertConsultation />

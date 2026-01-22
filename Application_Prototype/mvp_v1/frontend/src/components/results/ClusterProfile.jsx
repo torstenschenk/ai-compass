@@ -43,48 +43,53 @@ export function ClusterProfile({ data }) {
     const activeClusterName = (data.cluster.cluster_name || "Unknown").replace(/^\d+\s*-\s*/, '');
 
     return (
-        <section className="space-y-8">
-            <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tight text-primary">Your Cluster Profile: {activeClusterName}</h2>
-                <p className="text-muted-foreground text-lg">A high-level synthesis of the company's current state.</p>
+        <section className="space-y-8 relative">
+            <div className="absolute inset-0 bg-slate-50/50 -skew-y-1 transform rounded-3xl -z-10" />
+            <div className="space-y-4 text-center max-w-3xl mx-auto mb-16">
+                <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Your Cluster Profile: <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">{activeClusterName}</span></h2>
+                <p className="text-slate-600 text-lg leading-relaxed">
+                    A data-driven synthesis of your company's AI maturity level relative to industry patterns.
+                </p>
             </div>
 
             <Card className="border-none shadow-none bg-transparent">
-                <CardContent className="p-0 space-y-8">
+                <CardContent className="p-0 space-y-12">
                     {/* Bar Chart Visualization */}
-                    <div className="relative h-[300px] w-full flex items-end justify-between gap-2 md:gap-4 px-4 pb-8 border-b border-border">
+                    <div className="relative h-[320px] w-full flex items-end justify-between gap-3 md:gap-6 px-4 md:px-12 pb-8 border-b border-slate-200">
                         {/* Y-Axis Label */}
                         <div className="absolute left-0 top-0 bottom-8 -translate-x-full pr-4 flex items-center justify-center">
-                            <span className="text-xs font-semibold text-muted-foreground -rotate-90 whitespace-nowrap">Value Growth ↑</span>
+                            <span className="text-xs font-bold text-slate-400 -rotate-90 whitespace-nowrap tracking-wider uppercase">Value Growth</span>
                         </div>
 
                         {CLUSTER_DEFINITIONS.map((cluster) => {
                             const isActive = cluster.id === activeClusterId;
                             return (
-                                <div key={cluster.id} className="flex-1 flex flex-col items-center justify-end h-full gap-2 group">
+                                <div key={cluster.id} className="flex-1 flex flex-col items-center justify-end h-full gap-3 group relative">
+                                    {isActive && (
+                                        <div className="absolute -top-12 bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-bounce">
+                                            You are here
+                                        </div>
+                                    )}
                                     <div
                                         className={cn(
-                                            "w-full rounded-t-lg transition-all duration-500 ease-out",
+                                            "w-full rounded-t-xl transition-all duration-700 ease-out relative overflow-hidden",
                                             isActive
-                                                ? "bg-gradient-to-t from-blue-600 to-purple-600 shadow-lg shadow-blue-500/20"
-                                                : "bg-slate-200 group-hover:bg-slate-300"
+                                                ? "bg-gradient-to-t from-blue-600 via-indigo-600 to-purple-600 shadow-xl shadow-indigo-200 scale-105"
+                                                : "bg-slate-100 group-hover:bg-slate-200"
                                         )}
                                         style={{ height: cluster.height }}
-                                    />
+                                    >
+                                        {isActive && <div className="absolute inset-0 bg-white/20 animate-pulse" />}
+                                    </div>
                                     <span className={cn(
-                                        "text-xs md:text-sm font-medium text-center transition-colors",
-                                        isActive ? "text-primary font-bold" : "text-muted-foreground"
+                                        "text-xs md:text-sm font-medium text-center transition-colors max-w-[120px]",
+                                        isActive ? "text-indigo-700 font-bold" : "text-slate-500 group-hover:text-slate-700"
                                     )}>
                                         {cluster.name}
                                     </span>
                                 </div>
                             );
                         })}
-
-                        {/* X-Axis Label */}
-                        <div className="absolute bottom-0 left-0 right-0 pt-2 flex items-center justify-center">
-                            <span className="text-xs font-semibold text-muted-foreground whitespace-nowrap">AI Maturity →</span>
-                        </div>
                     </div>
 
                     {/* Description Cards */}
@@ -95,19 +100,22 @@ export function ClusterProfile({ data }) {
                                 <div
                                     key={cluster.id}
                                     className={cn(
-                                        "p-4 rounded-xl border transition-all duration-300",
+                                        "p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden",
                                         isActive
-                                            ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-md transform scale-105"
-                                            : "border-border bg-card hover:border-slate-300"
+                                            ? "border-indigo-500 bg-white ring-4 ring-indigo-50 shadow-xl transform scale-[1.02] z-10"
+                                            : "border-slate-100 bg-white/50 hover:border-slate-200 hover:bg-white hover:shadow-md"
                                     )}
                                 >
+                                    {isActive && <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-indigo-100 to-transparent rounded-bl-3xl" />}
+
                                     <h4 className={cn(
-                                        "font-semibold mb-2 text-sm",
-                                        isActive ? "text-blue-700" : "text-foreground"
+                                        "font-bold mb-3 text-sm flex items-center gap-2",
+                                        isActive ? "text-indigo-700" : "text-slate-700"
                                     )}>
+                                        <div className={cn("w-2 h-2 rounded-full", isActive ? "bg-indigo-500" : "bg-slate-300")} />
                                         {cluster.name}
                                     </h4>
-                                    <p className="text-xs text-muted-foreground leading-relaxed">
+                                    <p className="text-xs text-slate-500 leading-relaxed font-medium">
                                         {cluster.description}
                                     </p>
                                 </div>

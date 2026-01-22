@@ -24,59 +24,70 @@ export function MaturityProfile({ data }) {
     });
 
     return (
-        <Card className="border-border shadow-sm">
-            <CardHeader>
-                <CardTitle>The Multi-Dimensional Maturity Profile</CardTitle>
-                <CardDescription>A high-fidelity visualization comparing your organizational performance across 7 core dimensions.</CardDescription>
-            </CardHeader>
-            <CardContent className="h-[500px] flex flex-col">
-                <div className="flex-1 min-h-0">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
-                            <PolarGrid stroke="oklch(0.922 0 0)" />
-                            <PolarAngleAxis
-                                dataKey="subject"
-                                tick={{ fill: 'oklch(0.556 0 0)', fontSize: 12, fontWeight: 500 }}
-                            />
-                            <PolarRadiusAxis
-                                angle={30}
-                                domain={[0, 5]}
-                                tick={false}
-                                axisLine={false}
-                            />
-                            <Radar
-                                name="Your Company"
-                                dataKey="A"
-                                stroke="#ef4444"
-                                strokeWidth={2}
-                                fill="#ef4444"
-                                fillOpacity={0.2}
-                            />
-                            <Radar
-                                name="Peer Benchmark"
-                                dataKey="B"
-                                stroke="#3b82f6"
-                                strokeWidth={2}
-                                fill="#3b82f6"
-                                fillOpacity={0.2}
-                            />
-                            <Tooltip />
-                        </RadarChart>
-                    </ResponsiveContainer>
-                </div>
+        <section className="space-y-6">
+            <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tight text-primary">The Multi-Dimensional Maturity Profile</h2>
+                <p className="text-muted-foreground text-lg">A high-fidelity visualization comparing your organizational performance across 7 core dimensions.</p>
+            </div>
 
-                {/* Custom Legend */}
-                <div className="flex items-center justify-center gap-6 pt-4 pb-2">
-                    <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-red-500/20 border border-red-500 rounded-full"></div>
-                        <span className="text-sm font-medium text-slate-700">Your Company</span>
+            <Card className="glass-premium overflow-hidden border-none relative shadow-xl">
+                {/* Decorative background gradients matching Executive Briefing */}
+                <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-50/40 rounded-full -mr-48 -mt-48 blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-50/40 rounded-full -ml-48 -mb-48 blur-3xl pointer-events-none" />
+
+                <CardContent className="h-[600px] flex flex-col p-6 md:p-12 relative z-10">
+                    <div className="flex-1 min-h-0 w-full max-w-5xl mx-auto flex items-center justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
+                                <PolarGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+                                <PolarAngleAxis
+                                    dataKey="subject"
+                                    tick={{ fill: '#475569', fontSize: 13, fontWeight: 600, fontFamily: 'Inter, sans-serif' }}
+                                />
+                                <PolarRadiusAxis
+                                    angle={30}
+                                    domain={[0, 5]}
+                                    tick={false}
+                                    axisLine={false}
+                                />
+                                <Radar
+                                    name="Your Company"
+                                    dataKey="A"
+                                    stroke="#4f46e5" // Indigo-600
+                                    strokeWidth={3}
+                                    fill="#6366f1" // Indigo-500
+                                    fillOpacity={0.3}
+                                />
+                                <Radar
+                                    name="Peer Benchmark"
+                                    dataKey="B"
+                                    stroke="#f97316" // Orange-500
+                                    strokeWidth={2}
+                                    strokeDasharray="4 4"
+                                    fill="#fb923c" // Orange-400
+                                    fillOpacity={0.15}
+                                />
+                                <Tooltip
+                                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
+                                    itemStyle={{ fontWeight: 600 }}
+                                />
+                            </RadarChart>
+                        </ResponsiveContainer>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-blue-500/20 border border-blue-500 rounded-full"></div>
-                        <span className="text-sm font-medium text-slate-700">Peer Performance</span>
+
+                    {/* Custom Legend Styled like Gap/Roadmap badges */}
+                    <div className="flex items-center justify-center gap-6 pt-8">
+                        <div className="flex items-center gap-3 px-5 py-2.5 bg-indigo-50/80 backdrop-blur-sm rounded-full border border-indigo-100 shadow-sm">
+                            <div className="w-2.5 h-2.5 bg-indigo-600 rounded-full ring-2 ring-indigo-200"></div>
+                            <span className="text-sm font-bold text-indigo-900">Your Company</span>
+                        </div>
+                        <div className="flex items-center gap-3 px-5 py-2.5 bg-orange-50/80 backdrop-blur-sm rounded-full border border-orange-100 shadow-sm">
+                            <div className="w-2.5 h-2.5 bg-orange-500 rounded-full ring-2 ring-orange-200"></div>
+                            <span className="text-sm font-bold text-orange-900">Peer Benchmark</span>
+                        </div>
                     </div>
-                </div>
-            </CardContent>
-        </Card>
+                </CardContent>
+            </Card>
+        </section>
     );
 }
