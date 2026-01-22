@@ -5,11 +5,12 @@ echo "Starting AI-Compass Prototype (Mac/Linux)"
 echo "=========================================="
 
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_DIR="$BASE_DIR/../.."
 cd "$BASE_DIR"
 
-# Check if setup was run
-if [ ! -d "backend/.venv" ]; then
-    echo "Error: Backend virtual environment not found. Please run ./setup.sh first."
+# Check if root venv exists
+if [ ! -d "$ROOT_DIR/.venv" ]; then
+    echo "Error: Root virtual environment not found at $ROOT_DIR/.venv"
     exit 1
 fi
 
@@ -31,8 +32,9 @@ trap cleanup SIGINT SIGTERM
 
 echo "Launching Backend (FastAPI)..."
 cd backend
-source .venv/bin/activate
-uvicorn main:app --reload --port 8000 &
+source "$ROOT_DIR/.venv/bin/activate"
+# Point to root .env explicitely
+uvicorn main:app --reload --port 8000 --env-file "$ROOT_DIR/.env" &
 cd "$BASE_DIR"
 
 echo "Launching Frontend (Vite)..."

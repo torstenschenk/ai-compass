@@ -5,6 +5,7 @@ from database import get_db
 from models import Response, ResponseItem, Company
 from schemas import response as schemas
 from services.session_store import session_store
+from services.scoring_service import calculate_total_score
 from sqlalchemy import func
 
 router = APIRouter()
@@ -65,12 +66,15 @@ def complete_assessment(response_id: int, db: Session = Depends(get_db)):
         )
         db.merge(db_company) # merge handles insert or update if exists
         
+        # 2.5 Calculate actual total score based on answers
+        calculated_total_score = calculate_total_score(items_data, db)
+        
         # 3. Persist Response
         db_response = Response(
             response_id=response_data["response_id"],
             company_id=response_data["company_id"],
             created_at=response_data["created_at"],
-            total_score=response_data["total_score"],
+            total_score=str(calculated_total_score), # Store the calculated value
             cluster_id=response_data["cluster_id"]
         )
         db.merge(db_response)

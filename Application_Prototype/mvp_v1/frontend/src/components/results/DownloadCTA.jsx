@@ -14,52 +14,63 @@ export function DownloadCTA({ responseId }) {
     };
 
     return (
-        <section className="py-8 flex justify-center">
-            <Card className="w-full max-w-4xl border border-slate-200 shadow-xl rounded-2xl overflow-hidden">
-                <CardContent className="p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-12">
-                    {/* Icon Section */}
-                    <div className="flex-shrink-0">
-                        <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                            <FileDown className="w-10 h-10" />
-                        </div>
-                    </div>
+        <section className="py-12" id="download-cta">
+            <div className="relative rounded-3xl overflow-hidden p-[1px] bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-2xl">
+                <div className="bg-white rounded-[23px] relative overflow-hidden">
+                    <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-100 rounded-full blur-3xl opacity-50" />
+                    <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-purple-100 rounded-full blur-3xl opacity-50" />
 
-                    {/* Content Section */}
-                    <div className="flex-1 text-center md:text-left space-y-4">
-                        <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Download Your Complete Report</h2>
-                        <p className="text-slate-600 text-lg">
-                            Get a comprehensive PDF version of your AI maturity assessment for offline review and team sharing.
-                        </p>
-
-                        {/* Features Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-                            <div className="flex items-center gap-2 justify-center md:justify-start">
-                                <span className="bg-green-100 text-green-600 rounded-full p-1"><Check className="w-3 h-3" /></span>
-                                <span className="text-sm font-medium text-slate-700">Complete Analysis</span>
-                            </div>
-                            <div className="flex items-center gap-2 justify-center md:justify-start">
-                                <span className="bg-green-100 text-green-600 rounded-full p-1"><Check className="w-3 h-3" /></span>
-                                <span className="text-sm font-medium text-slate-700">Visual Charts</span>
-                            </div>
-                            <div className="flex items-center gap-2 justify-center md:justify-start">
-                                <span className="bg-green-100 text-green-600 rounded-full p-1"><Check className="w-3 h-3" /></span>
-                                <span className="text-sm font-medium text-slate-700">Shareable Format</span>
+                    <div className="relative z-10 p-8 md:p-12 flex flex-col md:flex-row items-center gap-10 text-center md:text-left">
+                        {/* Icon Section */}
+                        <div className="flex-shrink-0">
+                            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white shadow-xl rotate-3 transform hover:rotate-6 transition-transform duration-300">
+                                <FileDown className="w-10 h-10" />
                             </div>
                         </div>
-                    </div>
 
-                    {/* Button Section */}
-                    <div className="flex-shrink-0">
-                        <Button
-                            onClick={handleDownload}
-                            size="lg"
-                            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold h-14 px-8 shadow-lg md:w-auto w-full"
-                        >
-                            <Download className="mr-2 w-5 h-5" /> Download Full Report
-                        </Button>
+                        {/* Content Section */}
+                        <div className="flex-1 space-y-6">
+                            <div>
+                                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Download Your Complete Report</h2>
+                                <p className="text-slate-600 text-lg mt-2">
+                                    Get a comprehensive PDF version of your AI maturity assessment including all charts, benchmarks, and your custom roadmap.
+                                </p>
+                            </div>
+
+                            {/* Features Grid */}
+                            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                                {[
+                                    "Full Technical Analysis",
+                                    "Executive Summary Presentation",
+                                    "High-Resolution Charts",
+                                    "Team Licensing Included"
+                                ].map((feature, i) => (
+                                    <div key={i} className="flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-lg border border-slate-100 text-sm font-semibold text-slate-700">
+                                        <Check className="w-4 h-4 text-emerald-500" /> {feature}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Button Section */}
+                        <div className="flex-shrink-0 w-full md:w-auto">
+                            <Button
+                                onClick={handleDownload}
+                                size="lg"
+                                className="w-full md:w-auto relative px-8 h-16 text-lg font-bold rounded-2xl transition-all shadow-[0_10px_40px_-10px_rgba(79,70,229,0.5)] active:scale-95 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white border-0 ring-1 ring-white/20 overflow-hidden group"
+                            >
+                                <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10" />
+                                <span className="relative z-20 flex items-center">
+                                    <Download className="mr-2 w-5 h-5" /> Download PDF
+                                </span>
+                            </Button>
+                            <p className="text-xs text-center mt-3 text-slate-400 font-medium">
+                                Generated instantly • 12MB PDF
+                            </p>
+                        </div>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         </section>
     );
 }

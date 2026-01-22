@@ -1,24 +1,14 @@
 @echo off
 setlocal
 
-echo ==========================================
-echo Stopping AI-Compass Prototype Processes
-echo ==========================================
+echo Stopping AI-Compass Processes...
 
-:: Find PID of process on port 8000 (Backend)
-echo Stopping Backend (Port 8000)...
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :8000 ^| findstr LISTENING') do (
-    echo Killing process %%a
-    taskkill /f /pid %%a
-)
+taskkill /FI "WINDOWTITLE eq AI-Compass Backend*" /T /F >nul 2>&1
+taskkill /FI "WINDOWTITLE eq AI-Compass Frontend*" /T /F >nul 2>&1
 
-:: Find PID of process on port 5173 (Frontend)
-echo Stopping Frontend (Port 5173)...
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5173 ^| findstr LISTENING') do (
-    echo Killing process %%a
-    taskkill /f /pid %%a
-)
+:: Also try to kill independent node/python processes if they linger (optional/optimistic)
+:: taskkill /IM node.exe /F >nul 2>&1
+:: taskkill /IM python.exe /F >nul 2>&1
 
-echo.
-echo Process cleanup complete.
-pause
+echo Done.
+timeout /t 2 >nul

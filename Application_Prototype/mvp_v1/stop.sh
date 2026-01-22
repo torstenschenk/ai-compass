@@ -1,22 +1,23 @@
 #!/bin/bash
 
-echo "=========================================="
-echo "Stopping AI-Compass Prototype Processes"
-echo "=========================================="
+echo "Stopping AI-Compass Processes..."
 
-# Kill processes on port 8000 (Backend)
-PID_8000=$(lsof -t -i:8000)
-if [ -n "$PID_8000" ]; then
-    echo "Stopping Backend process (PID $PID_8000)..."
-    kill -9 $PID_8000
+# Find pids for uvicorn and vite/node related to this project might be tricky
+# A simple killall approach or pkill for user owned processes
+# For dev environment:
+
+# Check appropriate kill command for OS
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || "$OSTYPE" == "win32" ]]; then
+    # Windows (Git Bash)
+    echo "Detected Windows. Using taskkill..."
+    # Killing python/node globally in this shell's context is the most reliable way 
+    # for a dev script without PID tracking.
+    taskkill //F //IM python.exe //T 2> /dev/null || echo "No Python processes found."
+    taskkill //F //IM node.exe //T 2> /dev/null || echo "No Node processes found."
+else
+    # Mac/Linux
+    pkill -f "uvicorn main:app" || echo "Backend not running."
+    pkill -f "vite" || echo "Frontend not running."
 fi
 
-# Kill processes on port 5173 (Frontend)
-PID_5173=$(lsof -t -i:5173)
-if [ -n "$PID_5173" ]; then
-    echo "Stopping Frontend process (PID $PID_5173)..."
-    kill -9 $PID_5173
-fi
-
-echo ""
-echo "Process cleanup complete."
+echo "Done."

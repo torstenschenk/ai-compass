@@ -6,11 +6,13 @@ echo Starting AI-Compass Prototype
 echo ==========================================
 
 set BASE_DIR=%~dp0
+set ROOT_DIR=%BASE_DIR%..\..
 cd /d %BASE_DIR%
 
-:: Check if setup was run
-if not exist "backend\.venv" (
-    echo Error: Backend virtual environment not found. Please run setup.bat first.
+:: Check if root venv exists
+if not exist "%ROOT_DIR%\.venv" (
+    echo Error: Root virtual environment not found at %ROOT_DIR%\.venv
+    echo Please ensure the project structure is correct.
     pause
     exit /b 1
 )
@@ -22,7 +24,8 @@ if not exist "frontend\node_modules" (
 )
 
 echo Launching Backend (FastAPI)...
-start "AI-Compass Backend" cmd /k "cd /d backend && .venv\Scripts\activate && uvicorn main:app --reload --port 8000"
+:: We activate the ROOT .venv, then start uvicorn from the backend folder
+start "AI-Compass Backend" cmd /k "call "%ROOT_DIR%\.venv\Scripts\activate" && cd backend && uvicorn main:app --reload --port 8000 --env-file "%ROOT_DIR%\.env""
 
 echo Launching Frontend (Vite)...
 start "AI-Compass Frontend" cmd /k "cd /d frontend && npm run dev"

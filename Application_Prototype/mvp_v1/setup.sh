@@ -5,54 +5,40 @@ echo "=========================================="
 echo "Setting up AI-Compass Prototype Environment (Mac/Linux)"
 echo "=========================================="
 
-# get base dir
+# get base dir and root dir
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT_DIR="$(dirname "$(dirname "$BASE_DIR")")" # Go up 2 levels -> Application_Prototype -> root? Verify path depth.
+# BASE_DIR is .../Application_Prototype/mvp_v1
+# dirname(BASE_DIR) -> .../Application_Prototype
+# dirname(...) -> .../Projects/ai-compass (ROOT)
+ROOT_DIR="$BASE_DIR/../.."
+
 cd "$BASE_DIR"
 
-echo "[1/3] Setting up Backend..."
-if [ ! -d "backend" ]; then
-    echo "Error: Backend directory not found."
+echo "[1/2] Verifying Root Virtual Environment..."
+if [ ! -d "$ROOT_DIR/.venv" ]; then
+    echo "Error: Root virtual environment not found at $ROOT_DIR/.venv"
+    echo "Please ensure the project root has the virtual environment set up."
     exit 1
 fi
 
+echo "Installing Python dependencies into ROOT .venv..."
+source "$ROOT_DIR/.venv/bin/activate"
 cd backend
-if [ ! -d ".venv" ]; then
-    echo "Creating virtual environment..."
-    python3 -m venv .venv
-fi
-
-echo "Installing Python dependencies..."
-source .venv/bin/activate
 pip install -r requirements.txt
 cd "$BASE_DIR"
 
 echo ""
-echo "[2/3] Setting up Frontend..."
+echo "[2/2] Setting up Frontend..."
 if [ ! -d "frontend" ]; then
     echo "Error: Frontend directory not found."
     exit 1
 fi
 
 cd frontend
-echo "Installing npm dependencies (this may take a few minutes)..."
+echo "Installing npm dependencies..."
 npm install
 cd "$BASE_DIR"
-
-echo ""
-echo "[3/3] Checking configuration..."
-if [ ! -f "backend/.env" ]; then
-    if [ -f "../../.env" ]; then
-        echo "Copying .env from root to backend/..."
-        cp "../../.env" "backend/.env"
-    else
-        echo "WARNING: backend/.env not found. Please create it manually."
-    fi
-fi
-
-if [ ! -f "frontend/.env" ]; then
-    echo "Creating frontend/.env..."
-    echo "VITE_API_URL=http://localhost:8000" > "frontend/.env"
-fi
 
 echo ""
 echo "=========================================="

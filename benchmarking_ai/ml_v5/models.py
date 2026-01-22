@@ -95,6 +95,13 @@ class ClusterEngine:
             self.industry_data['industry'] == company_industry
         ]
         
+        benchmark_group = company_industry
+        
+        # Fallback to Global if industry sample is too small (< 5)
+        if len(industry_companies) < 5:
+            industry_companies = self.industry_data
+            benchmark_group = "Global"
+        
         if len(industry_companies) == 0:
             return None
         
@@ -104,8 +111,8 @@ class ClusterEngine:
         
         return {
             'percentile_value': f"{percentile:.2f}",
-            'percentage': f"{percentile:.0f}",  # Simplified percentage (e.g., "82")
-            'industry': company_industry,
+            'percentage': f"{max(1, 100 - percentile):.0f}",  # Inverted for "Top X%" logic
+            'industry': benchmark_group,
             'industry_sample_size': len(industry_companies)
         }
 
@@ -183,7 +190,8 @@ class StrategicGapAnalyzer:
                         "title": f"Structural Imbalance: {p1} vs {p2}",
                         "score": z, # Use Z as severity
                         "context": f"Gap of {gap:.1f} points (Z={z:.1f}). Disconnect between {p1} ({company_dim_series[p1]:.1f}) and {p2} ({company_dim_series[p2]:.1f}).",
-                        "source_dim": p1 if company_dim_series[p1] < company_dim_series[p2] else p2 # The lower one is the bottleneck usually, but anomaly is the relationship
+                        "source_dim": p1 if company_dim_series[p1] < company_dim_series[p2] else p2, # The lower one is the bottleneck usually, but anomaly is the relationship
+                        "strategic_risk": self._get_strategic_risk("Structural Imbalance", z, f"{p1} vs {p2}")
                     })
 
         # --- Stage 2: Weighted Impact Gaps ---
@@ -207,14 +215,17 @@ class StrategicGapAnalyzer:
                     impact = w * (5.0 - s)
                 
                 if impact > 0:
+                    theme = row.get('tactical_theme', 'Unknown Theme')
+                    dim_name = row.get('dimension_name')
                     impact_candidates.append({
                         "type": "Weakness",
-                        "title": f"Critical Gap: {row.get('tactical_theme', 'Unknown Theme')}",
+                        "title": f"Critical Gap: {theme}",
                         "score": impact,
-                        "context": f"High Strategic Impact ({w}). Current Maturity: {s:.1f}. Theme: {row.get('tactical_theme', 'Unknown')}.",
-                        "dimension_name": row.get('dimension_name'),
-                        "tactical_theme": row.get('tactical_theme'),
-                        "question_id": row.get('question_id')
+                        "context": f"High Strategic Impact ({w}). Current Maturity: {s:.1f}. Theme: {theme}.",
+                        "dimension_name": dim_name,
+                        "tactical_theme": theme,
+                        "question_id": row.get('question_id'),
+                        "strategic_risk": self._get_strategic_risk(theme, impact, dim_name)
                     })
         
         # Sort by Impact
@@ -233,6 +244,50 @@ class StrategicGapAnalyzer:
                 final_findings.append(item)
                 
         return final_findings
+    
+    def _get_strategic_risk(self, theme, score, dimension):
+        """
+        Returns theme-specific strategic risk text.
+        """
+        if not theme:
+            return f"This gap in {dimension} creates potential liabilities in scalability."
+            
+        theme_lower = theme.lower()
+        
+        # Structural Imbalance logic
+        if "structural imbalance" in theme_lower:
+            return f"The disconnect between {dimension} creates organizational friction that will slow down AI adoption velocity."
+            
+        # Specific Themes
+        if 'staff' in theme_lower or 'proficiency' in theme_lower:
+            return "Without addressing workforce upskilling, specific technical tools will lack the adoption needed for ROI, leading to 'shelf-ware' and wasted investment."
+            
+        if 'leadership' in theme_lower or 'alignment' in theme_lower:
+            return "The disconnect between technical capabilities and executive vision creates 'Strategic Debt', risking project cancellation due to lack of clear business value."
+            
+        if 'budget' in theme_lower or 'allocation' in theme_lower:
+             return "Insufficient or misaligned funding for AI initiatives will stall progress, preventing the organization from moving beyond pilot phases to production-grade deployment."
+             
+        if 'data' in theme_lower and ('privacy' in theme_lower or 'governance' in theme_lower):
+            return "Lack of robust data governance poses critical legal and reputational risks, especially with upcoming regulations like the EU AI Act."
+            
+        if 'standardization' in theme_lower or 'scaling' in theme_lower:
+            return "Ad-hoc processes without standardization will result in technical debt and inability to scale, making AI maintenance exponentially expensive."
+            
+        if 'infrastructure' in theme_lower or 'tooling' in theme_lower:
+            return "Inadequate infrastructure creates performance bottlenecks that limit the complexity and speed of AI models you can deploy effectively."
+            
+        if 'adoption' in theme_lower or 'culture' in theme_lower:
+            return "A culture resistant to AI adoption will undermine technical implementation, as users fail to trust or integrate new systems into their daily workflows."
+
+        if 'strategy' in theme_lower or 'vision' in theme_lower:
+            return "Proceeding without a clear AI strategy risks fragmented efforts that fail to contribute to overarching business goals."
+
+        if 'use case' in theme_lower or 'business value' in theme_lower:
+            return "Focusing on technology over business value risks deploying solutions that solve the wrong problems, leading to low impact and poor ROI."
+
+        # Default fallback
+        return f"This gap in {dimension} creates potential liabilities in scalability and long-term value realization."
 
     def synthesize_narrative(self, findings, company_scores):
         """

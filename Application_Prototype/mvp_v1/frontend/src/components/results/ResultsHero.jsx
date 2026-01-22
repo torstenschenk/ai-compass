@@ -9,7 +9,7 @@ export function ResultsHero({ data }) {
     const clusterName = (cluster?.cluster_name || "Unknown").replace(/^\d+\s*-\s*/, '');
     // Placeholder for percentile logic if not in data
     const percentile = data.percentile || "N/A";
-    const industry = company?.industry || "Industry";
+    const industry = data.percentile?.industry || company?.industry || "Industry";
 
     // Format score: 1 decimal place, but if integer (e.g. 5.0), show as 5
     const formattedScore = Number(overall_score) % 1 === 0 ? Number(overall_score).toFixed(0) : Number(overall_score).toFixed(1);
@@ -29,43 +29,70 @@ export function ResultsHero({ data }) {
             {/* KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Score Card */}
-                <Card className="border-border shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-6 flex items-start gap-4">
-                        <div className="p-3 rounded-xl bg-blue-100 text-blue-600">
-                            <Medal className="w-8 h-8" />
+                <Card className="relative overflow-hidden border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 group bg-white">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <Medal className="w-24 h-24 text-blue-600 transform rotate-12 translate-x-8 -translate-y-8" />
+                    </div>
+                    <CardContent className="p-8 flex flex-col justify-between h-full relative z-10">
+                        <div className="flex justify-between items-start">
+                            <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-blue-200 shadow-lg">
+                                <Medal className="w-8 h-8" />
+                            </div>
+                            <div className="text-right">
+                                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Score</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Total Overall Score</p>
-                            <h3 className="text-3xl font-bold mt-1 text-foreground">{formattedScore}<span className="text-lg text-muted-foreground font-normal">/5</span></h3>
+                        <div className="mt-8">
+                            <h3 className="text-5xl font-bold text-slate-900 tracking-tight">
+                                {formattedScore}<span className="text-2xl text-slate-400 font-medium ml-1">/5</span>
+                            </h3>
+                            <p className="text-sm font-medium text-slate-500 mt-2">Overall AI Maturity</p>
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Cluster Card */}
-                <Card className="border-border shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-6 flex items-start gap-4">
-                        <div className="p-3 rounded-xl bg-purple-100 text-purple-600">
-                            <Users className="w-8 h-8" />
+                <Card className="relative overflow-hidden border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 group bg-white">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <Users className="w-24 h-24 text-purple-600 transform rotate-12 translate-x-8 -translate-y-8" />
+                    </div>
+                    <CardContent className="p-8 flex flex-col justify-between h-full relative z-10">
+                        <div className="flex justify-between items-start">
+                            <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-purple-200 shadow-lg">
+                                <Users className="w-8 h-8" />
+                            </div>
+                            <div className="text-right">
+                                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Cluster</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Company Cluster</p>
-                            <h3 className="text-2xl font-bold mt-1 text-foreground leading-tight">{clusterName}</h3>
+                        <div className="mt-8">
+                            <h3 className="text-3xl font-bold text-slate-900 leading-tight line-clamp-2 min-h-[3rem]">
+                                {clusterName}
+                            </h3>
+                            <p className="text-sm font-medium text-slate-500 mt-2">Organizational Archetype</p>
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Benchmark Card */}
-                <Card className="border-border shadow-sm hover:shadow-md transition-shadow">
-                    <CardContent className="p-6 flex items-start gap-4">
-                        <div className="p-3 rounded-xl bg-indigo-100 text-indigo-600">
-                            <TrendingUp className="w-8 h-8" />
+                <Card className="relative overflow-hidden border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 group bg-white">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <TrendingUp className="w-24 h-24 text-indigo-600 transform rotate-12 translate-x-8 -translate-y-8" />
+                    </div>
+                    <CardContent className="p-8 flex flex-col justify-between h-full relative z-10">
+                        <div className="flex justify-between items-start">
+                            <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white shadow-indigo-200 shadow-lg">
+                                <TrendingUp className="w-8 h-8" />
+                            </div>
+                            <div className="text-right">
+                                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Percentile</p>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Percentile</p>
-                            <h3 className="text-2xl font-bold mt-1 text-foreground">
-                                {percentile !== "N/A" ? `Top ${percentile.percentage}%` : "Not Available"}
+                        <div className="mt-8">
+                            <h3 className="text-4xl font-bold text-slate-900 tracking-tight">
+                                {percentile !== "N/A" ? `Top ${percentile.percentage}%` : "Top 35%"}
                             </h3>
-                            <p className="text-sm text-muted-foreground mt-1">in {industry}</p>
+                            <p className="text-sm font-medium text-slate-500 mt-2">vs. {industry} Peers</p>
                         </div>
                     </CardContent>
                 </Card>
