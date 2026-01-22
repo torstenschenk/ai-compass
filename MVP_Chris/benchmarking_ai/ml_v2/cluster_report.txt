@@ -1,0 +1,59 @@
+--- Analyzing Cluster Definitions (5 Clusters - LOGICAL SCALE) ---
+
+Cluster Centroids (Mean Score per Dimension):
+dimension_name                         Data Readiness & Literacy  Governance & Compliance  People & Culture  Processes & Scaling  Strategy & Business Vision  Tech Infrastructure  Use Cases & Business Value
+Cluster Cluster_Name                                                                                                                                                                                         
+0       4 - The Operational Scaler                      2.943230                 3.709895          3.429881             3.442544                    3.364700             3.198338                    3.450255
+1       1 - The Traditionalist                          2.102125                 2.353469          2.156550             2.232398                    2.192084             2.261439                    2.185253
+2       2 - The Experimental Explorer                   2.339669                 2.959680          2.698710             2.718875                    2.708364             2.515789                    2.718968
+3       5 - The AI-Driven Leader                        3.335796                 4.359123          4.199293             4.192123                    4.239518             3.845854                    4.195404
+4       3 - The Structured Builder                      2.524061                 3.556889          3.354122             3.373264                    3.450842             2.785965                    3.368100
+
+--- PCA Component Interpretation ---
+
+PCA Component 1 Breakdown:
+dimension_name
+Strategy & Business Vision    0.392691
+Processes & Scaling           0.390049
+Governance & Compliance       0.389987
+People & Culture              0.389085
+Use Cases & Business Value    0.388213
+Data Readiness & Literacy     0.352029
+Tech Infrastructure           0.339919
+
+PCA Component 2 Breakdown:
+dimension_name
+Tech Infrastructure           0.918579
+Use Cases & Business Value   -0.061591
+Strategy & Business Vision   -0.080580
+Governance & Compliance      -0.105924
+Processes & Scaling          -0.117649
+People & Culture             -0.153300
+Data Readiness & Literacy    -0.312033
+
+--- Interpretation ---
+
+Cluster 0 - Named: 4 - The Operational Scaler:
+  - Strongest: Governance & Compliance, Use Cases & Business Value (3.71)
+  - Weakest:   Tech Infrastructure, Data Readiness & Literacy (2.94)
+  - Count:     57 companies
+
+Cluster 1 - Named: 1 - The Traditionalist:
+  - Strongest: Governance & Compliance, Tech Infrastructure (2.35)
+  - Weakest:   People & Culture, Data Readiness & Literacy (2.10)
+  - Count:     98 companies
+
+Cluster 2 - Named: 2 - The Experimental Explorer:
+  - Strongest: Governance & Compliance, Use Cases & Business Value (2.96)
+  - Weakest:   Tech Infrastructure, Data Readiness & Literacy (2.34)
+  - Count:     200 companies
+
+Cluster 3 - Named: 5 - The AI-Driven Leader:
+  - Strongest: Governance & Compliance, Strategy & Business Vision (4.36)
+  - Weakest:   Tech Infrastructure, Data Readiness & Literacy (3.34)
+  - Count:     73 companies
+
+Cluster 4 - Named: 3 - The Structured Builder:
+  - Strongest: Governance & Compliance, Strategy & Business Vision (3.56)
+  - Weakest:   Tech Infrastructure, Data Readiness & Literacy (2.52)
+  - Count:     72 companies
