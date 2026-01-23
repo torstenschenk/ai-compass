@@ -25,9 +25,9 @@ export function ProcessSection() {
     ];
 
     return (
-        <section id="how-it-works" className="py-20 px-6 bg-white">
-            <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-16">
+        <section id="how-it-works" className="py-10 px-6 bg-white">
+            <div className="max-w-5xl mx-auto">
+                <div className="text-center mb-8">
                     <h2 className="text-4xl font-bold text-gray-900 mb-4">The Process</h2>
                     <p className="text-xl text-gray-600">Three simple steps to your AI roadmap</p>
                 </div>
@@ -46,14 +46,15 @@ export function ProcessSection() {
                                 viewport={{ once: true }}
                                 className="relative"
                             >
-                                <div className="bg-white border-2 border-gray-200 rounded-xl p-8 hover:border-blue-600 transition-colors hover:shadow-xl">
-                                    <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full mb-6 mx-auto">
-                                        <step.icon className="w-8 h-8 text-white" />
+                                <div className={`bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-blue-600 transition-colors hover:shadow-xl ${index === 0 ? 'h-[300px]' : index === 1 ? 'h-[270px]' : 'h-[240px]'
+                                    }`}>
+                                    <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full mb-4 mx-auto">
+                                        <step.icon className="w-6 h-6 text-white" />
                                     </div>
                                     <div className="text-center">
-                                        <div className="text-5xl font-bold text-gray-200 mb-2">{step.number}</div>
-                                        <h3 className="text-xl font-semibold text-gray-900 mb-3">{step.title}</h3>
-                                        <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                                        <div className="text-4xl font-bold text-gray-200 mb-2">{step.number}</div>
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{step.title}</h3>
+                                        <p className="text-gray-600 leading-relaxed text-sm">{step.description}</p>
                                     </div>
                                 </div>
                             </motion.div>

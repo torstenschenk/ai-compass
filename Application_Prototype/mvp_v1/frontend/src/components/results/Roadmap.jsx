@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
 // Phase Definitions from ML v5 Spec
+// Phase Definitions from ML v5 Spec
 const PHASES = [
     {
         key: "phase_1",
@@ -13,7 +14,8 @@ const PHASES = [
         timeframe: "0-3 Months",
         color: "bg-blue-50/50 border-blue-100",
         headerColor: "text-blue-700 bg-blue-100/50",
-        accent: "blue",
+        stepStyle: "bg-blue-100 text-blue-700 ring-blue-50",
+        titleStyle: "text-blue-900",
         borderColor: "border-l-blue-500",
         gradientFrom: "from-blue-500"
     },
@@ -24,7 +26,8 @@ const PHASES = [
         timeframe: "3-9 Months",
         color: "bg-indigo-50/50 border-indigo-100",
         headerColor: "text-indigo-700 bg-indigo-100/50",
-        accent: "indigo",
+        stepStyle: "bg-indigo-100 text-indigo-700 ring-indigo-50",
+        titleStyle: "text-indigo-900",
         borderColor: "border-l-indigo-500",
         gradientFrom: "from-indigo-500"
     },
@@ -35,7 +38,8 @@ const PHASES = [
         timeframe: "9+ Months",
         color: "bg-purple-50/50 border-purple-100",
         headerColor: "text-purple-700 bg-purple-100/50",
-        accent: "purple",
+        stepStyle: "bg-purple-100 text-purple-700 ring-purple-50",
+        titleStyle: "text-purple-900",
         borderColor: "border-l-purple-500",
         gradientFrom: "from-purple-500"
     }
@@ -68,7 +72,7 @@ export function Roadmap({ data }) {
     return (
         <section className="space-y-12">
             <div className="space-y-2 text-center max-w-3xl mx-auto">
-                <h2 className="text-3xl font-bold tracking-tight text-primary">AI Compass: "Next Best Action" Roadmap</h2>
+                <h2 className="text-3xl font-bold tracking-tight text-primary">"Next Best Action" Roadmap</h2>
                 <p className="text-muted-foreground text-lg">Your personalized 3-phase transformation pathway.</p>
             </div>
 
@@ -99,7 +103,7 @@ export function Roadmap({ data }) {
                                             `${phaseDef.gradientFrom} to-transparent`
                                         )} />
 
-                                        <h3 className={cn("text-2xl font-bold tracking-tight mb-2 relative z-10", `text-${phaseDef.accent}-900`)}>
+                                        <h3 className={cn("text-2xl font-bold tracking-tight mb-2 relative z-10", phaseDef.titleStyle)}>
                                             {phaseDef.title}
                                         </h3>
                                         <div className="flex md:justify-end items-center gap-2 mb-3 relative z-10">
@@ -116,8 +120,8 @@ export function Roadmap({ data }) {
                                 {/* 2. Center Column: Step Indicator */}
                                 <div className="relative flex justify-center z-10 my-4 md:my-0">
                                     <div className={cn(
-                                        "w-16 h-16 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-xl font-bold",
-                                        `bg-${phaseDef.accent}-100 text-${phaseDef.accent}-700 ring-4 ring-${phaseDef.accent}-50`
+                                        "w-16 h-16 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-xl font-bold ring-4",
+                                        phaseDef.stepStyle
                                     )}>
                                         {phaseDef.step}
                                     </div>

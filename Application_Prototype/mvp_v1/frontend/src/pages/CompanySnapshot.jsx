@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageBackground } from '@/components/ui/PageBackground';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
@@ -27,6 +27,36 @@ export default function CompanySnapshot() {
         email: ''
     });
     const [loading, setLoading] = useState(false);
+
+    // Prefetch questionnaire data in background
+    useEffect(() => {
+        const prefetchData = async () => {
+            try {
+                // Check if already cached to avoid redundant calls
+                if (!sessionStorage.getItem('cached_questionnaire_data')) {
+                    console.log("SNAPSHOT: Starting background prefetch of questionnaire...");
+                    console.time("prefetchDuration");
+                    const data = await api.getQuestionnaire();
+                    console.timeEnd("prefetchDuration");
+
+                    if (data) {
+                        try {
+                            const stringified = JSON.stringify(data);
+                            sessionStorage.setItem('cached_questionnaire_data', stringified);
+                            console.log(`SNAPSHOT: Prefetch complete. Cached ${stringified.length} bytes.`);
+                        } catch (writeErr) {
+                            console.error("SNAPSHOT: Failed to write to sessionStorage", writeErr);
+                        }
+                    }
+                } else {
+                    console.log("SNAPSHOT: Data already in cache. Skipping prefetch.");
+                }
+            } catch (error) {
+                console.warn("SNAPSHOT: Background prefetch failed:", error);
+            }
+        };
+        prefetchData();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

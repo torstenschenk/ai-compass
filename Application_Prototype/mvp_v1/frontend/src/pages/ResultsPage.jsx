@@ -11,7 +11,6 @@ import { ResultsHero } from '../components/results/ResultsHero';
 import { ClusterProfile } from '../components/results/ClusterProfile';
 import { MaturityProfile } from '../components/results/MaturityProfile';
 import { GapAnalysis } from '../components/results/GapAnalysis';
-import { ExecutiveBriefing } from '../components/results/ExecutiveBriefing';
 import { Roadmap } from '../components/results/Roadmap';
 import { ExpertConsultation } from '../components/results/ExpertConsultation';
 import { DownloadCTA } from '../components/results/DownloadCTA';
@@ -74,10 +73,9 @@ export default function ResultsPage() {
             <Navigation />
 
             <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-12 space-y-20 md:space-y-32 z-10 relative">
-                <ResultsHero data={data} />
+                <ResultsHero data={data} responseId={responseId} />
                 <ClusterProfile data={data} />
                 <MaturityProfile data={data} />
-                <ExecutiveBriefing data={data} />
                 <GapAnalysis data={data} />
                 <Roadmap data={data} />
                 <ExpertConsultation />

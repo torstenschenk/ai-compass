@@ -23,7 +23,11 @@ if [ ! -d "$ROOT_DIR/.venv" ]; then
 fi
 
 echo "Installing Python dependencies into ROOT .venv..."
-source "$ROOT_DIR/.venv/bin/activate"
+if [ -d "$ROOT_DIR/.venv/Scripts" ]; then
+    source "$ROOT_DIR/.venv/Scripts/activate"
+else
+    source "$ROOT_DIR/.venv/bin/activate"
+fi
 cd backend
 pip install -r requirements.txt
 cd "$BASE_DIR"
