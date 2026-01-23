@@ -11,7 +11,7 @@ export function HeroSection() {
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                     <div>
                         <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                            Navigate the AI Evolution with the AI Compass.
+                            Navigate Your AI Evolution with the AI Compass.
                         </h1>
                         <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                             Stop guessing. Gain strategic clarity in 10-15 minutes. Benchmark your Organization against 500+ peers and receive a data-driven roadmap to AI maturity. No costs attached, just your valuable time.

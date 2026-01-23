@@ -39,7 +39,7 @@ export function MaturityProfile({ data }) {
                     <div className="flex-1 min-h-0 w-full max-w-5xl mx-auto flex items-center justify-center">
                         <ResponsiveContainer width="100%" height="100%">
                             <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
-                                <PolarGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+                                <PolarGrid stroke="#94a3b8" strokeDasharray="3 3" />
                                 <PolarAngleAxis
                                     dataKey="subject"
                                     tick={{ fill: '#475569', fontSize: 13, fontWeight: 600, fontFamily: 'Inter, sans-serif' }}

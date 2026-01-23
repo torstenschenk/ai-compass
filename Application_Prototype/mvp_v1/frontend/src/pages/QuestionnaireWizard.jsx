@@ -23,6 +23,8 @@ export default function QuestionnaireWizard() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [selectedAnswers, setSelectedAnswers] = useState([]);
+    // Map<questionId, Array<answerId>>
+    const [allAnswers, setAllAnswers] = useState({});
 
     // Track answered questions for progress calculation
     // Map<questionId, boolean>
@@ -33,9 +35,10 @@ export default function QuestionnaireWizard() {
         const savedProgress = localStorage.getItem(`assessment_progress_${responseId}`);
         if (savedProgress) {
             try {
-                const { index, answered } = JSON.parse(savedProgress);
+                const { index, answered, answers } = JSON.parse(savedProgress);
                 if (typeof index === 'number') setCurrentIndex(index);
                 if (answered) setAnsweredMap(answered);
+                if (answers) setAllAnswers(answers);
             } catch (e) {
                 console.error("Failed to parse saved progress", e);
             }
@@ -47,17 +50,44 @@ export default function QuestionnaireWizard() {
         if (questions.length > 0) {
             localStorage.setItem(`assessment_progress_${responseId}`, JSON.stringify({
                 index: currentIndex,
-                answered: answeredMap
+                answered: answeredMap,
+                answers: allAnswers
             }));
         }
-    }, [currentIndex, answeredMap, questions.length, responseId]);
+    }, [currentIndex, answeredMap, allAnswers, questions.length, responseId]);
 
     useEffect(() => {
         async function fetchQuestions() {
             try {
+                // 1. Try Cache
+                // 1. Try Cache
+                const cached = sessionStorage.getItem('cached_questionnaire_data');
+                if (cached) {
+                    console.log("Found cached data in sessionStorage");
+                    try {
+                        const data = JSON.parse(cached);
+                        console.log("Parsed cached data:", data);
+                        if (data && data.questions && Array.isArray(data.questions)) {
+                            console.log(`Using cached questionnaire with ${data.questions.length} questions.`);
+                            setQuestions(data.questions);
+                            setLoading(false);
+                            return;
+                        } else {
+                            console.warn("Cached data format invalid:", data);
+                        }
+                    } catch (e) {
+                        console.error("Failed to parse cached questionnaire:", e);
+                    }
+                } else {
+                    console.log("No cached questionnaire found in sessionStorage.");
+                }
+
+                // 2. Fallback to Network
                 const data = await api.getQuestionnaire();
                 if (data && data.questions) {
                     setQuestions(data.questions);
+                    // Update cache for persistence on refresh
+                    sessionStorage.setItem('cached_questionnaire_data', JSON.stringify(data));
                 }
             } catch (error) {
                 console.error("Failed to load questions", error);
@@ -70,15 +100,23 @@ export default function QuestionnaireWizard() {
     }, []);
 
     useEffect(() => {
-        // Pre-select slider default if applicable
         const currentQ = questions[currentIndex];
-        if (currentQ && (currentQ.type || 'choice').toLowerCase() === 'slider' && currentQ.answers?.length > 0) {
+        if (!currentQ) return;
+
+        // 1. Check if we have a persisted answer in our local session state
+        if (allAnswers[currentQ.question_id] && allAnswers[currentQ.question_id].length > 0) {
+            setSelectedAnswers(allAnswers[currentQ.question_id]);
+            return;
+        }
+
+        // 2. Fallback: Pre-select slider default if applicable and no previous answer
+        if ((currentQ.type || 'choice').toLowerCase() === 'slider' && currentQ.answers?.length > 0) {
             // Default to the first option (or middle/semantic default if we had one)
             setSelectedAnswers([currentQ.answers[0].answer_id]);
         } else {
             setSelectedAnswers([]);
         }
-    }, [currentIndex, questions]);
+    }, [currentIndex, questions, allAnswers]);
 
     // Group questions by dimension
     const dimensions = useMemo(() => {
@@ -129,11 +167,9 @@ export default function QuestionnaireWizard() {
                 await api.saveAnswer(parseInt(responseId), currentQ.question_id, selectedAnswers);
             }
 
-            // Mark as answered locally for progress bar
-            setAnsweredMap(prev => {
-                const next = { ...prev, [currentQ.question_id]: true };
-                return next;
-            });
+            // Mark as answered locally for progress bar and persistence
+            setAnsweredMap(prev => ({ ...prev, [currentQ.question_id]: true }));
+            setAllAnswers(prev => ({ ...prev, [currentQ.question_id]: selectedAnswers }));
 
             if (currentIndex < questions.length - 1) {
                 setCurrentIndex(prev => prev + 1);
@@ -238,8 +274,8 @@ export default function QuestionnaireWizard() {
             const safeIndex = currentIndexVal !== -1 ? currentIndexVal : 0;
 
             return (
-                <div className="flex flex-col justify-center h-full px-4 md:px-12 py-8">
-                    <div className="mb-16 text-center">
+                <div className="flex flex-col justify-center h-full px-4 md:px-8 py-4">
+                    <div className="mb-8 text-center">
                         <motion.div
                             key={answers[safeIndex]?.answer_text}
                             initial={{ opacity: 0, y: 10 }}
@@ -311,7 +347,7 @@ export default function QuestionnaireWizard() {
                         whileHover={{ scale: 1.005 }}
                         whileTap={{ scale: 0.995 }}
                         className={cn(
-                            "flex items-start space-x-3 p-3 border rounded-xl cursor-pointer transition-all duration-200 h-full",
+                            "flex items-start space-x-3 p-4 border rounded-xl cursor-pointer transition-all duration-200 h-full",
                             selectedAnswers.includes(ans.answer_id)
                                 ? "border-blue-600 bg-blue-50/50 shadow-md ring-1 ring-blue-600/20"
                                 : "border-slate-200 bg-white hover:border-blue-300 hover:bg-slate-50 hover:shadow-sm"
@@ -339,8 +375,8 @@ export default function QuestionnaireWizard() {
     };
 
     const DimensionList = () => (
-        <div className="space-y-2 py-6 w-full px-3">
-            <div className="px-4 mb-6">
+        <div className="space-y-2 py-1 w-full px-3">
+            <div className="px-4 mb-3">
                 <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest bg-white/30 w-fit px-2 py-1 rounded-md backdrop-blur-sm">Your Progress</h3>
             </div>
             {dimensions.map((dim, idx) => {
@@ -350,10 +386,10 @@ export default function QuestionnaireWizard() {
 
                 return (
                     <div key={dim.id} className={cn(
-                        "relative px-4 py-4 flex items-center gap-4 transition-all duration-500 rounded-2xl mx-1 group",
+                        "relative px-3 py-1 flex items-center gap-3 transition-all duration-500 rounded-xl mx-2 group",
                         isActive
                             ? "glass-premium translate-x-1"
-                            : "hover:bg-white/30 hover:translate-x-1"
+                            : "bg-slate-50/50 hover:bg-slate-100/50 hover:translate-x-1"
                     )}>
                         {/* Active Indicator Color Splash */}
                         {isActive && (
@@ -374,20 +410,20 @@ export default function QuestionnaireWizard() {
                                     <Disc className="w-5 h-5" />
                                 </div>
                             ) : (
-                                <div className="w-10 h-10 rounded-full bg-white/40 border border-white/60 flex items-center justify-center text-slate-400 group-hover:bg-white group-hover:shadow-md transition-all">
+                                <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 group-hover:bg-slate-200 group-hover:shadow-sm transition-all">
                                     <span className="text-xs font-bold font-heading">{idx + 1}</span>
                                 </div>
                             )}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <div className={cn("text-sm font-bold truncate mb-1.5 transition-colors", isActive ? "text-slate-800" : "text-slate-500 group-hover:text-slate-700")}>
+                            <div className={cn("text-sm font-bold truncate mb-1 transition-colors", isActive ? "text-slate-800" : "text-slate-500 group-hover:text-slate-700")}>
                                 {dim.name}
                             </div>
                             <div className="flex items-center gap-3">
                                 <Progress
                                     value={progress}
-                                    className="h-1.5 bg-slate-200/50 flex-1"
-                                    indicatorClassName={isCompleted ? "bg-emerald-500" : isActive ? "bg-gradient-to-r from-indigo-500 to-violet-500" : "bg-slate-300"}
+                                    className="h-1.5 bg-slate-200 flex-1"
+                                    indicatorClassName={isCompleted ? "bg-emerald-500" : isActive ? "bg-gradient-to-r from-indigo-500 to-violet-500" : "bg-slate-400"}
                                 />
                                 <span className={cn("text-[10px] font-semibold tabular-nums", isActive ? "text-indigo-600" : "text-slate-400")}>
                                     {Math.round(progress)}%
@@ -406,13 +442,13 @@ export default function QuestionnaireWizard() {
 
             {/* Desktop Sidebar */}
             <aside className="hidden lg:flex flex-col w-96 bg-white/10 backdrop-blur-3xl border-r border-white/20 z-20 h-full overflow-y-auto custom-scrollbar shadow-[20px_0_40px_rgba(0,0,0,0.02)]">
-                <div className="p-8 pb-4">
-                    <div className="flex items-center gap-4 mb-2">
-                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-xl shadow-blue-500/20 ring-4 ring-white/10">
-                            <Compass className="w-7 h-7 text-white" />
+                <div className="p-6 pb-2">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 ring-2 ring-white/10">
+                            <Compass className="w-6 h-6 text-white" />
                         </div>
                         <div className="flex flex-col justify-center">
-                            <div className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent font-heading tracking-tight leading-none">
+                            <div className="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent font-heading tracking-tight leading-none">
                                 AI Compass
                             </div>
                         </div>
@@ -443,7 +479,7 @@ export default function QuestionnaireWizard() {
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col h-full relative z-10 pt-16 lg:pt-0 overflow-hidden">
-                <div className="flex-1 flex flex-col w-full h-full max-w-5xl mx-auto p-4 md:p-6 justify-center overflow-hidden">
+                <div className="flex-1 flex flex-col w-full h-full max-w-5xl mx-auto p-2 md:p-4 justify-center overflow-hidden">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentIndex}
@@ -455,8 +491,8 @@ export default function QuestionnaireWizard() {
                         >
                             <Card className="flex flex-col glass-premium rounded-[2.5rem] overflow-hidden w-full h-full max-h-full border-white/50 ring-1 ring-white/60">
                                 {/* Question Header */}
-                                <CardHeader className="flex-none border-b border-white/20 bg-white/20 pb-6 pt-8 px-8 md:px-12 backdrop-blur-md">
-                                    <div className="flex items-center justify-between mb-6">
+                                <CardHeader className="flex-none border-b border-white/20 bg-white/20 pb-2 pt-4 px-4 md:px-6 backdrop-blur-md">
+                                    <div className="flex items-center justify-between mb-2">
                                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/50 border border-white/60 shadow-sm text-indigo-900 text-[11px] font-bold uppercase tracking-widest backdrop-blur-sm">
                                             <span className="relative flex h-2 w-2 mr-1">
                                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
@@ -466,29 +502,29 @@ export default function QuestionnaireWizard() {
                                         </div>
                                     </div>
 
-                                    <CardTitle className="text-xl md:text-2xl font-black text-slate-800 tracking-tight font-heading">
+                                    <CardTitle className="text-base md:text-lg font-black text-slate-800 tracking-tight font-heading leading-tight">
                                         {currentQuestion.question_text}
                                     </CardTitle>
                                 </CardHeader>
 
                                 {/* Answers Area */}
-                                <CardContent className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
-                                    <div className="max-w-4xl mx-auto h-full flex flex-col justify-center">
+                                <CardContent className="flex-1 overflow-y-auto p-2 md:p-4 custom-scrollbar">
+                                    <div className="max-w-5xl mx-auto h-full flex flex-col justify-center gap-3">
                                         {renderAnswers()}
                                     </div>
                                 </CardContent>
 
                                 {/* Persistent Footer */}
-                                <CardFooter className="flex-none border-t border-slate-100/50 bg-white/40 p-6 md:px-12 backdrop-blur-md">
+                                <CardFooter className="flex-none border-t border-slate-100/50 bg-white/40 p-3 md:px-6 backdrop-blur-md">
                                     <div className="flex justify-between w-full items-center">
                                         <div className="flex gap-4">
                                             <Button
                                                 variant="outline"
                                                 disabled={currentIndex === 0}
                                                 onClick={() => setCurrentIndex(prev => prev - 1)}
-                                                className="border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100/50 px-6 h-12 text-base rounded-xl transition-all hover:border-slate-400"
+                                                className="border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100/50 px-4 h-11 text-sm rounded-xl transition-all hover:border-slate-400"
                                             >
-                                                <ChevronLeft className="w-5 h-5 mr-1" />
+                                                <ChevronLeft className="w-4 h-4 mr-1" />
                                                 Back
                                             </Button>
                                             {currentQuestion.dimension_id === 8 && (
@@ -496,9 +532,9 @@ export default function QuestionnaireWizard() {
                                                     variant="outline"
                                                     onClick={handleSkipDimension}
                                                     disabled={saving}
-                                                    className="border-amber-200 text-amber-700 hover:text-amber-800 hover:bg-amber-50 px-6 h-12 text-base rounded-xl transition-all hover:border-amber-300"
+                                                    className="border-amber-200 text-amber-700 hover:text-amber-800 hover:bg-amber-50 px-4 h-11 text-sm rounded-xl transition-all hover:border-amber-300"
                                                 >
-                                                    <SkipForward className="w-5 h-5 mr-2" />
+                                                    <SkipForward className="w-4 h-4 mr-2" />
                                                     Skip Section
                                                 </Button>
                                             )}
@@ -510,7 +546,7 @@ export default function QuestionnaireWizard() {
                                                 size="lg"
                                                 onClick={handleNext}
                                                 disabled={saving || selectedAnswers.length === 0}
-                                                className="relative px-12 h-16 text-lg rounded-2xl transition-all shadow-[0_10px_40px_-10px_rgba(79,70,229,0.5)] active:scale-95 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white border-0 ring-1 ring-white/20 overflow-hidden group"
+                                                className="relative px-6 h-12 text-sm font-bold rounded-xl transition-all shadow-[0_10px_20px_-5px_rgba(79,70,229,0.5)] active:scale-95 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white border-0 ring-1 ring-white/20 overflow-hidden group"
                                             >
                                                 {/* Shimmer Effect */}
                                                 <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10" />
@@ -523,6 +559,7 @@ export default function QuestionnaireWizard() {
                                         </div>
                                     </div>
                                 </CardFooter>
+
                             </Card>
                         </motion.div>
                     </AnimatePresence>

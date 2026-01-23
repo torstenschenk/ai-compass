@@ -88,4 +88,14 @@ export const api = {
         const response = await fetch(`${API_BASE_URL}/responses/${responseId}/results`);
         return handleResponse(response);
     },
+
+    /**
+     * Download PDF Report
+     * @param {number} responseId
+     */
+    downloadPDF: async (responseId) => {
+        const response = await fetch(`${API_BASE_URL}/responses/${responseId}/pdf`);
+        if (!response.ok) throw new Error("PDF Generation Failed");
+        return response.blob();
+    },
 };

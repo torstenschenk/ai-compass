@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Medal, Users, TrendingUp } from 'lucide-react';
 
 export function ResultsHero({ data }) {
@@ -17,7 +18,7 @@ export function ResultsHero({ data }) {
     return (
         <div className="section-container space-y-8">
             {/* Header Text */}
-            <div className="text-center max-w-4xl mx-auto space-y-4">
+            <div className="text-center max-w-4xl mx-auto space-y-6">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-primary">
                     AI Compass: Executive Results Report
                 </h1>

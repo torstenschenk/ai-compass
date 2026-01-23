@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileDown, Check, Download } from 'lucide-react';
+import { FileDown, Check, Download, Loader2 } from 'lucide-react';
 import { toast } from "sonner";
+import { api } from '@/lib/api';
 
 export function DownloadCTA({ responseId }) {
-    const handleDownload = () => {
-        // Placeholder for real PDF endpoint
-        // window.location.href = `/api/v1/responses/${responseId}/pdf`;
-        toast.success("PDF Report queued for generation!", {
-            description: "Check your email in a few minutes (Simulation)."
-        });
+    const [isDownloading, setIsDownloading] = useState(false);
+
+    const handleDownload = async () => {
+        try {
+            setIsDownloading(true);
+            const blob = await api.downloadPDF(responseId);
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ai_maturity_report_${responseId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            toast.success("Report downloaded successfully!");
+        } catch (error) {
+            console.error("Download failed", error);
+            toast.error("Failed to download report.");
+        } finally {
+            setIsDownloading(false);
+        }
     };
 
     return (
@@ -56,12 +72,14 @@ export function DownloadCTA({ responseId }) {
                         <div className="flex-shrink-0 w-full md:w-auto">
                             <Button
                                 onClick={handleDownload}
+                                disabled={isDownloading}
                                 size="lg"
                                 className="w-full md:w-auto relative px-8 h-16 text-lg font-bold rounded-2xl transition-all shadow-[0_10px_40px_-10px_rgba(79,70,229,0.5)] active:scale-95 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white border-0 ring-1 ring-white/20 overflow-hidden group"
                             >
                                 <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10" />
                                 <span className="relative z-20 flex items-center">
-                                    <Download className="mr-2 w-5 h-5" /> Download PDF
+                                    {isDownloading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Download className="mr-2 w-5 h-5" />}
+                                    {isDownloading ? "Generating..." : "Download Report"}
                                 </span>
                             </Button>
                             <p className="text-xs text-center mt-3 text-slate-400 font-medium">

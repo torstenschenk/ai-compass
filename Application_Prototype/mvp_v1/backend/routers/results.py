@@ -152,9 +152,33 @@ def get_results(response_id: int, db: Session = Depends(get_db)):
         from fastapi.responses import JSONResponse
         return JSONResponse(status_code=500, content={"detail": f"Debug Error: {str(e)}"})
 
+from fastapi import Response as FastAPIResponse
+from services.pdf_service import PDFService
+
 @router.get("/{response_id}/pdf")
 def generate_pdf(response_id: int, db: Session = Depends(get_db)):
     """
     Generate and download PDF report.
     """
-    return {"message": "PDF generation placeholder", "response_id": response_id}
+    try:
+        # Reuse the results logic to get the data
+        # In a larger app, we'd refactor `get_results` to separate data fetching from the API response
+        # For now, we call it directly as it returns a dict (mostly)
+        results_data = get_results(response_id, db)
+        
+        # Check if it returned an error response (JSONResponse)
+        if hasattr(results_data, 'status_code') and results_data.status_code >= 400:
+             raise HTTPException(status_code=results_data.status_code, detail="Could not fetch results data")
+
+        # Generate PDF
+        pdf_service = PDFService()
+        pdf_bytes = pdf_service.generate_pdf(results_data)
+        
+        return FastAPIResponse(
+            content=pdf_bytes, 
+            media_type="application/pdf", 
+            headers={"Content-Disposition": f"attachment; filename=ai_maturity_report_{response_id}.pdf"}
+        )
+    except Exception as e:
+        print(f"PDF Gen Error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

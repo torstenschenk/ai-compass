@@ -32,7 +32,11 @@ trap cleanup SIGINT SIGTERM
 
 echo "Launching Backend (FastAPI)..."
 cd backend
-source "$ROOT_DIR/.venv/bin/activate"
+if [ -d "$ROOT_DIR/.venv/Scripts" ]; then
+    source "$ROOT_DIR/.venv/Scripts/activate"
+else
+    source "$ROOT_DIR/.venv/bin/activate"
+fi
 # Point to root .env explicitely
 uvicorn main:app --reload --port 8000 --env-file "$ROOT_DIR/.env" &
 cd "$BASE_DIR"
