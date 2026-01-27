@@ -53,74 +53,73 @@ export function ClusterProfile({ data }) {
             </div>
 
             <Card className="border-none shadow-none bg-transparent">
-                <CardContent className="p-0 space-y-12">
-                    {/* Bar Chart Visualization */}
-                    <div className="relative h-[320px] w-full flex items-end justify-between gap-3 md:gap-6 px-4 md:px-12 pb-8 border-b border-slate-200">
+                <CardContent className="p-0 space-y-4">
+                    {/* Combined Visualization Area */}
+                    <div className="relative">
                         {/* Y-Axis Label */}
-                        <div className="absolute left-0 top-0 bottom-8 -translate-x-full pr-4 flex items-center justify-center">
+                        <div className="absolute left-0 top-0 bottom-32 -translate-x-full pr-4 flex items-center justify-center">
                             <span className="text-xs font-bold text-slate-400 -rotate-90 whitespace-nowrap tracking-wider uppercase">Value Growth</span>
                         </div>
 
-                        {CLUSTER_DEFINITIONS.map((cluster) => {
-                            const isActive = cluster.id === activeClusterId;
-                            return (
-                                <div key={cluster.id} className="flex-1 flex flex-col items-center justify-end h-full gap-3 group relative">
-                                    {isActive && (
-                                        <div className="absolute -top-12 bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-bounce">
-                                            You are here
-                                        </div>
-                                    )}
-                                    <div
-                                        className={cn(
-                                            "w-full rounded-t-xl transition-all duration-700 ease-out relative overflow-hidden",
-                                            isActive
-                                                ? "bg-gradient-to-t from-blue-600 via-indigo-600 to-purple-600 shadow-xl shadow-indigo-200 scale-105"
-                                                : "bg-slate-100 group-hover:bg-slate-200"
+                        {/* Chart Grid */}
+                        <div className="grid grid-cols-5 gap-2 md:gap-4 h-[320px] items-end px-2 md:px-0 border-b border-slate-200 pb-0">
+                            {CLUSTER_DEFINITIONS.map((cluster) => {
+                                const isActive = cluster.id === activeClusterId;
+                                return (
+                                    <div key={cluster.id} className="flex flex-col items-center justify-end h-full gap-0 group relative">
+                                        {isActive && (
+                                            <div className="absolute -top-10 bg-slate-900 text-white text-[10px] md:text-xs font-bold px-2 md:px-3 py-1 md:py-1.5 rounded-full shadow-lg animate-bounce z-10 whitespace-nowrap">
+                                                You are here
+                                            </div>
                                         )}
-                                        style={{ height: cluster.height }}
-                                    >
-                                        {isActive && <div className="absolute inset-0 bg-white/20 animate-pulse" />}
+                                        <div
+                                            className={cn(
+                                                "w-full rounded-t-lg transition-all duration-700 ease-out relative overflow-hidden",
+                                                isActive
+                                                    ? "bg-gradient-to-t from-blue-600 via-indigo-600 to-purple-600 shadow-lg shadow-indigo-200"
+                                                    : "bg-slate-200 group-hover:bg-slate-300"
+                                            )}
+                                            style={{ height: cluster.height }}
+                                        >
+                                            {isActive && <div className="absolute inset-0 bg-white/20 animate-pulse" />}
+                                        </div>
                                     </div>
-                                    <span className={cn(
-                                        "text-xs md:text-sm font-medium text-center transition-colors max-w-[120px]",
-                                        isActive ? "text-indigo-700 font-bold" : "text-slate-500 group-hover:text-slate-700"
-                                    )}>
-                                        {cluster.name}
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
 
-                    {/* Description Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                        {CLUSTER_DEFINITIONS.map((cluster) => {
-                            const isActive = cluster.id === activeClusterId;
-                            return (
-                                <div
-                                    key={cluster.id}
-                                    className={cn(
-                                        "p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden",
-                                        isActive
-                                            ? "border-indigo-500 bg-white ring-4 ring-indigo-50 shadow-xl transform scale-[1.02] z-10"
-                                            : "border-slate-100 bg-white/50 hover:border-slate-200 hover:bg-white hover:shadow-md"
-                                    )}
-                                >
-                                    {isActive && <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-indigo-100 to-transparent rounded-bl-3xl" />}
+                        {/* X-Axis Description Cards (Aligned perfectly under bars via same grid) */}
+                        <div className="grid grid-cols-5 gap-2 md:gap-4 mt-4 px-2 md:px-0">
+                            {CLUSTER_DEFINITIONS.map((cluster) => {
+                                const isActive = cluster.id === activeClusterId;
+                                return (
+                                    <div
+                                        key={cluster.id}
+                                        className={cn(
+                                            "p-2 md:p-3 rounded-xl border transition-all duration-300 relative overflow-hidden flex flex-col",
+                                            isActive
+                                                ? "border-indigo-500 bg-white ring-2 ring-indigo-50 shadow-md z-10 scale-[1.02]"
+                                                : "border-slate-100 bg-white/50 hover:border-slate-200 hover:bg-white"
+                                        )}
+                                    >
+                                        <h4 className={cn(
+                                            "font-bold mb-1 md:mb-2 text-[10px] md:text-xs leading-tight",
+                                            isActive ? "text-indigo-700" : "text-slate-700"
+                                        )}>
+                                            {cluster.name}
+                                        </h4>
+                                        <p className="hidden md:block text-[10px] text-slate-500 leading-tight font-medium">
+                                            {cluster.description}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+                        </div>
 
-                                    <h4 className={cn(
-                                        "font-bold mb-3 text-sm flex items-center gap-2",
-                                        isActive ? "text-indigo-700" : "text-slate-700"
-                                    )}>
-                                        <div className={cn("w-2 h-2 rounded-full", isActive ? "bg-indigo-500" : "bg-slate-300")} />
-                                        {cluster.name}
-                                    </h4>
-                                    <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                                        {cluster.description}
-                                    </p>
-                                </div>
-                            );
-                        })}
+                        {/* X-Axis Label */}
+                        <div className="mt-6 text-center">
+                            <span className="text-xs font-bold text-slate-400 tracking-wider uppercase">Organizational Maturity Archetypes</span>
+                        </div>
                     </div>
                 </CardContent>
             </Card>

@@ -84,7 +84,6 @@ export function ExecutiveBriefing({ data }) {
                     {/* Gap Analysis Cards - Integrated */}
                     {gaps.length > 0 && (
                         <div className="mt-8 pt-8 border-t border-slate-200">
-                            <h3 className="text-xl font-bold text-slate-800 mb-6">Gap Analysis Details</h3>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 {gaps.map((gap, idx) => {
                                     const visuals = getGapVisuals(gap);

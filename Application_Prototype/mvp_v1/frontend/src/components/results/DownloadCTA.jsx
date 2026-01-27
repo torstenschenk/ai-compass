@@ -57,7 +57,7 @@ export function DownloadCTA({ responseId }) {
                             <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                                 {[
                                     "Full Technical Analysis",
-                                    "Executive Summary Presentation",
+                                    "Executive Summary",
                                     "High-Resolution Charts",
                                     "Team Licensing Included"
                                 ].map((feature, i) => (
