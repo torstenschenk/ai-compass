@@ -44,8 +44,8 @@ export function ResultsHero({ data }) {
                             </div>
                         </div>
                         <div className="mt-6">
-                            <h3 className="text-4xl font-bold text-slate-900 tracking-tight">
-                                {formattedScore}<span className="text-xl text-slate-400 font-medium ml-1">/5</span>
+                            <h3 className="text-3xl font-bold text-slate-900 tracking-tight">
+                                {formattedScore}<span className="text-lg text-slate-400 font-medium ml-1">/5</span>
                             </h3>
                             <p className="text-xs font-medium text-slate-500 mt-2">Overall AI Maturity</p>
                         </div>
@@ -67,7 +67,7 @@ export function ResultsHero({ data }) {
                             </div>
                         </div>
                         <div className="mt-6">
-                            <h3 className="text-2xl font-bold text-slate-900 leading-tight line-clamp-2 min-h-[2rem]">
+                            <h3 className="text-xl font-bold text-slate-900 leading-tight line-clamp-2 min-h-[2rem]">
                                 {clusterName}
                             </h3>
                             <p className="text-xs font-medium text-slate-500 mt-2">Organizational Archetype</p>
@@ -90,7 +90,7 @@ export function ResultsHero({ data }) {
                             </div>
                         </div>
                         <div className="mt-6">
-                            <h3 className="text-3xl font-bold text-slate-900 tracking-tight">
+                            <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
                                 {percentile !== "N/A" ? `Top ${percentile.percentage}%` : "Top 35%"}
                             </h3>
                             <p className="text-xs font-medium text-slate-500 mt-2">vs. {industry} Peers</p>
