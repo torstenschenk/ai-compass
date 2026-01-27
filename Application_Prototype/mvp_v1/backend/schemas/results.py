@@ -10,3 +10,4 @@ class AnalysisResult(BaseModel):
     percentiles: Dict[str, float]
     gap_analysis: Dict[str, Any]
     roadmap: Dict[str, Any]
+    benchmark_scores: Optional[Dict[str, float]] = None

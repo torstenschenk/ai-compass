@@ -13,7 +13,8 @@ export function MaturityProfile({ data }) {
     const radarData = Object.entries(data.dimension_scores).map(([dim, score]) => {
         // Fallback: If no real benchmark data, generate a plausible "Peer Average" 
         // (typically slightly higher or lower than user, or fixed around 3.0-3.5 for demo)
-        const peerScore = benchmarkScores[dim] !== undefined ? benchmarkScores[dim] : (score > 0 ? Math.min(5, score * 1.1 + 0.2) : 2.5);
+        let rawPeer = benchmarkScores[dim] !== undefined ? benchmarkScores[dim] : (score > 0 ? Math.min(5, score * 1.1 + 0.2) : 2.5);
+        const peerScore = Number(rawPeer.toFixed(2));
 
         return {
             subject: dim,
@@ -59,7 +60,7 @@ export function MaturityProfile({ data }) {
                                     fillOpacity={0.3}
                                 />
                                 <Radar
-                                    name="Peer Benchmark"
+                                    name="Industry Benchmark"
                                     dataKey="B"
                                     stroke="#f97316" // Orange-500
                                     strokeWidth={2}
@@ -83,7 +84,7 @@ export function MaturityProfile({ data }) {
                         </div>
                         <div className="flex items-center gap-3 px-5 py-2.5 bg-orange-50/80 backdrop-blur-sm rounded-full border border-orange-100 shadow-sm">
                             <div className="w-2.5 h-2.5 bg-orange-500 rounded-full ring-2 ring-orange-200"></div>
-                            <span className="text-sm font-bold text-orange-900">Peer Benchmark</span>
+                            <span className="text-sm font-bold text-orange-900">Industry Benchmark</span>
                         </div>
                     </div>
                 </CardContent>

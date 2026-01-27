@@ -83,7 +83,7 @@ export function DownloadCTA({ responseId }) {
                                 </span>
                             </Button>
                             <p className="text-xs text-center mt-3 text-slate-400 font-medium">
-                                Generated instantly • 12MB PDF
+                                Generated instantly • PDF
                             </p>
                         </div>
                     </div>

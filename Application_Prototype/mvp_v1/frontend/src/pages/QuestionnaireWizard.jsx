@@ -182,7 +182,12 @@ export default function QuestionnaireWizard() {
             }
         } catch (error) {
             console.error("Failed to save answer", error);
-            toast.error("Failed to save answer. Retrying...");
+            if (error.message && (error.message.includes("404") || error.message.toLowerCase().includes("not found"))) {
+                toast.error("Session expired. Please start over.");
+                navigate('/');
+                return;
+            }
+            toast.error(error.message || "Failed to save answer.");
         } finally {
             setSaving(false);
         }
@@ -242,7 +247,12 @@ export default function QuestionnaireWizard() {
             }
         } catch (error) {
             console.error("Skip failed", error);
-            toast.error("Failed to skip dimension.");
+            if (error.message && (error.message.includes("404") || error.message.toLowerCase().includes("not found"))) {
+                toast.error("Session expired. Please start over.");
+                navigate('/');
+                return;
+            }
+            toast.error(error.message || "Failed to skip dimension.");
         } finally {
             setSaving(false);
         }
@@ -335,11 +345,18 @@ export default function QuestionnaireWizard() {
         }
 
         // Default: Choice / Statement (Radio)
+        const isShortText = answers.every(a => (a.answer_text || '').length < 60);
+
         return (
             <RadioGroup
                 value={selectedAnswers[0]?.toString()}
                 onValueChange={handleRadioChange}
-                className="grid grid-cols-1 md:grid-cols-2 gap-2"
+                className={cn(
+                    "w-full gap-2",
+                    isShortText
+                        ? "flex flex-col w-full"
+                        : "grid grid-cols-1 md:grid-cols-2"
+                )}
             >
                 {answers.map(ans => (
                     <motion.div
@@ -347,7 +364,8 @@ export default function QuestionnaireWizard() {
                         whileHover={{ scale: 1.005 }}
                         whileTap={{ scale: 0.995 }}
                         className={cn(
-                            "flex items-start space-x-3 p-4 border rounded-xl cursor-pointer transition-all duration-200 h-full",
+                            "flex space-x-3 border rounded-xl cursor-pointer transition-all duration-200 h-full",
+                            isShortText ? "p-3.5 items-center" : "p-4 items-start",
                             selectedAnswers.includes(ans.answer_id)
                                 ? "border-blue-600 bg-blue-50/50 shadow-md ring-1 ring-blue-600/20"
                                 : "border-slate-200 bg-white hover:border-blue-300 hover:bg-slate-50 hover:shadow-sm"
@@ -379,7 +397,7 @@ export default function QuestionnaireWizard() {
             <div className="px-4 mb-3">
                 <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest bg-white/30 w-fit px-2 py-1 rounded-md backdrop-blur-sm">Your Progress</h3>
             </div>
-            {dimensions.map((dim, idx) => {
+            {dimensions.filter(d => d.id !== 8).map((dim, idx) => {
                 const isActive = dim.id === currentDimensionId;
                 const isCompleted = dim.answered === dim.total;
                 const progress = (dim.answered / dim.total) * 100;
@@ -479,7 +497,7 @@ export default function QuestionnaireWizard() {
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col h-full relative z-10 pt-16 lg:pt-0 overflow-hidden">
-                <div className="flex-1 flex flex-col w-full h-full max-w-5xl mx-auto p-2 md:p-4 justify-center overflow-hidden">
+                <div className="flex-1 flex flex-col w-full h-full max-w-5xl mx-auto p-1 md:p-2 justify-center overflow-hidden">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentIndex}
@@ -489,42 +507,42 @@ export default function QuestionnaireWizard() {
                             transition={{ duration: 0.4, ease: [0.19, 1.0, 0.22, 1.0] }} // Authentic iOS ease
                             className="w-full flex flex-col h-full max-h-full"
                         >
-                            <Card className="flex flex-col glass-premium rounded-[2.5rem] overflow-hidden w-full h-full max-h-full border-white/50 ring-1 ring-white/60">
+                            <Card className="flex flex-col glass-premium rounded-[1.5rem] overflow-hidden w-full h-full max-h-full border-white/50 ring-1 ring-white/60">
                                 {/* Question Header */}
-                                <CardHeader className="flex-none border-b border-white/20 bg-white/20 pb-2 pt-4 px-4 md:px-6 backdrop-blur-md">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/50 border border-white/60 shadow-sm text-indigo-900 text-[11px] font-bold uppercase tracking-widest backdrop-blur-sm">
-                                            <span className="relative flex h-2 w-2 mr-1">
+                                <CardHeader className="flex-none border-b border-white/20 bg-white/20 pb-1 pt-3 px-4 md:px-6 backdrop-blur-md">
+                                    <div className="flex items-center justify-between mb-1">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/50 border border-white/60 shadow-sm text-indigo-900 text-[10px] font-bold uppercase tracking-widest backdrop-blur-sm">
+                                            <span className="relative flex h-1.5 w-1.5 mr-0.5">
                                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600"></span>
+                                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-indigo-600"></span>
                                             </span>
                                             Question {currentIndex + 1} / {questions.length}
                                         </div>
                                     </div>
 
-                                    <CardTitle className="text-base md:text-lg font-black text-slate-800 tracking-tight font-heading leading-tight">
+                                    <CardTitle className="text-base font-black text-slate-800 tracking-tight font-heading leading-tight mb-1">
                                         {currentQuestion.question_text}
                                     </CardTitle>
                                 </CardHeader>
 
                                 {/* Answers Area */}
-                                <CardContent className="flex-1 overflow-y-auto p-2 md:p-4 custom-scrollbar">
-                                    <div className="max-w-5xl mx-auto h-full flex flex-col justify-center gap-3">
+                                <CardContent className="flex-1 overflow-y-auto px-4 py-1 md:px-6 custom-scrollbar">
+                                    <div className="max-w-5xl mx-auto h-full flex flex-col gap-2">
                                         {renderAnswers()}
                                     </div>
                                 </CardContent>
 
                                 {/* Persistent Footer */}
-                                <CardFooter className="flex-none border-t border-slate-100/50 bg-white/40 p-3 md:px-6 backdrop-blur-md">
+                                <CardFooter className="flex-none border-t border-slate-100/50 bg-white/40 px-4 py-2 md:px-6 backdrop-blur-md">
                                     <div className="flex justify-between w-full items-center">
                                         <div className="flex gap-4">
                                             <Button
                                                 variant="outline"
                                                 disabled={currentIndex === 0}
                                                 onClick={() => setCurrentIndex(prev => prev - 1)}
-                                                className="border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100/50 px-4 h-11 text-sm rounded-xl transition-all hover:border-slate-400"
+                                                className="border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-100/50 px-3 h-9 text-xs rounded-lg transition-all hover:border-slate-400"
                                             >
-                                                <ChevronLeft className="w-4 h-4 mr-1" />
+                                                <ChevronLeft className="w-3 h-3 mr-1" />
                                                 Back
                                             </Button>
                                             {currentQuestion.dimension_id === 8 && (
@@ -532,28 +550,28 @@ export default function QuestionnaireWizard() {
                                                     variant="outline"
                                                     onClick={handleSkipDimension}
                                                     disabled={saving}
-                                                    className="border-amber-200 text-amber-700 hover:text-amber-800 hover:bg-amber-50 px-4 h-11 text-sm rounded-xl transition-all hover:border-amber-300"
+                                                    className="border-amber-200 text-amber-700 hover:text-amber-800 hover:bg-amber-50 px-3 h-9 text-xs rounded-lg transition-all hover:border-amber-300"
                                                 >
-                                                    <SkipForward className="w-4 h-4 mr-2" />
+                                                    <SkipForward className="w-3 h-3 mr-2" />
                                                     Skip Section
                                                 </Button>
                                             )}
                                         </div>
 
                                         <div className="flex items-center gap-6">
-                                            {saving && <span className="text-sm font-medium text-indigo-600 animate-pulse hidden sm:inline-block">Saving...</span>}
+                                            {saving && <span className="text-xs font-medium text-indigo-600 animate-pulse hidden sm:inline-block">Saving...</span>}
                                             <Button
                                                 size="lg"
                                                 onClick={handleNext}
                                                 disabled={saving || selectedAnswers.length === 0}
-                                                className="relative px-6 h-12 text-sm font-bold rounded-xl transition-all shadow-[0_10px_20px_-5px_rgba(79,70,229,0.5)] active:scale-95 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white border-0 ring-1 ring-white/20 overflow-hidden group"
+                                                className="relative px-5 h-10 text-sm font-bold rounded-xl transition-all shadow-[0_4px_10px_-2px_rgba(79,70,229,0.5)] active:scale-95 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white border-0 ring-1 ring-white/20 overflow-hidden group"
                                             >
                                                 {/* Shimmer Effect */}
                                                 <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10" />
 
                                                 <span className="relative z-20 flex items-center font-bold tracking-wide">
-                                                    {currentIndex === questions.length - 1 ? 'Finish Assessment' : 'Next Question'}
-                                                    {!saving && (currentIndex === questions.length - 1 ? <CheckCircle2 className="w-5 h-5 ml-2" /> : <ArrowRight className="w-5 h-5 ml-2" />)}
+                                                    {currentIndex === questions.length - 1 ? 'Finish' : 'Next'}
+                                                    {!saving && (currentIndex === questions.length - 1 ? <CheckCircle2 className="w-4 h-4 ml-2" /> : <ArrowRight className="w-4 h-4 ml-2" />)}
                                                 </span>
                                             </Button>
                                         </div>

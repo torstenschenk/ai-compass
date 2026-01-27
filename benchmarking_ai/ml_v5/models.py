@@ -295,16 +295,16 @@ class StrategicGapAnalyzer:
         """
         header = "### 🎖️ AI-Compass Strategic Briefing"
         narrative = f"{header}\n\n"
-        narrative += "Our analysis of your current AI maturity profile identifies two primary structural risks that require immediate executive attention.\n\n"
+        if len(findings) >= 2:
+             f1_name = findings[0]['title']
+             f2_name = findings[1]['title']
+             narrative += f"Our analysis of your current AI maturity profile identifies **{f1_name}** and **{f2_name}** as primary structural risks that require immediate executive attention.\n\n"
+        elif len(findings) == 1:
+             f1_name = findings[0]['title']
+             narrative += f"Our analysis of your current AI maturity profile identifies **{f1_name}** as a primary structural risk that requires immediate executive attention.\n\n"
+        else:
+             narrative += "Our analysis of your current AI maturity profile shows a balanced structure, though optimization opportunities exist.\n\n"
         
-        if len(findings) > 0:
-            f1 = findings[0]
-            narrative += f"Firstly, we have identified a **{f1['title']}**. {f1['context']} This suggests that your current organizational trajectory may be creating 'Strategic Debt'—where technical capabilities outpace leadership alignment or vice versa.\n\n"
-        
-        if len(findings) > 1:
-            f2 = findings[1]
-            narrative += f"Secondly, the **{f2['title']}** indicates a critical gap in your foundational readiness. Currently, this maturity level ({f2['score']:.1f} impact score) acts as a significant bottleneck. Addressing this specific area will unlock higher ROI for your existing and future AI use cases.\n\n"
-            
         narrative += "**Strategic Verdict**: Your profile shows high potential but is currently decoupled. Prioritizing these two areas over the next 3 months will transform your AI initiatives from experimental to scalable."
         return narrative
 
@@ -329,18 +329,20 @@ class RoadmapGenerator:
         
     def fit(self, dim_data, question_data_agg):
         """
-        dim_data: Index=Company, Cols=Dimensions
+        dim_data: Index=Company, Cols=Dimensions (may include 'industry' column)
         question_data_agg: Index=Company, Cols=Questions (Scores) - Used to find peer strengths
         """
         self.dim_data_train = dim_data.copy().fillna(0)
-        self.dim_data_train['total_maturity'] = self.dim_data_train.mean(axis=1)
+        self.dim_data_train['total_maturity'] = self.dim_data_train[[c for c in self.dim_data_train.columns if c != 'industry']].mean(axis=1)
         
-        # Store peer dimension averages for explanation generation
-        self.peer_dim_averages = self.dim_data_train.drop(columns=['total_maturity']).mean().to_dict()
+        # Store peer dimension averages for explanation generation (exclude industry and total_maturity)
+        dim_cols = [c for c in self.dim_data_train.columns if c not in ['total_maturity', 'industry']]
+        self.peer_dim_averages = self.dim_data_train[dim_cols].mean().to_dict()
         
         self.question_data_train = question_data_agg.copy().fillna(0)
         
-        X = self.scaler.fit_transform(self.dim_data_train.drop(columns=['total_maturity']))
+        # Prepare features for KNN (exclude total_maturity and industry)
+        X = self.scaler.fit_transform(self.dim_data_train[dim_cols])
         
         self.knn = NearestNeighbors(n_neighbors=15, metric='cosine')
         self.knn.fit(X)
@@ -384,7 +386,7 @@ class RoadmapGenerator:
             else:
                 analysis = f"**Analysis**: Your {theme} performance (score: {company_score:.1f}) is competitive, but targeted improvements will differentiate your AI maturity."
         
-        return f"{analysis}\n    - **Action 1**: {theme_actions['action1']}\n    - **Action 2**: {theme_actions['action2']}"
+        return f"{analysis}\n\n**Action 1:** {theme_actions['action1']}\n\n**Action 2:** {theme_actions['action2']}"
     
     def _get_theme_specific_actions(self, theme, source, gap_pct):
         """
@@ -461,6 +463,45 @@ class RoadmapGenerator:
             action2 = "Foster innovation culture with dedicated time for experimentation, hackathons, and recognition programs for AI-driven initiatives."
         
         return {'action1': action1, 'action2': action2}
+
+    def get_peer_benchmark(self, company_dim_series, company_industry=None):
+        """
+        Calculates the average dimension scores of industry peers.
+        If industry is provided, filters to same industry before averaging.
+        Returns dict {dimension: score}.
+        """
+        if self.dim_data_train is None:
+             return {}
+        
+        try:
+            # Identify training columns (dimensions only)
+            train_cols = [c for c in self.dim_data_train.columns if c not in ['total_maturity', 'industry']]
+            
+            # Filter by industry if provided and industry column exists
+            if company_industry and 'industry' in self.dim_data_train.columns:
+                industry_peers = self.dim_data_train[
+                    self.dim_data_train['industry'] == company_industry
+                ]
+                
+                # Fallback to global if industry sample is too small (< 5 companies)
+                if len(industry_peers) < 5:
+                    print(f"Industry '{company_industry}' has only {len(industry_peers)} companies. Using global benchmark.")
+                    peers = self.dim_data_train
+                else:
+                    peers = industry_peers
+                    print(f"Using industry-specific benchmark: {company_industry} ({len(peers)} companies)")
+            else:
+                # No industry filtering - use all peers
+                peers = self.dim_data_train
+                print(f"Using global benchmark ({len(peers)} companies)")
+            
+            # Calculate mean of peers for each dimension
+            peer_means = peers[train_cols].mean()
+            
+            return peer_means.round(2).to_dict()
+        except Exception as e:
+            print(f"Peer Benchmark Calc Error: {e}")
+            return {}
 
     def generate(self, company_id, company_dim_series, company_question_df, strategic_gaps):
         """

@@ -24,6 +24,12 @@ class InferenceEngine:
             self.sga.load_model(path)
             self.rg.load_model(path)
             self.loaded = True
+            
+            # Debug: Print expected columns from RoadmapGenerator
+            if self.rg.dim_data_train is not None:
+                 cols = [c for c in self.rg.dim_data_train.columns if c not in ['total_maturity', 'industry']]
+                 print(f"DEBUG: Model expects dimensions: {cols}")
+                 
         except Exception as e:
             print(f"Warning: Models not loaded. {e}")
             self.loaded = False
@@ -68,6 +74,10 @@ class InferenceEngine:
             total_score = company_dim_series.mean()
             percentile_info = self.ce.calculate_industry_percentile(total_score, company_industry)
         
+        # 1.6 Peer Benchmark (Nearest Neighbors)
+        peer_scores = self.rg.get_peer_benchmark(company_dim_series, company_industry)
+        print(f"DEBUG Peer Scores: {peer_scores}")
+
         # 2. Strategic Gap Analysis
         findings = self.sga.analyze(company_dim_series, company_question_df)
         narrative = self.sga.synthesize_narrative(findings, company_dim_series)
@@ -87,7 +97,8 @@ class InferenceEngine:
             "executive_briefing": narrative,
             "roadmap": roadmap,
             "roadmap_briefing": briefing,
-            "percentile": percentile_info
+            "percentile": percentile_info,
+            "benchmark_scores": peer_scores
         }
 
 if __name__ == "__main__":
