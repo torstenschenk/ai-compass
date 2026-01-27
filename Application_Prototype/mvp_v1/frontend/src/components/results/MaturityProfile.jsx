@@ -25,8 +25,8 @@ export function MaturityProfile({ data }) {
     });
 
     return (
-        <section className="space-y-6">
-            <div className="space-y-2">
+        <section className="space-y-4">
+            <div className="space-y-1">
                 <h2 className="text-3xl font-bold tracking-tight text-primary">The Multi-Dimensional Maturity Profile</h2>
                 <p className="text-muted-foreground text-lg">A high-fidelity visualization comparing your organizational performance across 7 core dimensions.</p>
             </div>
@@ -36,10 +36,10 @@ export function MaturityProfile({ data }) {
                 <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-50/40 rounded-full -mr-48 -mt-48 blur-3xl pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-50/40 rounded-full -ml-48 -mb-48 blur-3xl pointer-events-none" />
 
-                <CardContent className="h-[600px] flex flex-col p-6 md:p-12 relative z-10">
+                <CardContent className="h-[400px] flex flex-col p-2 relative z-10">
                     <div className="flex-1 min-h-0 w-full max-w-5xl mx-auto flex items-center justify-center">
                         <ResponsiveContainer width="100%" height="100%">
-                            <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
+                            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
                                 <PolarGrid stroke="#94a3b8" strokeDasharray="3 3" />
                                 <PolarAngleAxis
                                     dataKey="subject"
@@ -48,6 +48,7 @@ export function MaturityProfile({ data }) {
                                 <PolarRadiusAxis
                                     angle={30}
                                     domain={[0, 5]}
+                                    ticks={[1, 2, 3, 4, 5]}
                                     tick={false}
                                     axisLine={false}
                                 />
@@ -77,7 +78,7 @@ export function MaturityProfile({ data }) {
                     </div>
 
                     {/* Custom Legend Styled like Gap/Roadmap badges */}
-                    <div className="flex items-center justify-center gap-6 pt-8">
+                    <div className="flex items-center justify-center gap-6 pt-2 pb-2">
                         <div className="flex items-center gap-3 px-5 py-2.5 bg-indigo-50/80 backdrop-blur-sm rounded-full border border-indigo-100 shadow-sm">
                             <div className="w-2.5 h-2.5 bg-indigo-600 rounded-full ring-2 ring-indigo-200"></div>
                             <span className="text-sm font-bold text-indigo-900">Your Company</span>

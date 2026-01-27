@@ -72,7 +72,7 @@ export default function ResultsPage() {
             <PageBackground />
             <Navigation />
 
-            <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-12 space-y-20 md:space-y-32 z-10 relative">
+            <main className="flex-grow w-full max-w-[66rem] mx-auto px-4 sm:px-6 pt-24 pb-12 space-y-8 md:space-y-12 z-10 relative">
                 <ResultsHero data={data} responseId={responseId} />
                 <ClusterProfile data={data} />
                 <MaturityProfile data={data} />
