@@ -42,8 +42,12 @@ def train_and_save():
     print("Strategic Gap Analyzer trained and saved.")
     
     # 4. Train Roadmap Generator
+    # Add industry column for industry-specific benchmarking
+    d_matrix_with_industry = d_matrix.copy()
+    d_matrix_with_industry['industry'] = companies_df.set_index('company_id').loc[d_matrix.index, 'industry']
+    
     rg = RoadmapGenerator()
-    rg.fit(d_matrix, q_matrix)
+    rg.fit(d_matrix_with_industry, q_matrix)
     rg.save_model(f"{output_dir}/v5")
     print("Roadmap Generator trained and saved.")
     

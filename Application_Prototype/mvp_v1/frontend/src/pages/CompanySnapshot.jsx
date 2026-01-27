@@ -93,24 +93,24 @@ export default function CompanySnapshot() {
             <PageBackground />
 
             <Card className="w-full max-w-xl glass shadow-2xl relative z-10 transition-all duration-500 hover:shadow-indigo-500/10">
-                <CardHeader className="text-center space-y-2 pb-8">
-                    <div className="mx-auto w-14 h-14 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-indigo-500/30 ring-4 ring-white/50">
-                        <Building2 className="w-7 h-7 text-white" />
+                <CardHeader className="text-center space-y-1 pb-2">
+                    <div className="mx-auto w-10 h-10 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl flex items-center justify-center mb-2 shadow-lg shadow-indigo-500/30 ring-4 ring-white/50">
+                        <Building2 className="w-5 h-5 text-white" />
                     </div>
-                    <CardTitle className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent font-heading">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent font-heading">
                         Company Snapshot
                     </CardTitle>
-                    <CardDescription className="text-slate-500 text-lg">
+                    <CardDescription className="text-slate-500 text-sm">
                         Tell us a bit about your organization to personalize your benchmark.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2 md:col-span-2">
-                                <Label htmlFor="company_name" className="text-slate-700 font-medium">Company Name</Label>
+                    <form onSubmit={handleSubmit} className="space-y-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="space-y-1.5 md:col-span-2">
+                                <Label htmlFor="company_name" className="text-slate-700 font-medium text-xs uppercase tracking-wide">Company Name</Label>
                                 <div className="relative group">
-                                    <Building2 className="absolute left-3 top-3 h-5 w-5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                    <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                                     <Input
                                         id="company_name"
                                         name="company_name"
@@ -118,19 +118,19 @@ export default function CompanySnapshot() {
                                         placeholder="Acme Corp"
                                         value={formData.company_name}
                                         onChange={handleChange}
-                                        className="pl-10 h-11 bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all"
+                                        className="pl-9 h-10 text-sm bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all"
                                     />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="industry" className="text-slate-700 font-medium">Industry</Label>
+                            <div className="space-y-1.5">
+                                <Label htmlFor="industry" className="text-slate-700 font-medium text-xs uppercase tracking-wide">Industry</Label>
                                 <Select
                                     name="industry"
                                     value={formData.industry}
                                     onValueChange={(val) => handleSelectChange('industry', val)}
                                 >
-                                    <SelectTrigger className="h-11 bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all">
+                                    <SelectTrigger className="h-10 text-sm bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all">
                                         <SelectValue placeholder="Select industry" />
                                     </SelectTrigger>
                                     <SelectContent className="bg-white border shadow-xl text-slate-900">
@@ -144,16 +144,16 @@ export default function CompanySnapshot() {
                                 </Select>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="number_of_employees" className="text-slate-700 font-medium">Employees</Label>
+                            <div className="space-y-1.5">
+                                <Label htmlFor="number_of_employees" className="text-slate-700 font-medium text-xs uppercase tracking-wide">Employees</Label>
                                 <div className="relative group">
-                                    <Users className="absolute left-3 top-3 h-5 w-5 z-10 text-slate-400 pointer-events-none group-focus-within:text-indigo-600 transition-colors" />
+                                    <Users className="absolute left-3 top-2.5 h-4 w-4 z-10 text-slate-400 pointer-events-none group-focus-within:text-indigo-600 transition-colors" />
                                     <Select
                                         name="number_of_employees"
                                         value={formData.number_of_employees}
                                         onValueChange={(val) => handleSelectChange('number_of_employees', val)}
                                     >
-                                        <SelectTrigger className="h-11 pl-10 bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all">
+                                        <SelectTrigger className="h-10 pl-9 text-sm bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all">
                                             <SelectValue placeholder="Select size" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-white border shadow-xl text-slate-900">
@@ -167,10 +167,10 @@ export default function CompanySnapshot() {
                                 </div>
                             </div>
 
-                            <div className="space-y-2 md:col-span-2">
-                                <Label htmlFor="website" className="text-slate-700 font-medium">Website</Label>
+                            <div className="space-y-1.5 md:col-span-2">
+                                <Label htmlFor="website" className="text-slate-700 font-medium text-xs uppercase tracking-wide">Website</Label>
                                 <div className="relative group">
-                                    <Globe className="absolute left-3 top-3 h-5 w-5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                    <Globe className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                                     <Input
                                         id="website"
                                         name="website"
@@ -178,30 +178,30 @@ export default function CompanySnapshot() {
                                         placeholder="https://example.com"
                                         value={formData.website}
                                         onChange={handleChange}
-                                        className="pl-10 h-11 bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all"
+                                        className="pl-9 h-10 text-sm bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all"
                                     />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="city" className="text-slate-700 font-medium">City</Label>
+                            <div className="space-y-1.5">
+                                <Label htmlFor="city" className="text-slate-700 font-medium text-xs uppercase tracking-wide">City</Label>
                                 <div className="relative group">
-                                    <MapPin className="absolute left-3 top-3 h-5 w-5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                    <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                                     <Input
                                         id="city"
                                         name="city"
                                         placeholder="New York"
                                         value={formData.city}
                                         onChange={handleChange}
-                                        className="pl-10 h-11 bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all"
+                                        className="pl-9 h-10 text-sm bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all"
                                     />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="email" className="text-slate-700 font-medium">Email</Label>
+                            <div className="space-y-1.5">
+                                <Label htmlFor="email" className="text-slate-700 font-medium text-xs uppercase tracking-wide">Email</Label>
                                 <div className="relative group">
-                                    <Mail className="absolute left-3 top-3 h-5 w-5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                    <Mail className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                                     <Input
                                         id="email"
                                         name="email"
@@ -209,7 +209,7 @@ export default function CompanySnapshot() {
                                         placeholder="contact@example.com"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="pl-10 h-11 bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all"
+                                        className="pl-9 h-10 text-sm bg-white/50 border-slate-200 focus:bg-white focus:border-indigo-500 focus:ring-indigo-500/20 transition-all"
                                     />
                                 </div>
                             </div>
@@ -218,11 +218,11 @@ export default function CompanySnapshot() {
                         <Button
                             type="submit"
                             size="lg"
-                            className="w-full text-lg h-12 mt-6 group"
+                            className="w-full h-10 mt-2 text-base font-medium group transition-all"
                             disabled={loading}
                         >
                             {loading ? 'Starting...' : 'Continue to Assessment'}
-                            {!loading && <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+                            {!loading && <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />}
                         </Button>
                     </form>
                 </CardContent>

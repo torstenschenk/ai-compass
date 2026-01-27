@@ -68,6 +68,9 @@ def get_results(response_id: int, db: Session = Depends(get_db)):
         df_answers_ref = pd.DataFrame(rows_answers)
 
         # 3. Scoring Logic
+        # Preserve skipped questions (empty answers) by filling with [0] so explode doesn't drop them
+        df_items['answers'] = df_items['answers'].apply(lambda x: x if isinstance(x, list) and len(x) > 0 else [0])
+        
         df_items_exploded = df_items.explode('answers')
         df_items_exploded = df_items_exploded.rename(columns={'answers': 'answer_id'})
         df_items_exploded['answer_id'] = df_items_exploded['answer_id'].astype(float).fillna(0).astype(int)
@@ -84,6 +87,15 @@ def get_results(response_id: int, db: Session = Depends(get_db)):
         full_df = full_df.merge(ans_stats, on='question_id', how='left')
 
         # FIX: Added tactical_theme to groupby key to preserve it
+        # SANITIZATION: Fill missing metadata BEFORE groupby to prevent rows from being dropped due to NaNs
+        full_df.fillna({
+            'dimension_name': 'Unknown Dimension',
+            'question_text': 'Unknown Question',
+            'tactical_theme': 'General',
+            'question_type': 'Slider',
+            'question_weight': 1.0
+        }, inplace=True)
+
         grouped_q = full_df.groupby([
             'question_id', 'dimension_name', 'question_weight', 'question_type', 
             'total_possible_weight', 'max_possible_weight', 'question_text', 'tactical_theme'
@@ -110,9 +122,15 @@ def get_results(response_id: int, db: Session = Depends(get_db)):
             if x['question_weight'].sum() > 0 else 1.0
         )
         
-        if 'General Psychology' in dim_results.index:
-            dim_results = dim_results.drop('General Psychology')
+        # Standardize Dimensions for Inference Engine (ML robustness)
+        # Ensure we have all 7 core dimensions, filling missing/skipped with 1.0
+        all_dims = df_dims['dimension_name'].unique().tolist()
+        expected_dims = sorted([d for d in all_dims if d != 'General Psychology'])
+        print(f"DEBUG ML Input Features: {expected_dims}") # Log for debugging
+        
+        dim_results = dim_results.reindex(expected_dims, fill_value=1.0)
 
+        # Recalculate per-question score for gap analysis
         grouped_q['score_1to5'] = (grouped_q['question_score_contrib'] / (grouped_q['question_weight'] / 100)) * 4 + 1
         grouped_q['score_1to5'] = grouped_q['score_1to5'].fillna(1.0)
         
@@ -120,7 +138,11 @@ def get_results(response_id: int, db: Session = Depends(get_db)):
         grouped_q['tactical_theme'] = grouped_q['tactical_theme'].fillna("")
         grouped_q['question_text'] = grouped_q['question_text'].fillna("")
         grouped_q['question_type'] = grouped_q['question_type'].fillna("")
-        
+
+        # Filter out General Psychology questions from the granular analysis dataframe
+        # This prevents metadata/demographic questions from appearing as "Strategic Gaps"
+        grouped_q = grouped_q[grouped_q['dimension_name'] != 'General Psychology']
+
         # 5. Run Inference
         analysis = inference_engine.run_analysis(dim_results, grouped_q, company_industry=company.industry)
 
@@ -140,7 +162,8 @@ def get_results(response_id: int, db: Session = Depends(get_db)):
             "strategic_gaps": analysis.get("strategic_findings"),
             "roadmap": analysis.get("roadmap"),
             "executive_briefing": analysis.get("executive_briefing"),
-            "percentile": analysis.get("percentile")
+            "percentile": analysis.get("percentile"),
+            "benchmark_scores": analysis.get("benchmark_scores")
         }
         
         return final_result

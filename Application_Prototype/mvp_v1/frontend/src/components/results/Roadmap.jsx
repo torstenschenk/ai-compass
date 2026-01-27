@@ -201,7 +201,7 @@ export function Roadmap({ data }) {
                                                                                         </div>
                                                                                         <div className="text-sm text-slate-700">
                                                                                             <span className="font-semibold text-slate-900 text-xs uppercase tracking-wide mr-2">
-                                                                                                Action {i + 1}
+                                                                                                Action {i + 1}:
                                                                                             </span>
                                                                                             {cleanAction.replace(/^Action \d+:\s*/i, '')}
                                                                                         </div>

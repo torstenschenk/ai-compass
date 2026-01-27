@@ -1,12 +1,13 @@
 import os
+import re
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.graphics.shapes import Drawing, Rect, String
+from reportlab.graphics.shapes import Drawing, Rect, String, Circle, Polygon, Line
 from reportlab.graphics.charts.spider import SpiderChart
 from reportlab.graphics.charts.legends import Legend
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Frame, PageTemplate, NextPageTemplate
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Frame, PageTemplate, NextPageTemplate, KeepTogether
 from reportlab.lib.units import inch, cm
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
 
@@ -47,6 +48,33 @@ class PDFService:
             canvas.drawRightString(A4[0] - 1.5*cm, 1.0*cm, f"Page {page_num}")
         
         canvas.restoreState()
+
+    def _format_text(self, text):
+        """
+        Cleans and formats Markdown-style text for ReportLab Paragraphs.
+        Handles bold (**), headers (#), and bullets (*/-).
+        """
+        if not text:
+            return ""
+        
+        # 1. Bold: **text** -> <b>text</b>
+        text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
+        
+        # 2. Italic: *text* -> <i>text</i> (Basic handling, careful with bullets)
+        # We'll skip simple italics for now to avoid Bullet confusion or handle bullets first.
+        
+        # 3. Headers: # Header -> <b>Header</b><br/>
+        # Handle #, ##, ### at start of line or string
+        text = re.sub(r'(?m)^#{1,6}\s*(.*)$', r'<b>\1</b><br/>', text)
+        
+        # 4. Bullets: * or - at start of line -> • 
+        # Using non-breaking space for indentation
+        text = re.sub(r'(?m)^[\*\-]\s+(.*)$', r'&nbsp;&nbsp;• \1<br/>', text)
+        
+        # 5. Newlines to <br/>
+        text = text.replace('\n', '<br/>')
+        
+        return text
 
     def generate_pdf(self, data):
         """
@@ -139,9 +167,65 @@ class PDFService:
         # PAGE 1: COVER PAGE
         # ====================
         # We want the cover page to be centered vertically, so we add spacers
-        story.append(Spacer(1, 4*cm))
+        story.append(Spacer(1, 3*cm))
         
-        story.append(Paragraph("AI EVOLUTION BLUEPRINT", style_cover_title))
+        # AI Compass Logo (matching frontend design)
+        # Create a horizontal layout with gradient box + icon + text
+        logo_drawing = Drawing(300, 60)
+        
+        # Calculate centering - total logo width is approximately 180 (box 40 + gap 15 + text ~125)
+        # Center this within the 300pt drawing width
+        total_logo_width = 180
+        start_x = (300 - total_logo_width) / 2
+        
+        # Gradient background box (blue-600 to purple-600)
+        box_size = 40
+        box_x = start_x
+        box_y = 10
+        
+        # Create gradient effect with overlapping rectangles
+        logo_drawing.add(Rect(box_x, box_y, box_size, box_size, 
+                              fillColor=colors.HexColor('#2563eb'), strokeColor=None, rx=6, ry=6))
+        logo_drawing.add(Rect(box_x, box_y, box_size, box_size, 
+                              fillColor=colors.HexColor('#9333ea'), strokeColor=None, rx=6, ry=6, 
+                              fillOpacity=0.5))
+        
+        # Compass icon (simplified - circle with directional lines)
+        icon_center_x = box_x + box_size/2
+        icon_center_y = box_y + box_size/2
+        icon_radius = 12
+        
+        # Outer circle
+        logo_drawing.add(Circle(icon_center_x, icon_center_y, icon_radius, 
+                               fillColor=None, strokeColor=colors.white, strokeWidth=2))
+        # North pointer
+        logo_drawing.add(Polygon([icon_center_x, icon_center_y + icon_radius - 2,
+                                 icon_center_x + 3, icon_center_y,
+                                 icon_center_x, icon_center_y - icon_radius + 2,
+                                 icon_center_x - 3, icon_center_y],
+                                fillColor=colors.white, strokeColor=None))
+        # Center dot
+        logo_drawing.add(Circle(icon_center_x, icon_center_y, 2, 
+                               fillColor=colors.white, strokeColor=None))
+        
+        # "AI COMPASS" text next to the box
+        text_x = box_x + box_size + 15
+        text_y = box_y + box_size/2 - 8
+        logo_drawing.add(String(text_x, text_y, "AI COMPASS", 
+                               fontName='Helvetica-Bold', fontSize=20, 
+                               fillColor=col_primary, textAnchor='start'))
+        
+        # Wrap in table to center on page
+        logo_table = Table([[logo_drawing]], colWidths=[16*cm])
+        logo_table.setStyle(TableStyle([
+            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+        ]))
+        story.append(logo_table)
+        
+        story.append(Spacer(1, 2*cm))
+        
+        story.append(Paragraph("Executive Results Report", style_cover_title))
         story.append(Paragraph("STRATEGIC MATURITY ASSESSMENT", style_cover_sub))
         
         story.append(Spacer(1, 4*cm))
@@ -160,6 +244,8 @@ class PDFService:
         ]))
         story.append(t_cover)
         
+        import re
+        
         story.append(PageBreak())
         
         # ====================
@@ -175,12 +261,12 @@ class PDFService:
         ]
         
         right_metrics_block = [
-            [Paragraph("PEER BENCHMARK", style_score_label)],
+            [Paragraph("INDUSTRY BENCHMARK", style_score_label)],
             [Paragraph(f"Top <b>{percentile_rank}%</b>", style_score_sub)],
             [Paragraph(f"vs {peer_group} Peers", ParagraphStyle('tiny', parent=style_score_label, textTransform='none'))],
             [Spacer(1, 15)],
             [Paragraph("CLUSTER PROFILE", style_score_label)],
-            [Paragraph(f"<b>{cluster_name}</b>", style_score_sub)],
+            [Paragraph(f"<b>{re.sub(r'^\d+\s*[-:]\s*', '', cluster_name)}</b>", style_score_sub)],
         ]
         
         t_left = Table(left_score_block, colWidths=[6*cm])
@@ -204,7 +290,8 @@ class PDFService:
         # ====================
         # VALUE GROWTH CHART (New)
         # ====================
-        story.append(Paragraph("Value Growth Profile", style_h2))
+        kp_vg = []
+        kp_vg.append(Paragraph("Value Growth Profile", style_h1))
         
         # Cluster Definitions for Chart logic
         clusters_def = [
@@ -272,15 +359,17 @@ class PDFService:
             
             x_cursor += single_bar_w + bar_gap
             
-        story.append(vg_drawing)
+        kp_vg.append(vg_drawing)
+        story.append(KeepTogether(kp_vg))
         story.append(Spacer(1, 1*cm))
 
         # ====================
         # DIMENSION PROFILE SECTION (Moved Up)
         # ====================
-        story.append(Paragraph("The Multi-Dimensional Maturity Profile", style_h2))
-        story.append(Paragraph("Breakdown of performance across core capabilities.", ParagraphStyle('DimSub', parent=style_normal, fontSize=10, textColor=col_subtext)))
-        story.append(Spacer(1, 10))
+        kp_maturity = []
+        kp_maturity.append(Paragraph("The Multi-Dimensional Maturity Profile", style_h1))
+        kp_maturity.append(Paragraph("Breakdown of performance across core capabilities.", ParagraphStyle('DimSub', parent=style_normal, fontSize=10, textColor=col_subtext)))
+        kp_maturity.append(Spacer(1, 10))
         
         dim_scores = data.get("dimension_scores", {})
         if dim_scores:
@@ -320,35 +409,63 @@ class PDFService:
                 ('TOPPADDING', (0,0), (-1,-1), 4),
                 ('BOTTOMPADDING', (0,0), (-1,-1), 4),
             ]))
-            story.append(dim_table)
+            kp_maturity.append(dim_table)
+        
+        story.append(KeepTogether(kp_maturity))
         
         story.append(Spacer(1, 0.5*cm))
         
         # ====================
         # EXECUTIVE BRIEFING (Moved Down)
         # ====================
-        story.append(Paragraph("Executive Summary", style_h1))
+        kp_briefing = []
+        kp_briefing.append(Paragraph("Executive Summary", style_h1))
         briefing = data.get("executive_briefing", "No detailed briefing available.")
         
-        # Wrapped in a nice "Quote" style box
-        briefing_content = [[Paragraph(briefing, ParagraphStyle('BriefingText', parent=style_normal, fontSize=11, leading=16, textColor=colors.HexColor('#334155')))]]
-        briefing_table = Table(briefing_content, colWidths=[16*cm])
+        # Premium Design: Two-column layout with visual accent
+        # Col 1: Decorative Quote Icon (simulated with large text for now, or a Drawing)
+        # Col 2: Text content
+        
+        # Large Quote Mark
+        quote_style = ParagraphStyle('QuoteMark', parent=style_normal, fontSize=50, leading=60, textColor=col_primary, alignment=TA_CENTER)
+        quote_col = Paragraph("“", quote_style)
+        
+        # Main Text - Larger, more readable, dark slate
+        text_style = ParagraphStyle('BriefingText', parent=style_normal, fontSize=11, leading=18, textColor=colors.HexColor('#1e293b'))
+        clean_briefing = self._format_text(briefing)
+        text_col = Paragraph(clean_briefing, text_style)
+        
+        briefing_data = [[quote_col, text_col]]
+        
+        briefing_table = Table(briefing_data, colWidths=[1.5*cm, 14*cm])
         briefing_table.setStyle(TableStyle([
-            ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#f8fafc')), # Light Slate
-            ('LEFTPADDING', (0,0), (-1,-1), 15),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+            ('ALIGN', (0,0), (0,0), 'CENTER'),
+            ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#f8fafc')), # Very light background
+            ('BOX', (0,0), (-1,-1), 0.5, colors.HexColor('#e2e8f0')), # Subtle border
+            ('LEFTPADDING', (0,0), (-1,-1), 0),
             ('RIGHTPADDING', (0,0), (-1,-1), 15),
             ('TOPPADDING', (0,0), (-1,-1), 15),
-            ('BOTTOMPADDING', (0,0), (-1,-1), 15),
-            ('LINEBEFORE', (0,0), (0,-1), 4, col_primary), # Thick left border accent
+            ('BOTTOMPADDING', (0,0), (-1,-1), 20),
+            
+            # Accent line on top instead of left
+            ('LINEABOVE', (0,0), (-1,0), 3, col_primary),
         ]))
-        story.append(briefing_table)
+        
+        kp_briefing.append(briefing_table)
+        story.append(KeepTogether(kp_briefing))
         
         story.append(Spacer(1, 0.5*cm))
         
         # Cluster Description Detail
         story.append(Paragraph("Analysis", style_h2))
+        # Cluster Description Detail
+        story.append(Paragraph("Analysis", style_h2))
         cluster_desc = cluster.get('description', 'Your organization aligns with this pattern of AI adoption.')
-        story.append(Paragraph(f"<b>{cluster_name}:</b> {cluster_desc}", style_normal))
+        
+        display_name = re.sub(r'^\d+\s*[-:]\s*', '', cluster_name)
+        clean_desc = self._format_text(cluster_desc)
+        story.append(Paragraph(f"<b>{display_name}:</b> {clean_desc}", style_normal))
         
         story.append(PageBreak())
         
@@ -375,7 +492,8 @@ class PDFService:
                 
                 # Context
                 story.append(Spacer(1, 2))
-                story.append(Paragraph(context, ParagraphStyle('Indented', parent=style_normal, leftIndent=12, textColor=col_subtext)))
+                clean_context = self._format_text(context)
+                story.append(Paragraph(clean_context, ParagraphStyle('Indented', parent=style_normal, leftIndent=12, textColor=col_subtext)))
                 story.append(Spacer(1, 10))
         else:
             story.append(Paragraph("No critical findings.", style_normal))
@@ -387,9 +505,10 @@ class PDFService:
         roadmap = data.get("roadmap", {}) or {}
         
         for i, (phase, items) in enumerate(roadmap.items()):
-            # Phase "Card" Layout
-            # Header
-            story.append(Paragraph(phase.upper(), ParagraphStyle('PhaseHeader', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=10, textColor=col_primary, spaceAfter=8)))
+            kp_phase = []
+            
+            # Phase Header
+            kp_phase.append(Paragraph(phase.upper(), ParagraphStyle('PhaseHeader', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=10, textColor=col_primary, spaceAfter=8)))
             
             # Content Box
             if items:
@@ -399,59 +518,48 @@ class PDFService:
                     theme = item.get("theme", "Action")
                     explanation_raw = item.get("explanation", "")
                     
-                    # --- PARSING LOGIC (Matching Roadmap.jsx) ---
-                    # Format: "**Analysis**: Text... \n - **Action 1**: Text... \n - **Action 2**: Text..."
+                    # --- PARSING LOGIC ---
                     parts = [p.strip() for p in explanation_raw.split('\n') if p.strip()]
                     
                     analysis_text = ""
                     actions = []
                     
-                    # logic to extract Analysis vs Actions
-                    # 1. Find Analysis line
+                    # 1. Analysis
                     analysis_part = next((p for p in parts if 'analysis' in p.lower()), None)
                     if not analysis_part and parts: 
-                         analysis_part = parts[0] # Fallback if no explicit label
+                         analysis_part = parts[0]
                     
                     if analysis_part:
-                        # Clean up "**Analysis**:" etc
                          clean_an = analysis_part.replace('**Analysis**', '').replace('Analysis:', '').replace('**', '').strip()
                          if clean_an.startswith(':'): clean_an = clean_an[1:].strip()
                          analysis_text = clean_an
-
-                    # 2. Find Action lines
+                         
+                    # 2. Actions
                     action_parts = [p for p in parts if 'action' in p.lower() and ('-' in p or '*' in p or '•' in p)]
                     for act in action_parts:
-                        # Clean up "- **Action 1**: "
-                        # Regex or simple replace
                         clean_act = act.replace('-', '').replace('*', '').replace('•', '').strip()
-                        # Remove "Action N:" prefix if present
                         if ':' in clean_act and 'action' in clean_act.lower().split(':')[0]:
                             clean_act = clean_act.split(':', 1)[1].strip()
                         actions.append(clean_act)
 
                     # --- RENDER LOGIC ---
                     
-                    # 1. Main Recommendation Title (Theme)
-                    # Using a generic Bullet for the main item row
+                    # 1. Bullet
                     bullet_cell = Paragraph("•", ParagraphStyle('Bullet', parent=style_normal, textColor=col_accent, fontSize=14, alignment=TA_CENTER))
                     
-                    # Content Cell stack
+                    # 2. Content Stack
                     content_stack = []
-                    content_stack.append(Paragraph(f"<b>{theme}</b>", style_normal))
-                    content_stack.append(Spacer(1, 4))
+                    content_stack.append(Paragraph(f"<b>{theme}</b>", ParagraphStyle('RecTitle', parent=style_normal, fontSize=10, textColor=col_text)))
                     
-                    # Analysis Section
                     if analysis_text:
                         lbl = f"<font color='#1e293b'><b>Analysis:</b></font> <font color='#475569'>{analysis_text}</font>"
+                        content_stack.append(Spacer(1, 3))
                         content_stack.append(Paragraph(lbl, ParagraphStyle('Analysis', parent=style_normal, fontSize=9, leading=12)))
                         content_stack.append(Spacer(1, 6))
-                    
-                    # Action List
+                         
                     if actions:
                         for idx, action_text in enumerate(actions):
-                            # Action Box styling
-                            # We create a mini-table for the Icon + Label + Text
-                            # Label: "ACTION 1"
+                            # Action Box: Arrow + [Label / Text]
                             label_html = f"<font color='#0f172a' size=7><b>ACTION {idx+1}</b></font>"
                             
                             act_row = [
@@ -465,40 +573,42 @@ class PDFService:
                             act_table = Table([act_row], colWidths=[0.6*cm, 12*cm])
                             act_table.setStyle(TableStyle([
                                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
-                                ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#f8fafc')), # Slate 50
+                                ('BACKGROUND', (0,0), (-1,-1), colors.HexColor('#f8fafc')),
                                 ('BOX', (0,0), (-1,-1), 0.5, colors.HexColor('#e2e8f0')),
-                                # ('ROUNDEDCORNERS', [4,4,4,4]), # Not std
                                 ('TOPPADDING', (0,0), (-1,-1), 6),
                                 ('BOTTOMPADDING', (0,0), (-1,-1), 6),
-                                ('LEFTPADDING', (0,0), (0,0), 2), # Arrow col
+                                ('LEFTPADDING', (0,0), (0,0), 2),
                             ]))
                             content_stack.append(act_table)
                             content_stack.append(Spacer(1, 4))
-
+                            
                     item_rows.append([bullet_cell, content_stack])
+                    item_rows.append([None, Spacer(1, 8)]) # Separator
                 
-                # Table for items
+                # Wrapper Table for the whole Phase
                 items_table = Table(item_rows, colWidths=[0.8*cm, 14.2*cm])
                 items_table.setStyle(TableStyle([
                     ('VALIGN', (0,0), (-1,-1), 'TOP'),
                     ('LEFTPADDING', (0,0), (-1,-1), 0),
-                    ('BOTTOMPADDING', (0,0), (-1,-1), 12),
+                    ('BOTTOMPADDING', (0,0), (-1,-1), 0),
                 ]))
                 
-                # Wrapper Table for the whole Card
                 card_table = Table([[items_table]], colWidths=[16*cm])
                 card_table.setStyle(TableStyle([
                     ('BACKGROUND', (0,0), (-1,-1), colors.white),
-                    ('BOX', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')), # Thin border
+                    ('BOX', (0,0), (-1,-1), 0.5, colors.HexColor('#cbd5e1')),
                     ('TOPPADDING', (0,0), (-1,-1), 10),
                     ('BOTTOMPADDING', (0,0), (-1,-1), 10),
                     ('LEFTPADDING', (0,0), (-1,-1), 10),
                     ('RIGHTPADDING', (0,0), (-1,-1), 10),
                 ]))
                 card_table.hAlign = 'LEFT'
-                story.append(card_table)
+                kp_phase.append(card_table)
+            else:
+                 kp_phase.append(Paragraph("No immediate actions for this phase.", style_normal))
             
-            story.append(Spacer(1, 0.5*cm))
+            story.append(KeepTogether(kp_phase))
+            story.append(Spacer(1, 0.6*cm))
 
 
         # --- Build PDF ---

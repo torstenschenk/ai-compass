@@ -8,4 +8,5 @@ python-dotenv
 pandas
 scikit-learn
 numpy
-numpy
+reportlab
+
