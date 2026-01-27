@@ -1,0 +1,80 @@
+================================================================================
+CLUSTER COMPARISON REPORT: ML v2 vs Database
+================================================================================
+Generated: 2026-01-16
+Analysis: Comparison of ML v2 cluster assignments against database cluster_id
+
+================================================================================
+
+COMPARISON TABLE
+--------------------------------------------------------------------------------
+Sr.No.  Cluster Name                    ML_V2_Count     DB_Count
+--------------------------------------------------------------------------------
+1       The Traditionalist              98              100
+2       The Experimental Explorer       200             200
+3       The Structured Builder          72              125
+4       The Operational Scaler          57              60
+5       The AI-Driven Leader            73              15
+--------------------------------------------------------------------------------
+TOTAL                                   500             500
+================================================================================
+
+VARIANCE ANALYSIS
+--------------------------------------------------------------------------------
+
+Cluster-by-Cluster Comparison:
+
+1. The Traditionalist
+   ML v2: 98 companies  |  DB: 100 companies  |  Difference: -2 (-2.0%)
+   
+2. The Experimental Explorer  
+   ML v2: 200 companies |  DB: 200 companies  |  Difference: 0 (0.0%)
+   ✓ Perfect match
+   
+3. The Structured Builder
+   ML v2: 72 companies  |  DB: 125 companies  |  Difference: -53 (-42.4%)
+   ⚠ Significant underassignment by ML v2
+   
+4. The Operational Scaler
+   ML v2: 57 companies  |  DB: 60 companies   |  Difference: -3 (-5.0%)
+   
+5. The AI-Driven Leader
+   ML v2: 73 companies  |  DB: 15 companies   |  Difference: +58 (+386.7%)
+   ⚠ Significant overassignment by ML v2
+
+================================================================================
+
+KEY FINDINGS
+--------------------------------------------------------------------------------
+
+EXACT MATCHES:
+- The Experimental Explorer: Both systems assigned exactly 200 companies
+
+CLOSE MATCHES (within 5%):
+- The Traditionalist: 2 company difference
+- The Operational Scaler: 3 company difference
+
+SIGNIFICANT VARIANCES:
+- The Structured Builder: ML v2 assigned 53 fewer companies (-42.4%)
+- The AI-Driven Leader: ML v2 assigned 58 more companies (+386.7%)
+
+INTERPRETATION:
+The ML v2 model identified significantly more "AI-Driven Leaders" (73 vs 15)
+and fewer "Structured Builders" (72 vs 125) compared to the database 
+assignments. This suggests:
+
+1. The ML v2 rank-based approach may be more generous in identifying top 
+   performers, as it guarantees equal distribution of the 5 archetypes
+   
+2. The database assignments appear to have a concentration in the middle tier
+   (Structured Builder: 125 companies, 25% of total)
+   
+3. ML v2's unsupervised clustering found natural groupings that differ from
+   the rule-based or manual assignments in the database
+
+METHODOLOGY DIFFERENCE:
+- Database: Uses predefined rules/thresholds or manual assignment
+- ML v2: Uses K-Means clustering with rank-based mapping to ensure all 5
+  strategic levels are represented proportionally
+
+================================================================================

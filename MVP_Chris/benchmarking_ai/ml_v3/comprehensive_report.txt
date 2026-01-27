@@ -1,0 +1,37 @@
+================================================================================
+AI-COMPASS ML v3: COMPREHENSIVE INTELLIGENCE REPORT
+================================================================================
+
+1. MACRO-SEGMENTATION (CLUSTERS)
+--------------------------------
+Cluster_Name
+1 - The Traditionalist            98
+2 - The Experimental Explorer    200
+3 - The Structured Builder        72
+4 - The Operational Scaler        57
+5 - The AI-Driven Leader          73
+
+2. RISK ANALYSIS (ANOMALIES)
+----------------------------
+Total Companies with Structural Anomalies: 199 (39.8%)
+
+Top Detected Risks:
+Critical Imbalance    131
+Bottleneck            119
+
+3. STRATEGIC RECOMMENDATIONS (NEXT BEST ACTION)
+-----------------------------------------------
+Most Common Recommended Next Steps:
+Recommended_Action
+People & Culture              82
+Processes & Scaling           79
+Strategy & Business Vision    78
+Governance & Compliance       78
+Use Cases & Business Value    75
+Tech Infrastructure           60
+Data Readiness & Literacy     33
+Maintain                      15
+
+4. SAMPLE PROFILE (Company ID: 5)
+---------------------------------
+Company 5 not found in dataset.

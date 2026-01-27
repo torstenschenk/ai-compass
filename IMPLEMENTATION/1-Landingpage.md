@@ -1,8 +1,8 @@
 **Section A**. The Hero Section (The Hook) 
-Include image that fits well 
-Headline: Navigate the AI Evolution with the AI Compass. 
-Sub-headline: Stop guessing. Gain strategic clarity in 10-15 minutes. Benchmark your Organization against 500+ peers and receive a data-driven roadmap to AI maturity. No costs attached, just your valuable time.  
-Primary CTA: [Start Free Assessment] 
+Include image that fits well
+Headline: Navigate the AI Evolution with the AI Compass.
+Sub-headline: Stop guessing. Gain strategic clarity in 10-15 minutes. Benchmark your Organization against 500+ peers and receive a data-driven roadmap to AI maturity. No costs attached, just your valuable time. 
+Primary CTA: [Start Free Assessment]
 Trust Signal: “Takes 10-15 mins | GDPR Compliant | Professional Framework”
 Use the following code:
 import { ArrowRight, Shield, Clock, Award } from 'lucide-react';
@@ -54,21 +54,21 @@ export function HeroSection() {
 }
 
 
-**Section B**: make a flip card with title on the front and "what" plus "why" on the back.  
-Headline: The Value Proposition (The "Why") Why the AI Compass? 
+**Section B**: make a flip card with title on the front and "what" plus "why" on the back. 
+Headline: The Value Proposition (The "Why")Why the AI Compass?
 Sub-headline: AI is not a tool you buy; it is a capability you build. The AI Compass is a professional consulting tool designed to provide the diagnostic clarity needed to ensure your investment leads to growth, not just expense.
-1) Assess Your Current AI Maturity Level 
-What it is: A comprehensive multi-dimensional audit that evaluates your organization across 7 core pillars: Strategy, People, Data, Use Cases, Processes, Compliance, and Tech Infrastructure.  Why it’s necessary: You cannot improve what you do not measure. By establishing an objective baseline, you move away from guesswork and gain a scientific understanding of your organization's actual readiness.
+1) Assess Your Current AI Maturity Level
+What it is: A comprehensive multi-dimensional audit that evaluates your organization across 7 core pillars: Strategy, People, Data, Use Cases, Processes, Compliance, and Tech Infrastructure. Why it’s necessary: You cannot improve what you do not measure. By establishing an objective baseline, you move away from guesswork and gain a scientific understanding of your organization's actual readiness.
 2) Benchmarking Beyond the Hype
-What it is: A comparative analysis that measures your digital capabilities against a verified database of 500+ peer companies and industry leaders. Why it’s necessary: Strategic positioning is relative. Benchmarking tells you if you are truly leading your industry or if competitors are gaining a technological advantage that will be difficult to close later.
+What it is: A comparative analysis that measures your digital capabilities against a verified database of 500+ peer companies and industry leaders.Why it’s necessary: Strategic positioning is relative. Benchmarking tells you if you are truly leading your industry or if competitors are gaining a technological advantage that will be difficult to close later.
 3) Bridging the Human-Tech Divide
-What it is: An evaluation of organizational culture, employee mindset, and internal AI literacy levels. Why it’s necessary: Technology only scales as fast as your people. Identifying psychological resistance or skill gaps early ensures your culture supports your technical transformation instead of blocking it.
+What it is: An evaluation of organizational culture, employee mindset, and internal AI literacy levels.Why it’s necessary: Technology only scales as fast as your people. Identifying psychological resistance or skill gaps early ensures your culture supports your technical transformation instead of blocking it.
 4) Risk & Compliance Safeguard
-What it is: A proactive audit of your alignment with emerging standards, such as the EU AI Act, and internal data ethics protocols. Why it’s necessary: Moving fast is important, but moving safely is vital. This safeguard protects your company’s reputation and future-proofs your operations against shifting legal landscapes.
+What it is: A proactive audit of your alignment with emerging standards, such as the EU AI Act, and internal data ethics protocols.Why it’s necessary: Moving fast is important, but moving safely is vital. This safeguard protects your company’s reputation and future-proofs your operations against shifting legal landscapes.
 5) Identify Gaps and Opportunities
-What it is: A precise gap-analysis tool that reveals hidden weaknesses in your digital foundation while highlighting untapped areas for innovation. Why it’s necessary: To reach the next maturity level, you must know exactly what is holding you back. Pinpointing these "friction points" allows you to fix the foundation while simultaneously seizing "low-hanging fruit."
+What it is: A precise gap-analysis tool that reveals hidden weaknesses in your digital foundation while highlighting untapped areas for innovation.Why it’s necessary: To reach the next maturity level, you must know exactly what is holding you back. Pinpointing these "friction points" allows you to fix the foundation while simultaneously seizing "low-hanging fruit."
 6) Prioritized Strategic Advisory
-What it is: A structured advisory module that translates your maturity gaps into a prioritized sequence of strategic topics and focus areas (e.g., "Data Foundation" before "Customer-facing AI"). Why it’s necessary: SMEs often suffer from "pilot fatigue" by trying to do everything at once. This advisory ensures that you tackle the right topics in the right order, focusing resources on the thematic areas that will resolve your specific business bottlenecks most effectively.
+What it is: A structured advisory module that translates your maturity gaps into a prioritized sequence of strategic topics and focus areas (e.g., "Data Foundation" before "Customer-facing AI").Why it’s necessary: SMEs often suffer from "pilot fatigue" by trying to do everything at once. This advisory ensures that you tackle the right topics in the right order, focusing resources on the thematic areas that will resolve your specific business bottlenecks most effectively.
 Use the following code:
 import { useState } from 'react';
 import { motion } from 'motion/react';
@@ -211,7 +211,7 @@ export function ValueProposition() {
 }
 
 
-**Section C**: 3 step process.  Content: The Process (The "How")
+**Section C**: 3 step process. Content: The Process (The "How")
 Guided Assessment: 27 questions covering 7 key dimensions (Strategy, People, Data, Use Cases, Processes, Compliance, and Tech Infrastructure).
 Instant Analysis: Our AI supported algorithm identifies your unique Company Cluster Profile and your current potential.
 Growth Roadmap: Receive custom recommendations to move from your current level to the next.
@@ -282,7 +282,7 @@ export function ProcessSection() {
   );
 }
 
-**Section D**. The Outcome Preview (The "Gold") Visual Element as radar chart Content: "Your results page will include:" Maturity Score: An overall index from 1 to 5. Cluster Badge: Are you a Curious Experimenter or an AI-Enabled Leader? Gap Analysis: Deep dive into which dimension is holding you back. Next Steps: Immediate 'Low-Hanging Fruit' vs. Long-term strategic shifts.
+**Section D**. The Outcome Preview (The "Gold")Visual Element as radar chartContent: "Your results page will include:"Maturity Score: An overall index from 1 to 5.Cluster Badge: Are you a Curious Experimenter or an AI-Enabled Leader?Gap Analysis: Deep dive into which dimension is holding you back.Next Steps: Immediate 'Low-Hanging Fruit' vs. Long-term strategic shifts.
 Use the following code:
 import { motion } from 'motion/react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
@@ -387,7 +387,7 @@ export function OutcomePreview() {
 
 
 
-**Section E** CTA: Ready to discover your AI Maturity? [Start Now]
+**Section E**CTA: Ready to discover your AI Maturity? [Start Now]
 Use the following code:
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';

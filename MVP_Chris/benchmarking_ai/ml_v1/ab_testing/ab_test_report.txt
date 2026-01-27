@@ -1,0 +1,34 @@
+--- A/B Test Report: Existing Legacy Clusters vs New ML Model (5 vs 5) ---
+
+Confusion Matrix counts:
+New_Cluster_Name               1 - Laggards  2 - Data-Rich / Tech-Poor  3 - Middle Pack  4 - Tech Specialists  5 - Leaders
+Legacy_Caluster_Name                                                                                                      
+1 - The Traditionalist                    0                         94                0                     6            0
+2 - The Experimental Explorer             0                          3                1                   196            0
+3 - The Structured Builder                0                          0              124                     1            0
+4 - The Operational Scaler               56                          0                1                     0            3
+5 - The AI-Driven Leader                  1                          0                0                     0           14
+
+Interpretation:
+
+Legacy Cluster '1 - The Traditionalist' (Total 100):
+  -> 94.0% moved to New Cluster 2 - Data-Rich / Tech-Poor
+  -> 6.0% moved to New Cluster 4 - Tech Specialists
+
+Legacy Cluster '2 - The Experimental Explorer' (Total 200):
+  -> 98.0% moved to New Cluster 4 - Tech Specialists
+  -> 1.5% moved to New Cluster 2 - Data-Rich / Tech-Poor
+  -> 0.5% moved to New Cluster 3 - Middle Pack
+
+Legacy Cluster '3 - The Structured Builder' (Total 125):
+  -> 99.2% moved to New Cluster 3 - Middle Pack
+  -> 0.8% moved to New Cluster 4 - Tech Specialists
+
+Legacy Cluster '4 - The Operational Scaler' (Total 60):
+  -> 93.3% moved to New Cluster 1 - Laggards
+  -> 5.0% moved to New Cluster 5 - Leaders
+  -> 1.7% moved to New Cluster 3 - Middle Pack
+
+Legacy Cluster '5 - The AI-Driven Leader' (Total 15):
+  -> 93.3% moved to New Cluster 5 - Leaders
+  -> 6.7% moved to New Cluster 1 - Laggards
