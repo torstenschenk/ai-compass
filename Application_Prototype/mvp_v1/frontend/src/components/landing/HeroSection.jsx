@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Shield, Clock, Award } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { ImageWithFallback } from './ImageWithFallback';
+import teaserImage from '../../images/teaser.jpg';
+
 
 export function HeroSection() {
     return (
@@ -42,10 +44,11 @@ export function HeroSection() {
                     <div className="relative">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-2xl blur-3xl"></div>
                         <ImageWithFallback
-                            src="https://images.unsplash.com/photo-1697577418970-95d99b5a55cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwdGVjaG5vbG9neXxlbnwxfHx8fDE3NjgyMDU3MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                            src={teaserImage}
                             alt="AI Technology"
                             className="relative rounded-2xl shadow-2xl w-full h-auto"
                         />
+
                     </div>
                 </div>
             </div>
