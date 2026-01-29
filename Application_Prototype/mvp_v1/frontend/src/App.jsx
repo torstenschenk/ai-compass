@@ -16,7 +16,7 @@ function App() {
         <Route path="/assessment/:responseId" element={<QuestionnaireWizard />} />
         <Route path="/results/:responseId" element={<ResultsPage />} />
       </Routes>
-      <Toaster />
+      <Toaster position="bottom-left" />
     </div>
   );
 }
