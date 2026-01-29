@@ -115,5 +115,17 @@ class SessionStore:
         """
         return self.completed_assessments.get(str(response_id))
 
+    def delete_session(self, response_id: int):
+        """
+        Wipe all data associated with a response ID.
+        """
+        if response_id in self.responses:
+            del self.responses[response_id]
+        if response_id in self.response_values:
+            del self.response_values[response_id]
+        if str(response_id) in self.completed_assessments:
+            del self.completed_assessments[str(response_id)]
+        logger.info(f"Session {response_id} wiped from memory.")
+
 session_store = SessionStore()
 

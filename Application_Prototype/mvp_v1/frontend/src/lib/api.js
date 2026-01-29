@@ -98,4 +98,15 @@ export const api = {
         if (!response.ok) throw new Error("PDF Generation Failed");
         return response.blob();
     },
+
+    /**
+     * Clear assessment session on backend
+     * @param {number} responseId
+     */
+    deleteResponseSession: async (responseId) => {
+        const response = await fetch(`${API_BASE_URL}/responses/${responseId}`, {
+            method: 'DELETE',
+        });
+        return handleResponse(response);
+    },
 };

@@ -60,3 +60,11 @@ def complete_assessment(response_id: int):
 
     return {"message": "Assessment completed and stored in-memory", "response_id": response_id}
 
+@router.delete("/{response_id}")
+def delete_response_session(response_id: int):
+    """
+    Manually wipe an assessment session from memory.
+    """
+    session_store.delete_session(response_id)
+    return {"message": f"Session {response_id} wiped successfully"}
+
