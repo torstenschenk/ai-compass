@@ -1,0 +1,32 @@
+[
+    {
+        "cluster_id": 1,
+        "cluster_name": "The Traditionalist",
+        "score_min": 1.0,
+        "score_max": 1.5
+    },
+    {
+        "cluster_id": 2,
+        "cluster_name": "The Experimental Explorer",
+        "score_min": 1.6,
+        "score_max": 2.5
+    },
+    {
+        "cluster_id": 3,
+        "cluster_name": "The Structured Builder",
+        "score_min": 2.6,
+        "score_max": 3.5
+    },
+    {
+        "cluster_id": 4,
+        "cluster_name": "The Operational Scaler",
+        "score_min": 3.6,
+        "score_max": 4.5
+    },
+    {
+        "cluster_id": 5,
+        "cluster_name": "The AI-Driven Leader",
+        "score_min": 4.6,
+        "score_max": 5.0
+    }
+]

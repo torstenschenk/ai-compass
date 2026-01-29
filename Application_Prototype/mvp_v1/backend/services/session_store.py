@@ -1,12 +1,13 @@
 from typing import Dict, List, Optional
 from schemas.company import CompanyCreate
 from schemas.response import ResponseCreate
-from database import SessionLocal
-from models.company import Company
-from models.response import Response
-from sqlalchemy import func
+# from database import SessionLocal # REMOVED
+# from models.company import Company # REMOVED
+# from models.response import Response # REMOVED
+# from sqlalchemy import func # REMOVED
 import logging
 from datetime import datetime
+from services.persistence_service import _load_db
 
 logger = logging.getLogger(__name__)
 
@@ -20,27 +21,35 @@ class SessionStore:
             cls._instance.responses: Dict[int, dict] = {}
             cls._instance.response_values: Dict[int, List[dict]] = {} # response_id -> list of answers
             
-            # Initialize counters from DB
+            # Initialize counters from FILE persistence
             cls._instance._init_counters()
             
         return cls._instance
 
     def _init_counters(self):
-        db = SessionLocal()
         try:
-            # Get max IDs from DB to avoid collision
-            max_c = db.query(func.max(Company.company_id)).scalar() or 0
-            max_r = db.query(func.max(Response.response_id)).scalar() or 0
-            
-            self.company_counter = max_c
-            self.response_counter = max_r
-            logger.info(f"Initialized SessionStore counters - Company: {max_c}, Response: {max_r}")
+            db_data = _load_db()
+            if db_data:
+                # assessments.json keys are response_ids
+                max_r = max([int(k) for k in db_data.keys()]) if db_data else 0
+                # companies are embedded, find max company_id
+                max_c = 0
+                for r in db_data.values():
+                    if "company" in r and "company_id" in r["company"]:
+                        c_id = r["company"]["company_id"]
+                        if c_id > max_c:
+                            max_c = c_id
+                            
+                self.company_counter = max(1000, max_c)
+                self.response_counter = max(1000, max_r)
+                logger.info(f"Initialized SessionStore from JSON - Company: {self.company_counter}, Response: {self.response_counter}")
+            else:
+                self.company_counter = 1000
+                self.response_counter = 1000
         except Exception as e:
-            logger.error(f"Error initializing session counters, defaulting to 1000: {e}")
+            logger.error(f"Error initializing session counters: {e}")
             self.company_counter = 1000
             self.response_counter = 1000
-        finally:
-            db.close()
 
     def create_company(self, company: CompanyCreate) -> dict:
         self.company_counter += 1

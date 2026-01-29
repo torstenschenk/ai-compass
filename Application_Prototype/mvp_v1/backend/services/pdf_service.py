@@ -162,6 +162,7 @@ class PDFService:
         peer_group = pct_data.get("industry", "Global") if isinstance(pct_data, dict) else "Global"
         cluster = data.get("cluster", {})
         cluster_name = str(cluster.get("cluster_name") or "Unknown").replace(" - ", ": ")
+        clean_cluster_name = re.sub(r'^\d+\s*[-:]\s*', '', cluster_name)
         
         # ====================
         # PAGE 1: COVER PAGE
@@ -244,7 +245,7 @@ class PDFService:
         ]))
         story.append(t_cover)
         
-        import re
+
         
         story.append(PageBreak())
         
@@ -266,7 +267,7 @@ class PDFService:
             [Paragraph(f"vs {peer_group} Peers", ParagraphStyle('tiny', parent=style_score_label, textTransform='none'))],
             [Spacer(1, 15)],
             [Paragraph("CLUSTER PROFILE", style_score_label)],
-            [Paragraph(f"<b>{re.sub(r'^\d+\s*[-:]\s*', '', cluster_name)}</b>", style_score_sub)],
+            [Paragraph(f"<b>{clean_cluster_name}</b>", style_score_sub)],
         ]
         
         t_left = Table(left_score_block, colWidths=[6*cm])
@@ -459,11 +460,9 @@ class PDFService:
         
         # Cluster Description Detail
         story.append(Paragraph("Analysis", style_h2))
-        # Cluster Description Detail
-        story.append(Paragraph("Analysis", style_h2))
         cluster_desc = cluster.get('description', 'Your organization aligns with this pattern of AI adoption.')
         
-        display_name = re.sub(r'^\d+\s*[-:]\s*', '', cluster_name)
+        display_name = clean_cluster_name
         clean_desc = self._format_text(cluster_desc)
         story.append(Paragraph(f"<b>{display_name}:</b> {clean_desc}", style_normal))
         
