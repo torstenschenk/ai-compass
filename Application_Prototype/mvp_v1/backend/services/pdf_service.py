@@ -309,7 +309,6 @@ class PDFService:
         c_name_raw = cluster.get("cluster_name")
         if c_name_raw:
              # Try to find leading digit
-             import re
              m = re.match(r"(\d+)", str(c_name_raw))
              if m:
                  active_id = int(m.group(1))

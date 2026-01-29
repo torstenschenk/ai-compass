@@ -18,20 +18,28 @@ class InferenceEngine:
         self.ce = ClusterEngine()
         self.sga = StrategicGapAnalyzer()
         self.rg = RoadmapGenerator()
+        self.last_error = None
         
         try:
+            print(f"DEBUG: InferenceEngine starting load from prefix: {path}")
             self.ce.load_model(path)
+            print("DEBUG: ClusterEngine loaded.")
             self.sga.load_model(path)
+            print("DEBUG: StrategicGapAnalyzer loaded.")
             self.rg.load_model(path)
+            print("DEBUG: RoadmapGenerator loaded.")
             self.loaded = True
             
             # Debug: Print expected columns from RoadmapGenerator
             if self.rg.dim_data_train is not None:
                  cols = [c for c in self.rg.dim_data_train.columns if c not in ['total_maturity', 'industry']]
-                 print(f"DEBUG: Model expects dimensions: {cols}")
+                 print(f"DEBUG: Model successfully loaded. Dimensions: {cols}")
                  
         except Exception as e:
-            print(f"Warning: Models not loaded. {e}")
+            self.last_error = str(e)
+            print(f"CRITICAL ERROR: InferenceEngine failed to load artifacts from {path}. Error: {e}")
+            import traceback
+            traceback.print_exc()
             self.loaded = False
 
     def run_analysis(self, company_dim_series, company_question_df, company_industry=None):
@@ -45,8 +53,15 @@ class InferenceEngine:
             return {"error": "Models not loaded"}
         
         # 1. Cluster Prediction
-        # Series to DataFrame (row) for scaler
+        # Series to DataFrame (row) for scaler. Ensure feature names match fitted names.
         df_input = company_dim_series.to_frame().T 
+        
+        # Ensure column order matches what the scaler expects
+        if hasattr(self.ce.scaler, "feature_names_in_"):
+            expected_features = self.ce.scaler.feature_names_in_
+            # Reorder columns and fill missing with 1.0 (minimum maturity)
+            df_input = df_input.reindex(columns=expected_features, fill_value=1.0)
+            
         c_ids, c_names, coords = self.ce.predict(df_input)
         
         # Extract Semantic ID from name (e.g. "5 - Leader" -> 5) to match frontend expectation

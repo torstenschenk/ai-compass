@@ -1,13 +1,9 @@
 from typing import Dict, List, Optional
 from schemas.company import CompanyCreate
 from schemas.response import ResponseCreate
-# from database import SessionLocal # REMOVED
-# from models.company import Company # REMOVED
-# from models.response import Response # REMOVED
-# from sqlalchemy import func # REMOVED
 import logging
 from datetime import datetime
-from services.persistence_service import _load_db
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -20,36 +16,13 @@ class SessionStore:
             cls._instance.companies: Dict[int, dict] = {}
             cls._instance.responses: Dict[int, dict] = {}
             cls._instance.response_values: Dict[int, List[dict]] = {} # response_id -> list of answers
+            cls._instance.completed_assessments: Dict[str, dict] = {} # response_id -> full record
             
-            # Initialize counters from FILE persistence
-            cls._instance._init_counters()
+            # Initialize counters
+            cls._instance.company_counter = 1000
+            cls._instance.response_counter = 1000
             
         return cls._instance
-
-    def _init_counters(self):
-        try:
-            db_data = _load_db()
-            if db_data:
-                # assessments.json keys are response_ids
-                max_r = max([int(k) for k in db_data.keys()]) if db_data else 0
-                # companies are embedded, find max company_id
-                max_c = 0
-                for r in db_data.values():
-                    if "company" in r and "company_id" in r["company"]:
-                        c_id = r["company"]["company_id"]
-                        if c_id > max_c:
-                            max_c = c_id
-                            
-                self.company_counter = max(1000, max_c)
-                self.response_counter = max(1000, max_r)
-                logger.info(f"Initialized SessionStore from JSON - Company: {self.company_counter}, Response: {self.response_counter}")
-            else:
-                self.company_counter = 1000
-                self.response_counter = 1000
-        except Exception as e:
-            logger.error(f"Error initializing session counters: {e}")
-            self.company_counter = 1000
-            self.response_counter = 1000
 
     def create_company(self, company: CompanyCreate) -> dict:
         self.company_counter += 1
@@ -114,4 +87,33 @@ class SessionStore:
             "items": items
         }
 
+    def complete_assessment(self, response_id: int, total_score: float, cluster_id: int):
+        """
+        Store the final assessment record in memory.
+        """
+        session_data = self.get_full_session(response_id)
+        if not session_data:
+            return
+            
+        record = {
+            "response_id": response_id,
+            "company": session_data.get("company"),
+            "response_meta": session_data.get("response"),
+            "items": session_data.get("items"),
+            "computed_results": {
+                 "total_score": total_score,
+                 "cluster_id": cluster_id,
+                 "completed_at": time.time()
+            }
+        }
+        
+        self.completed_assessments[str(response_id)] = record
+
+    def get_assessment(self, response_id: int) -> Optional[dict]:
+        """
+        Retrieve a completed assessment by ID.
+        """
+        return self.completed_assessments.get(str(response_id))
+
 session_store = SessionStore()
+

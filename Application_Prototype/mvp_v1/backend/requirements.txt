@@ -5,8 +5,9 @@ psycopg2-binary
 pydantic
 pydantic-settings
 python-dotenv
-pandas
-scikit-learn
-numpy
-reportlab
+pandas==3.0.0
+scikit-learn==1.8.0
+numpy==2.4.1
+scipy==1.17.0
+reportlab==4.0.9
 
