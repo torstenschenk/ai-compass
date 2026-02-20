@@ -1,12 +1,9 @@
 from typing import Dict, List, Optional
 from schemas.company import CompanyCreate
 from schemas.response import ResponseCreate
-from database import SessionLocal
-from models.company import Company
-from models.response import Response
-from sqlalchemy import func
 import logging
 from datetime import datetime
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -19,28 +16,13 @@ class SessionStore:
             cls._instance.companies: Dict[int, dict] = {}
             cls._instance.responses: Dict[int, dict] = {}
             cls._instance.response_values: Dict[int, List[dict]] = {} # response_id -> list of answers
+            cls._instance.completed_assessments: Dict[str, dict] = {} # response_id -> full record
             
-            # Initialize counters from DB
-            cls._instance._init_counters()
+            # Initialize counters
+            cls._instance.company_counter = 1000
+            cls._instance.response_counter = 1000
             
         return cls._instance
-
-    def _init_counters(self):
-        db = SessionLocal()
-        try:
-            # Get max IDs from DB to avoid collision
-            max_c = db.query(func.max(Company.company_id)).scalar() or 0
-            max_r = db.query(func.max(Response.response_id)).scalar() or 0
-            
-            self.company_counter = max_c
-            self.response_counter = max_r
-            logger.info(f"Initialized SessionStore counters - Company: {max_c}, Response: {max_r}")
-        except Exception as e:
-            logger.error(f"Error initializing session counters, defaulting to 1000: {e}")
-            self.company_counter = 1000
-            self.response_counter = 1000
-        finally:
-            db.close()
 
     def create_company(self, company: CompanyCreate) -> dict:
         self.company_counter += 1
@@ -105,4 +87,45 @@ class SessionStore:
             "items": items
         }
 
+    def complete_assessment(self, response_id: int, total_score: float, cluster_id: int):
+        """
+        Store the final assessment record in memory.
+        """
+        session_data = self.get_full_session(response_id)
+        if not session_data:
+            return
+            
+        record = {
+            "response_id": response_id,
+            "company": session_data.get("company"),
+            "response_meta": session_data.get("response"),
+            "items": session_data.get("items"),
+            "computed_results": {
+                 "total_score": total_score,
+                 "cluster_id": cluster_id,
+                 "completed_at": time.time()
+            }
+        }
+        
+        self.completed_assessments[str(response_id)] = record
+
+    def get_assessment(self, response_id: int) -> Optional[dict]:
+        """
+        Retrieve a completed assessment by ID.
+        """
+        return self.completed_assessments.get(str(response_id))
+
+    def delete_session(self, response_id: int):
+        """
+        Wipe all data associated with a response ID.
+        """
+        if response_id in self.responses:
+            del self.responses[response_id]
+        if response_id in self.response_values:
+            del self.response_values[response_id]
+        if str(response_id) in self.completed_assessments:
+            del self.completed_assessments[str(response_id)]
+        logger.info(f"Session {response_id} wiped from memory.")
+
 session_store = SessionStore()
+

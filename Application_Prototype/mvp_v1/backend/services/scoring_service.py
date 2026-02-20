@@ -1,8 +1,7 @@
-from sqlalchemy.orm import Session
-from models.question import Question, Answer
-from typing import List
+from typing import List, Optional
+from services.questionnaire_service import get_question_map
 
-def calculate_total_score(items_data: List[dict], db: Session) -> float:
+def calculate_total_score(items_data: List[dict], db=None) -> float:
     """
     Calculates the total score based on scoring_methodology.md
     1. Calculate Question Scores (ratio of max/total possible weight)
@@ -12,25 +11,14 @@ def calculate_total_score(items_data: List[dict], db: Session) -> float:
     if not items_data:
         return 0.0
 
-    # 1. Fetch Question and Answer metadata
-    q_ids = [item["question_id"] for item in items_data]
-    questions = db.query(Question).filter(Question.question_id.in_(q_ids)).all()
-    q_meta = {q.question_id: q for q in questions}
+    # 1. Fetch Question and Answer metadata from Service (In-Memory JSON)
+    questions_map = get_question_map()
     
-    # Fetch ALL answers for these questions to calculate totals/maxes
-    all_answers = db.query(Answer).filter(Answer.question_id.in_(q_ids)).all()
-    
-    # Group answers by question
-    ans_ref = {}
-    for ans in all_answers:
-        if ans.question_id not in ans_ref:
-            ans_ref[ans.question_id] = []
-        ans_ref[ans.question_id].append(ans)
-        
-    # Calculate stats per question
+    # Calculate stats per question from reference data
     q_stats = {}
-    for q_id, answers in ans_ref.items():
-        weights = [a.answer_weight for a in answers if a.answer_weight is not None]
+    for q_id, q_data in questions_map.items():
+        answers = q_data.get("answers", [])
+        weights = [a.get("answer_weight") for a in answers if a.get("answer_weight") is not None]
         q_stats[q_id] = {
             "total_weight": sum(weights),
             "max_weight": max(weights) if weights else 0
@@ -41,20 +29,30 @@ def calculate_total_score(items_data: List[dict], db: Session) -> float:
     
     for item in items_data:
         q_id = item["question_id"]
-        if q_id not in q_meta or q_id not in q_stats:
+        if q_id not in questions_map or q_id not in q_stats:
             continue
             
-        q = q_meta[q_id]
+        q = questions_map[q_id]
         stats = q_stats[q_id]
         
         # Selected answer weights
+        # item["answers"] is a list of answer_ids
         selected_ids = item["answers"]
-        selected_weights = [a.answer_weight for a in ans_ref.get(q_id, []) 
-                           if a.answer_id in selected_ids and a.answer_weight is not None]
+        
+        # Find selected weights from reference
+        q_answers = q.get("answers", [])
+        selected_weights = []
+        for ans in q_answers:
+             if ans.get("answer_id") in selected_ids:
+                 w = ans.get("answer_weight")
+                 if w is not None:
+                     selected_weights.append(w)
+                     
         sum_selected = sum(selected_weights)
         
         ratio = 0
-        q_type = (q.type or "").lower()
+        q_type = (q.get("type") or "").lower()
+        
         if q_type == 'checklist':
             if stats["total_weight"] > 0:
                 ratio = sum_selected / stats["total_weight"]
@@ -65,14 +63,15 @@ def calculate_total_score(items_data: List[dict], db: Session) -> float:
         # Clamp ratio to 1.0
         ratio = min(1.0, ratio)
         
-        # Question weight (standardize to 1.0 if not defined, though usually it's like 3.5-5.0)
-        qw = q.weight if q.weight is not None else 1.0
+        # Question weight
+        qw = q.get("weight", 1.0)
+        dim_id = q.get("dimension_id", 0)
         
-        if q.dimension_id not in dim_calcs:
-            dim_calcs[q.dimension_id] = {"numerator": 0, "denominator": 0}
+        if dim_id not in dim_calcs:
+            dim_calcs[dim_id] = {"numerator": 0, "denominator": 0}
             
-        dim_calcs[q.dimension_id]["numerator"] += ratio * qw
-        dim_calcs[q.dimension_id]["denominator"] += qw
+        dim_calcs[dim_id]["numerator"] += ratio * qw
+        dim_calcs[dim_id]["denominator"] += qw
 
     # 2. Final dimension scores (1-5 scale)
     dimension_scores = []

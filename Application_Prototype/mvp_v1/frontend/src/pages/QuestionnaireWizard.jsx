@@ -14,6 +14,16 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, SkipForward, ArrowRight, CheckCircle2, Circle, Disc, Check, Menu, Compass } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function QuestionnaireWizard() {
     const { responseId } = useParams();
@@ -29,6 +39,34 @@ export default function QuestionnaireWizard() {
     // Track answered questions for progress calculation
     // Map<questionId, boolean>
     const [answeredMap, setAnsweredMap] = useState({});
+    const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+    const hasProgress = () => {
+        return Object.keys(localStorage).some(key => key.startsWith('assessment_progress_')) ||
+            localStorage.getItem('current_response_id');
+    };
+
+    const handleLogoReset = async () => {
+        try {
+            if (responseId) {
+                await api.deleteResponseSession(responseId);
+            }
+        } catch (error) {
+            console.error("Backend reset failed", error);
+        }
+
+        // Clear assessment progress from localStorage
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('assessment_progress_')) {
+                localStorage.removeItem(key);
+            }
+        });
+        localStorage.removeItem('current_response_id');
+        sessionStorage.removeItem('cached_questionnaire_data');
+        navigate('/');
+        toast.success("Assessment reset. You can start a new one.");
+        setShowResetConfirm(false);
+    };
 
     // Load progress from local storage on mount
     useEffect(() => {
@@ -461,12 +499,15 @@ export default function QuestionnaireWizard() {
             {/* Desktop Sidebar */}
             <aside className="hidden lg:flex flex-col w-96 bg-white/10 backdrop-blur-3xl border-r border-white/20 z-20 h-full overflow-y-auto custom-scrollbar shadow-[20px_0_40px_rgba(0,0,0,0.02)]">
                 <div className="p-6 pb-2">
-                    <div className="flex items-center gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 ring-2 ring-white/10">
+                    <div
+                        className="flex items-center gap-3 mb-2 cursor-pointer group"
+                        onClick={() => setShowResetConfirm(true)}
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 ring-2 ring-white/10 transition-transform group-hover:scale-110 active:scale-95">
                             <Compass className="w-6 h-6 text-white" />
                         </div>
                         <div className="flex flex-col justify-center">
-                            <div className="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent font-heading tracking-tight leading-none">
+                            <div className="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent font-heading tracking-tight leading-none group-hover:from-blue-600 group-hover:to-purple-600 transition-all">
                                 AI Compass
                             </div>
                         </div>
@@ -476,8 +517,16 @@ export default function QuestionnaireWizard() {
             </aside>
 
             {/* Mobile Header with Drawer */}
-            <div className="lg:hidden absolute top-0 left-0 w-full glass-premium z-30 flex justify-between items-center px-4 py-3">
-                <div className="font-bold text-slate-800 truncate max-w-[200px]">
+            <div className="lg:hidden absolute top-0 left-0 w-full glass-premium z-30 flex justify-between items-center px-4 py-3 border-b border-white/20">
+                <div
+                    className="flex items-center gap-2 cursor-pointer group"
+                    onClick={() => setShowResetConfirm(true)}
+                >
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-md shadow-blue-500/20">
+                        <Compass className="w-5 h-5 text-white" />
+                    </div>
+                </div>
+                <div className="font-bold text-slate-800 truncate px-2 text-sm">
                     {currentQuestion.dimension_name}
                 </div>
                 <Sheet>
@@ -486,9 +535,19 @@ export default function QuestionnaireWizard() {
                             <Menu className="w-6 h-6 text-slate-600" />
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-80 p-0 bg-white/95 backdrop-blur-xl">
-                        <div className="p-6 border-b border-slate-100">
-                            <div className="text-xl font-bold text-slate-900">Dimensions</div>
+                    <SheetContent side="left" className="w-80 p-0 bg-white/95 backdrop-blur-xl border-r border-indigo-100/30">
+                        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+                            <div
+                                className="flex items-center gap-3 cursor-pointer group"
+                                onClick={() => {
+                                    setShowResetConfirm(true);
+                                }}
+                            >
+                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-md shadow-blue-500/20">
+                                    <Compass className="w-5 h-5 text-white" />
+                                </div>
+                                <div className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent group-hover:from-blue-600 group-hover:to-purple-600 transition-all font-heading tracking-tight">AI Compass</div>
+                            </div>
                         </div>
                         <DimensionList />
                     </SheetContent>
@@ -583,6 +642,23 @@ export default function QuestionnaireWizard() {
                     </AnimatePresence>
                 </div>
             </main>
+
+            <AlertDialog open={showResetConfirm} onOpenChange={setShowResetConfirm}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Exit Assessment?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This will clear your current progress and take you back to the home page. You will need to start over from the beginning.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleLogoReset} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                            Reset and Exit
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
