@@ -1,0 +1,101 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+dist/
+dist-ssr
+build/
+
+# -------------------------
+# Node / Frontend
+# -------------------------
+node_modules/
+Application_Prototype/mvp_v1/frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# -------------------------
+# Virtual Environments
+# -------------------------
+venv/
+.venv/
+env/
+ENV/
+
+# -------------------------
+# Environment Variables
+# -------------------------
+.env
+.env.*
+.local
+!.env.example
+
+# -------------------------
+# Logs
+# -------------------------
+logs/
+*.log
+
+# -------------------------
+# Database
+# -------------------------
+*.db
+*.sqlite3
+
+# -------------------------
+# IDEs & Editors
+# -------------------------
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*.sw?
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# -------------------------
+# OS Files
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# Testing / Coverage
+# -------------------------
+.coverage
+htmlcov/
+.pytest_cache/
+
+# -------------------------
+# Jupyter
+# -------------------------
+.ipynb_checkpoints/
+
+# -------------------------
+# Mypy
+# -------------------------
+.mypy_cache/
+
+# -------------------------
+# Data & Credentials
+# -------------------------
+ai_compass_at_supabase.txt
+dimensions_table_output.txt
+*.xlsx
+*.csv
+
+# -------------------------
+# Project Specific
+# -------------------------
+ai-compass.code-workspace
