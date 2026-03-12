@@ -66,7 +66,6 @@ Application_Prototype/mvp_v1/
 ├── start.bat / .sh         # One-click launch scripts
 └── stop.bat / .sh          # Safe termination scripts
 ```
-```
 
 ---
 
