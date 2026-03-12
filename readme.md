@@ -174,7 +174,7 @@ Benchmarking can start using synthetic profiles. If used, the product should sta
 ---
 
 ## Repository structure (suggested)
-
+<code>
 ├── MVP                      # Working prototype
 │       ├── backend/         # FastAPI
 │       │   └── ml/ # Current ML models & engine        
@@ -183,3 +183,4 @@ Benchmarking can start using synthetic profiles. If used, the product should sta
 │       ├── start.bat / .sh  # Launch application
 │       └── stop.bat / .sh   # Close application
 ├── .venv
+</code>code>
