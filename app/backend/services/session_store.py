@@ -26,8 +26,16 @@ class SessionStore:
         new_session["session_id"] = self.session_counter
         new_session["total_score"] = None
         new_session["cluster_id"] = None
+        new_session["created_at"] = time.time()
         
         self.sessions[self.session_counter] = new_session
+        
+        # Schedule the session to be automatically deleted after 1 hour (3600 seconds)
+        import threading
+        timer = threading.Timer(3600, self.delete_session, args=[self.session_counter])
+        timer.daemon = True
+        timer.start()
+        
         return new_session
 
     def get_session(self, session_id: int) -> Optional[dict]:
@@ -104,13 +112,14 @@ class SessionStore:
         """
         Wipe all data associated with a session ID.
         """
-        if session_id in self.sessions:
-            del self.sessions[session_id]
-        if session_id in self.response_values:
-            del self.response_values[session_id]
-        if session_id in self.completed_assessments:
-            del self.completed_assessments[session_id]
-        logger.info(f"Session {session_id} wiped from memory.")
+        instance = SessionStore._instance
+        if session_id in instance.sessions:
+            del instance.sessions[session_id]
+        if session_id in instance.response_values:
+            del instance.response_values[session_id]
+        if session_id in instance.completed_assessments:
+            del instance.completed_assessments[session_id]
+        logger.info(f"Session {session_id} wiped from memory by automatic cleanup.")
 
 session_store = SessionStore()
 
