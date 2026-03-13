@@ -11,9 +11,9 @@ class SessionStore:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(SessionStore, cls).__new__(cls)
-            cls._instance.sessions: Dict[int, dict] = {}
+            cls._instance.sessions: Dict[int, dict] = {} # session_id -> session data
             cls._instance.response_values: Dict[int, List[dict]] = {} # session_id -> list of answers
-            cls._instance.completed_assessments: Dict[str, dict] = {} # session_id -> full record
+            cls._instance.completed_assessments: Dict[int, dict] = {} # session_id -> full record
             
             # Initialize counters
             cls._instance.session_counter = 1000
@@ -87,13 +87,18 @@ class SessionStore:
             }
         }
         
-        self.completed_assessments[str(session_id)] = record
+        self.completed_assessments[session_id] = record
+        
+        # Also update the session entry for SessionDetail schema
+        if session_id in self.sessions:
+            self.sessions[session_id]["total_score"] = str(total_score)
+            self.sessions[session_id]["cluster_id"] = cluster_id
 
     def get_assessment(self, session_id: int) -> Optional[dict]:
         """
         Retrieve a completed assessment by ID.
         """
-        return self.completed_assessments.get(str(session_id))
+        return self.completed_assessments.get(session_id)
 
     def delete_session(self, session_id: int):
         """
@@ -103,8 +108,8 @@ class SessionStore:
             del self.sessions[session_id]
         if session_id in self.response_values:
             del self.response_values[session_id]
-        if str(session_id) in self.completed_assessments:
-            del self.completed_assessments[str(session_id)]
+        if session_id in self.completed_assessments:
+            del self.completed_assessments[session_id]
         logger.info(f"Session {session_id} wiped from memory.")
 
 session_store = SessionStore()

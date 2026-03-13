@@ -21,9 +21,6 @@ class ResponseUpdate(BaseModel):
 class SessionDetail(BaseModel):
     session_id: int
     company_name: str
-    total_score: Optional[str] = None
-    created_at: Optional[datetime] = None
-    cluster_id: Optional[int] = None
     
     class Config:
         from_attributes = True

@@ -58,7 +58,7 @@ def complete_assessment(session_id: int):
         print(f"Error completing assessment: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to complete assessment: {str(e)}")
 
-    return {"message": "Assessment completed and stored in-memory", "session_id": session_id}
+    return session_store.get_session(session_id)
 
 @router.delete("/{session_id}")
 def delete_session(session_id: int):
