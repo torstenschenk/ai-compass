@@ -24,8 +24,8 @@ except Exception as e:
 
 router = APIRouter()
 
-@router.get("/{response_id}/results")
-def get_results(response_id: int):
+@router.get("/{session_id}/results")
+def get_results(session_id: int):
     """
     Retrieve full analysis results from JSON store.
     """
@@ -36,15 +36,15 @@ def get_results(response_id: int):
              # raise HTTPException(status_code=503, detail="AI Analysis Engine is unavailable.")
 
         # 1. Fetch Assessment Data from Session Store
-        assessment = session_store.get_assessment(response_id)
+        assessment = session_store.get_assessment(session_id)
         if not assessment:
-            raise HTTPException(status_code=404, detail="Response not found")
+            raise HTTPException(status_code=404, detail="Session not found")
         
-        company = assessment["company"]
+        session_data = assessment["session_data"]
         items = assessment["items"] # List of dicts {question_id, answers: []}
         
         if not items:
-             raise HTTPException(status_code=400, detail="No answers found for this response")
+             raise HTTPException(status_code=400, detail="No answers found for this session")
 
         # Fetch Reference Data from Service (Static JSON)
         questions_all = get_all_questions()
@@ -60,14 +60,14 @@ def get_results(response_id: int):
                  answers_all.append(a_copy)
 
         # 2. Convert to DataFrame
-        # items is list of dicts: {'item_id': 0, 'response_id': 1, 'question_id': 1, 'answers': [101]}
+        # items is list of dicts: {'item_id': 0, 'session_id': 1, 'question_id': 1, 'answers': [101]}
         rows_items = []
         for i in items:
             if isinstance(i, dict) and "question_id" in i:
                 rows_items.append({"question_id": i["question_id"], "answers": i.get("answers") or []})
         
         if not rows_items:
-             raise HTTPException(status_code=400, detail="No valid answers found for this response")
+             raise HTTPException(status_code=400, detail="No valid answers found for this session")
              
         df_items = pd.DataFrame(rows_items)
         df_items['question_id'] = df_items['question_id'].astype(int)
@@ -185,7 +185,7 @@ def get_results(response_id: int):
         grouped_q_final = grouped_q[grouped_q['dimension_name'] != 'General Psychology'].copy()
 
         # 5. Run Inference
-        company_industry = company.get("industry", "Technology")
+        company_industry = session_data.get("industry", "Technology")
         
         if inference_engine and inference_engine.loaded:
             try:
@@ -217,9 +217,9 @@ def get_results(response_id: int):
         # 6. Construct Response
         final_result = {
             "company": {
-                "name": company.get("company_name"),
-                "industry": company.get("industry"),
-                "size": company.get("number_of_employees")
+                "name": session_data.get("company_name"),
+                "industry": session_data.get("industry"),
+                "size": session_data.get("number_of_employees")
             },
             "overall_score": round(dim_results.mean(), 2),
             "dimension_scores": dim_results.round(2).to_dict(),
@@ -241,13 +241,13 @@ def get_results(response_id: int):
         return JSONResponse(status_code=500, content={"detail": f"Debug Error: {str(e)}"})
 
 
-@router.get("/{response_id}/pdf")
-def generate_pdf(response_id: int):
+@router.get("/{session_id}/pdf")
+def generate_pdf(session_id: int):
     """
     Generate and download PDF report.
     """
     try:
-        results_data = get_results(response_id)
+        results_data = get_results(session_id)
         
         if hasattr(results_data, 'status_code') and results_data.status_code >= 400:
              raise HTTPException(status_code=results_data.status_code, detail="Could not fetch results data")
@@ -258,7 +258,7 @@ def generate_pdf(response_id: int):
         return FastAPIResponse(
             content=pdf_bytes, 
             media_type="application/pdf", 
-            headers={"Content-Disposition": f"attachment; filename=ai_maturity_report_{response_id}.pdf"}
+            headers={"Content-Disposition": f"attachment; filename=ai_maturity_report_{session_id}.pdf"}
         )
     except Exception as e:
         print(f"PDF Gen Error: {e}")

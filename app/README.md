@@ -26,7 +26,7 @@ The prototype transforms traditional manual consulting into a scalable digital e
 
 ### Backend
 - **Framework**: FastAPI (Python 3.10+)
-- **ORM**: SQLAlchemy (PostgreSQL integration)
+- **ORM**: (in memory storare) integration)
 - **Data Validation**: Pydantic v2
 - **Persistence**: PostgreSQL (hosted on Supabase)
 - **In-Memory Store**: Custom session store for autosave and temporary state tracking.

@@ -5,40 +5,40 @@ from services.scoring_service import calculate_total_score
 
 router = APIRouter()
 
-@router.post("", response_model=schemas.ResponseDetail)
-def create_response(response: schemas.ResponseCreate):
+@router.post("", response_model=schemas.SessionDetail)
+def create_session(session_data: schemas.SessionCreate):
     """
-    Initialize a new assessment response for a company.
+    Initialize a new assessment session.
     """
-    new_response = session_store.create_response(response)
-    return new_response
+    new_session = session_store.create_session(session_data)
+    return new_session
 
-@router.patch("/{response_id}/items", response_model=schemas.ResponseDetail)
-def save_answer(response_id: int, item: schemas.ResponseUpdate):
+@router.patch("/{session_id}/items", response_model=schemas.SessionDetail)
+def save_answer(session_id: int, item: schemas.ResponseUpdate):
     """
     Save or update an answer (Autosave).
     """
     # Save to session store
-    session_store.save_answer(response_id, item.question_id, item.answer_ids)
+    session_store.save_answer(session_id, item.question_id, item.answer_ids)
     
-    # Return response details from session
-    response_data = session_store.get_response(response_id)
-    if not response_data:
-         raise HTTPException(status_code=404, detail="Response not found")
+    # Return session details from session
+    session_data = session_store.get_session(session_id)
+    if not session_data:
+         raise HTTPException(status_code=404, detail="Session not found")
          
-    return response_data
+    return session_data
 
-@router.post("/{response_id}/complete")
-def complete_assessment(response_id: int):
+@router.post("/{session_id}/complete")
+def complete_assessment(session_id: int):
     """
     Mark assessment as complete and store in-memory.
     """
     # 1. Retrieve full session data
-    session_data = session_store.get_full_session(response_id)
-    if not session_data:
-        raise HTTPException(status_code=404, detail="Response session not found")
+    full_session = session_store.get_full_session(session_id)
+    if not full_session:
+        raise HTTPException(status_code=404, detail="Session not found")
         
-    items_data = session_data["items"]
+    items_data = full_session["items"]
     
     if not items_data:
         raise HTTPException(status_code=400, detail="Cannot complete assessment: No answers provided.")
@@ -49,22 +49,22 @@ def complete_assessment(response_id: int):
         
         # 3. Store final record in SessionStore
         session_store.complete_assessment(
-            response_id=response_id,
+            session_id=session_id,
             total_score=calculated_total_score,
-            cluster_id=session_data["response"]["cluster_id"]
+            cluster_id=full_session["session"]["cluster_id"]
         )
         
     except Exception as e:
         print(f"Error completing assessment: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to complete assessment: {str(e)}")
 
-    return {"message": "Assessment completed and stored in-memory", "response_id": response_id}
+    return {"message": "Assessment completed and stored in-memory", "session_id": session_id}
 
-@router.delete("/{response_id}")
-def delete_response_session(response_id: int):
+@router.delete("/{session_id}")
+def delete_session(session_id: int):
     """
     Manually wipe an assessment session from memory.
     """
-    session_store.delete_session(response_id)
-    return {"message": f"Session {response_id} wiped successfully"}
+    session_store.delete_session(session_id)
+    return {"message": f"Session {session_id} wiped successfully"}
 

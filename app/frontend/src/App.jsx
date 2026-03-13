@@ -13,8 +13,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/snapshot" element={<CompanySnapshot />} />
-        <Route path="/assessment/:responseId" element={<QuestionnaireWizard />} />
-        <Route path="/results/:responseId" element={<ResultsPage />} />
+        <Route path="/assessment/:sessionId" element={<QuestionnaireWizard />} />
+        <Route path="/results/:sessionId" element={<ResultsPage />} />
       </Routes>
       <Toaster position="bottom-left" />
     </div>

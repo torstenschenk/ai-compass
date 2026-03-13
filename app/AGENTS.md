@@ -93,7 +93,7 @@ backend/
 ├── main.py                    # FastAPI app entry point
 ├── config.py                  # Environment configuration
 ├── database.py                # DB connection management
-├── models/                    # SQLAlchemy ORM models
+├── models/                    # models
 │   ├── __init__.py
 │   ├── company.py
 │   ├── response.py
@@ -446,7 +446,7 @@ echo Frontend running at http://localhost:5173
 
 ### Week 1: Backend Foundation
 1. Set up FastAPI project structure
-2. Create database models (SQLAlchemy)
+2. Create database models
 3. Implement questionnaire endpoint
 4. Implement company creation endpoint
 5. Test DB connectivity with existing Supabase instance
@@ -537,7 +537,6 @@ echo Frontend running at http://localhost:5173
 ### New Dependencies to Install
 **Backend**:
 - FastAPI
-- SQLAlchemy
 - psycopg2-binary
 - python-dotenv
 - reportlab (PDF generation)
@@ -563,7 +562,7 @@ Application_Prototype/
 │   ├── main.py
 │   ├── config.py
 │   ├── database.py
-│   ├── models/                              # SQLAlchemy ORM
+│   ├── models/                             
 │   ├── schemas/                             # Pydantic schemas
 │   ├── routers/                             # API endpoints
 │   ├── services/                            # Business logic

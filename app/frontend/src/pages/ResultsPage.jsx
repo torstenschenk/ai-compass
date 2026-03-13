@@ -16,7 +16,7 @@ import { ExpertConsultation } from '../components/results/ExpertConsultation';
 import { DownloadCTA } from '../components/results/DownloadCTA';
 
 export default function ResultsPage() {
-    const { responseId } = useParams();
+    const { sessionId } = useParams();
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -24,7 +24,7 @@ export default function ResultsPage() {
     useEffect(() => {
         async function fetchResults() {
             try {
-                const result = await api.getResults(responseId);
+                const result = await api.getResults(sessionId);
                 setData(result);
             } catch (err) {
                 console.error("Failed to load results", err);
@@ -35,7 +35,7 @@ export default function ResultsPage() {
             }
         }
         fetchResults();
-    }, [responseId]);
+    }, [sessionId]);
 
     if (loading) {
         return (
@@ -73,13 +73,13 @@ export default function ResultsPage() {
             <Navigation />
 
             <main className="flex-grow w-full max-w-[66rem] mx-auto px-4 sm:px-6 pt-24 pb-12 space-y-8 md:space-y-12 z-10 relative">
-                <ResultsHero data={data} responseId={responseId} />
+                <ResultsHero data={data} sessionId={sessionId} />
                 <ClusterProfile data={data} />
                 <MaturityProfile data={data} />
                 <ExecutiveBriefing data={data} />
                 <Roadmap data={data} />
                 <ExpertConsultation />
-                <DownloadCTA responseId={responseId} />
+                <DownloadCTA sessionId={sessionId} />
             </main>
 
             <Footer />

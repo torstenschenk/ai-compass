@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function QuestionnaireWizard() {
-    const { responseId } = useParams();
+    const { sessionId } = useParams();
     const navigate = useNavigate();
     const [questions, setQuestions] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -43,13 +43,13 @@ export default function QuestionnaireWizard() {
 
     const hasProgress = () => {
         return Object.keys(localStorage).some(key => key.startsWith('assessment_progress_')) ||
-            localStorage.getItem('current_response_id');
+            localStorage.getItem('current_session_id');
     };
 
     const handleLogoReset = async () => {
         try {
-            if (responseId) {
-                await api.deleteResponseSession(responseId);
+            if (sessionId) {
+                await api.deleteSession(sessionId);
             }
         } catch (error) {
             console.error("Backend reset failed", error);
@@ -61,7 +61,7 @@ export default function QuestionnaireWizard() {
                 localStorage.removeItem(key);
             }
         });
-        localStorage.removeItem('current_response_id');
+        localStorage.removeItem('current_session_id');
         sessionStorage.removeItem('cached_questionnaire_data');
         navigate('/');
         toast.success("Assessment reset. You can start a new one.");
@@ -70,7 +70,7 @@ export default function QuestionnaireWizard() {
 
     // Load progress from local storage on mount
     useEffect(() => {
-        const savedProgress = localStorage.getItem(`assessment_progress_${responseId}`);
+        const savedProgress = localStorage.getItem(`assessment_progress_${sessionId}`);
         if (savedProgress) {
             try {
                 const { index, answered, answers } = JSON.parse(savedProgress);
@@ -81,18 +81,18 @@ export default function QuestionnaireWizard() {
                 console.error("Failed to parse saved progress", e);
             }
         }
-    }, [responseId]);
+    }, [sessionId]);
 
     // Save progress to local storage
     useEffect(() => {
         if (questions.length > 0) {
-            localStorage.setItem(`assessment_progress_${responseId}`, JSON.stringify({
+            localStorage.setItem(`assessment_progress_${sessionId}`, JSON.stringify({
                 index: currentIndex,
                 answered: answeredMap,
                 answers: allAnswers
             }));
         }
-    }, [currentIndex, answeredMap, allAnswers, questions.length, responseId]);
+    }, [currentIndex, answeredMap, allAnswers, questions.length, sessionId]);
 
     useEffect(() => {
         async function fetchQuestions() {
@@ -202,7 +202,7 @@ export default function QuestionnaireWizard() {
             const currentQ = questions[currentIndex];
             // Only save to DB if we have answers (for slider/choice)
             if (selectedAnswers.length > 0) {
-                await api.saveAnswer(parseInt(responseId), currentQ.question_id, selectedAnswers);
+                await api.saveAnswer(parseInt(sessionId), currentQ.question_id, selectedAnswers);
             }
 
             // Mark as answered locally for progress bar and persistence
@@ -212,11 +212,11 @@ export default function QuestionnaireWizard() {
             if (currentIndex < questions.length - 1) {
                 setCurrentIndex(prev => prev + 1);
             } else {
-                await api.completeAssessment(parseInt(responseId));
+                await api.completeAssessment(parseInt(sessionId));
                 // Clear local storage on complete
-                localStorage.removeItem(`assessment_progress_${responseId}`);
+                localStorage.removeItem(`assessment_progress_${sessionId}`);
                 toast.success("Assessment complete!");
-                navigate(`/results/${responseId}`);
+                navigate(`/results/${sessionId}`);
             }
         } catch (error) {
             console.error("Failed to save answer", error);
@@ -259,7 +259,7 @@ export default function QuestionnaireWizard() {
             const d8Questions = remaining.filter(q => q.dimension_id === 8);
 
             await Promise.all(d8Questions.map(q =>
-                api.saveAnswer(parseInt(responseId), q.question_id, [])
+                api.saveAnswer(parseInt(sessionId), q.question_id, [])
             ));
 
             // Mark skipped as answered (or handled)
@@ -279,9 +279,9 @@ export default function QuestionnaireWizard() {
                 setCurrentIndex(nextIndex);
                 toast.info("Skipped remaining Dimension 8 questions.");
             } else {
-                await api.completeAssessment(parseInt(responseId));
+                await api.completeAssessment(parseInt(sessionId));
                 toast.success("Assessment complete!");
-                navigate(`/results/${responseId}`);
+                navigate(`/results/${sessionId}`);
             }
         } catch (error) {
             console.error("Skip failed", error);

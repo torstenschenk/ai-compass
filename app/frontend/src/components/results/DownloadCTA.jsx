@@ -5,17 +5,17 @@ import { FileDown, Check, Download, Loader2 } from 'lucide-react';
 import { toast } from "sonner";
 import { api } from '@/lib/api';
 
-export function DownloadCTA({ responseId }) {
+export function DownloadCTA({ sessionId }) {
     const [isDownloading, setIsDownloading] = useState(false);
 
     const handleDownload = async () => {
         try {
             setIsDownloading(true);
-            const blob = await api.downloadPDF(responseId);
+            const blob = await api.downloadPDF(sessionId);
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `ai_maturity_report_${responseId}.pdf`;
+            a.download = `ai_maturity_report_${sessionId}.pdf`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);

@@ -21,20 +21,20 @@ export function Navigation() {
     const navigate = useNavigate();
     const showDownload = location.pathname.includes('/results/');
     const showStart = location.pathname === '/';
-    const responseId = showDownload ? location.pathname.split('/results/')[1] : null;
+    const sessionId = showDownload ? location.pathname.split('/results/')[1] : null;
     const [isDownloading, setIsDownloading] = useState(false);
     const [showResetConfirm, setShowResetConfirm] = useState(false);
 
     const hasProgress = () => {
         return Object.keys(localStorage).some(key => key.startsWith('assessment_progress_')) ||
-            localStorage.getItem('current_response_id');
+            localStorage.getItem('current_session_id');
     };
 
     const performReset = async () => {
         try {
-            const currentResponseId = localStorage.getItem('current_response_id');
-            if (currentResponseId) {
-                await api.deleteResponseSession(currentResponseId);
+            const currentSessionId = localStorage.getItem('current_session_id');
+            if (currentSessionId) {
+                await api.deleteSession(currentSessionId);
             }
         } catch (error) {
             console.error("Backend reset failed", error);
@@ -46,7 +46,7 @@ export function Navigation() {
                 localStorage.removeItem(key);
             }
         });
-        localStorage.removeItem('current_response_id');
+        localStorage.removeItem('current_session_id');
 
         // Optionally clear session storage if we want a fresh start
         sessionStorage.removeItem('cached_questionnaire_data');
@@ -70,14 +70,14 @@ export function Navigation() {
     };
 
     const handleDownload = async () => {
-        if (!responseId) return;
+        if (!sessionId) return;
         try {
             setIsDownloading(true);
-            const blob = await api.downloadPDF(responseId);
+            const blob = await api.downloadPDF(sessionId);
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `ai_maturity_report_${responseId}.pdf`;
+            a.download = `ai_maturity_report_${sessionId}.pdf`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);

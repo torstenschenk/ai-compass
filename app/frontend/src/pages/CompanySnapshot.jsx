@@ -63,16 +63,13 @@ export default function CompanySnapshot() {
         e.preventDefault();
         setLoading(true);
         try {
-            // 1. Create Company
-            const company = await api.createCompany(formData);
+            // 1. Create Session (Combining Company + Response initialization)
+            const session = await api.createSession(formData);
 
-            // 2. Initialize Response
-            const response = await api.createResponse(company.company_id);
-
-            // 3. Save IDs and redirect
-            localStorage.setItem('current_response_id', response.response_id);
-            toast.success("Company profile created!");
-            navigate(`/assessment/${response.response_id}`);
+            // 2. Save Session ID and redirect
+            localStorage.setItem('current_session_id', session.session_id);
+            toast.success("Assessment session created!");
+            navigate(`/assessment/${session.session_id}`);
         } catch (error) {
             console.error('Error starting assessment:', error);
             toast.error(`Failed to start assessment: ${error.message}`);

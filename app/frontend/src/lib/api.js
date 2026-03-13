@@ -26,39 +26,26 @@ export const api = {
     },
 
     /**
-     * Create a new company profile
-     * @param {Object} companyData 
+     * Create a new assessment session
+     * @param {Object} sessionData 
      */
-    createCompany: async (companyData) => {
-        const response = await fetch(`${API_BASE_URL}/companies`, {
+    createSession: async (sessionData) => {
+        const response = await fetch(`${API_BASE_URL}/sessions`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(companyData),
-        });
-        return handleResponse(response);
-    },
-
-    /**
-     * Initialize a new response session
-     * @param {number} companyId 
-     */
-    createResponse: async (companyId) => {
-        const response = await fetch(`${API_BASE_URL}/responses`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ company_id: companyId }),
+            body: JSON.stringify(sessionData),
         });
         return handleResponse(response);
     },
 
     /**
      * Autosave an answer
-     * @param {number} responseId 
+     * @param {number} sessionId 
      * @param {number} questionId 
      * @param {Array<number>} answerIds 
      */
-    saveAnswer: async (responseId, questionId, answerIds) => {
-        const response = await fetch(`${API_BASE_URL}/responses/${responseId}/items`, {
+    saveAnswer: async (sessionId, questionId, answerIds) => {
+        const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}/items`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -71,10 +58,10 @@ export const api = {
 
     /**
      * Complete the assessment
-     * @param {number} responseId 
+     * @param {number} sessionId 
      */
-    completeAssessment: async (responseId) => {
-        const response = await fetch(`${API_BASE_URL}/responses/${responseId}/complete`, {
+    completeAssessment: async (sessionId) => {
+        const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}/complete`, {
             method: 'POST',
         });
         return handleResponse(response);
@@ -82,29 +69,29 @@ export const api = {
 
     /**
      * Get results
-     * @param {number} responseId 
+     * @param {number} sessionId 
      */
-    getResults: async (responseId) => {
-        const response = await fetch(`${API_BASE_URL}/responses/${responseId}/results`);
+    getResults: async (sessionId) => {
+        const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}/results`);
         return handleResponse(response);
     },
 
     /**
      * Download PDF Report
-     * @param {number} responseId
+     * @param {number} sessionId
      */
-    downloadPDF: async (responseId) => {
-        const response = await fetch(`${API_BASE_URL}/responses/${responseId}/pdf`);
+    downloadPDF: async (sessionId) => {
+        const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}/pdf`);
         if (!response.ok) throw new Error("PDF Generation Failed");
         return response.blob();
     },
 
     /**
      * Clear assessment session on backend
-     * @param {number} responseId
+     * @param {number} sessionId
      */
-    deleteResponseSession: async (responseId) => {
-        const response = await fetch(`${API_BASE_URL}/responses/${responseId}`, {
+    deleteSession: async (sessionId) => {
+        const response = await fetch(`${API_BASE_URL}/sessions/${sessionId}`, {
             method: 'DELETE',
         });
         return handleResponse(response);
