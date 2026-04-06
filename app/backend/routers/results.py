@@ -4,9 +4,9 @@ import pandas as pd
 import numpy as np
 from fastapi import APIRouter, HTTPException
 from fastapi import Response as FastAPIResponse
-from services.pdf_service import PDFService
-from services.session_store import session_store
-from services.questionnaire_service import get_all_questions, get_all_dimensions
+from ..services.pdf_service import PDFService
+from ..services.session_store import session_store
+from ..services.questionnaire_service import get_all_questions, get_all_dimensions
 
 try:
     from ml.inference import InferenceEngine

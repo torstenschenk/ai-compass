@@ -184,3 +184,20 @@ Benchmarking can start using synthetic profiles. If used, the product should sta
 │       └── stop.bat / .sh   # Close application
 ├── .venv
 </code>code>
+
+
+## Start from app dir
+Python included updated!
+```
+uvicorn backend.main:app --reload &
+npm --prefix ./frontend/ run dev &
+```
+## Start from backend and frontend dirs
+Run from backend folder: 
+```
+uvicorn main:app --reload
+```
+Run from frontend folder: 
+```
+npm run dev
+```

@@ -1,5 +1,5 @@
 from typing import Dict, List, Optional
-from schemas.response import SessionCreate
+from ..schemas.response import SessionCreate
 import logging
 import time
 

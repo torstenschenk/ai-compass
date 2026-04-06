@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from schemas import questionnaire as schemas
-from services.questionnaire_service import get_all_questions
+from ..schemas import questionnaire as schemas
+from ..services.questionnaire_service import get_all_questions
 
 router = APIRouter()
 

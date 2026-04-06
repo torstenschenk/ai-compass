@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from schemas import response as schemas
-from services.session_store import session_store
-from services.scoring_service import calculate_total_score
+from ..schemas import response as schemas
+from ..services.session_store import session_store
+from ..services.scoring_service import calculate_total_score
 
 router = APIRouter()
 

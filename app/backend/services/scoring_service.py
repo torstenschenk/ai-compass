@@ -1,5 +1,5 @@
 from typing import List, Optional
-from services.questionnaire_service import get_question_map
+from ..services.questionnaire_service import get_question_map
 
 def calculate_total_score(items_data: List[dict], db=None) -> float:
     """
