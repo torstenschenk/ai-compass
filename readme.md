@@ -189,10 +189,10 @@ Benchmarking can start using synthetic profiles. If used, the product should sta
 ## Start from app dir
 Python included updated!
 ```
-uvicorn backend.main:app --reload &
-npm --prefix ./frontend/ run dev &
+uvicorn backend.main:app --reload
+npm --prefix ./frontend/ run dev
 ```
-## Start from backend and frontend dirs
+## Start from dedicated app dirs
 Run from backend folder: 
 ```
 uvicorn main:app --reload
@@ -202,17 +202,23 @@ Run from frontend folder:
 npm run dev
 ```
 
+## Docker local
+Run from rav.yaml file
+```
+rav run local-build
+rav run local-run
+```
 
 
-## Gloud setup
+## Gloud setup, switch project !
 https://www.codingforentrepreneurs.com/blog/google-cloud-cli-and-sdk-setup
-
+```
 gcloud --version
 
 gcloud auth login
 
 gcloud config set project ai-compass-2025 (see id on gcloud)
-
+```
 # Enter running docker container
 Open new console and list all running containers
 ```
@@ -225,7 +231,6 @@ docker exec -it 848...id_of_container /bin/bash
 docker run --help
 docker system prune
 ```
-
 
 ## Docker push error:
 ```
