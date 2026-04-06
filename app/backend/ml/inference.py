@@ -1,8 +1,8 @@
 
 import pandas as pd
 import os
-from ml.models import ClusterEngine, StrategicGapAnalyzer, RoadmapGenerator
-from ml.utils import generate_narrative_template
+from .models import ClusterEngine, StrategicGapAnalyzer, RoadmapGenerator
+from .utils import generate_narrative_template
 
 class InferenceEngine:
     def __init__(self, artifacts_path="model_artifacts/v5"):

@@ -5,6 +5,9 @@ Dockerfile.empty
 README.md
 *.code-workspace
 rav.yaml
+setup.*
+start.*
+stop.*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

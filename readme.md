@@ -201,3 +201,35 @@ Run from frontend folder:
 ```
 npm run dev
 ```
+
+
+
+## Gloud setup
+https://www.codingforentrepreneurs.com/blog/google-cloud-cli-and-sdk-setup
+
+gcloud --version
+
+gcloud auth login
+
+gcloud config set project ai-compass-2025 (see id on gcloud)
+
+# Enter running docker container
+Open new console and list all running containers
+```
+docker ps
+```
+Go into container
+```
+docker exec -it 848...id_of_container /bin/bash
+
+docker run --help
+docker system prune
+```
+
+
+## Docker push error:
+```
+> denied: Unauthenticated request. Unauthenticated requests do not have permission "artifactregistry.repositories.uploadArtifacts"
+
+Solved:
+gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://europe-west10-docker.pkg.dev

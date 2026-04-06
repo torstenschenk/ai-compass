@@ -9,7 +9,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
 from scipy.stats import zscore
-from ml.utils import RISK_PAIRS, PHASE_MAPPING
+from .utils import RISK_PAIRS, PHASE_MAPPING
 
 class ClusterEngine:
     def __init__(self, n_clusters=5):

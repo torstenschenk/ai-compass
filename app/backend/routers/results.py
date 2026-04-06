@@ -9,7 +9,7 @@ from ..services.session_store import session_store
 from ..services.questionnaire_service import get_all_questions, get_all_dimensions
 
 try:
-    from ml.inference import InferenceEngine
+    from ..ml.inference import InferenceEngine
     # Initialize Engine Global
     inference_engine = InferenceEngine()
     if inference_engine and inference_engine.loaded:

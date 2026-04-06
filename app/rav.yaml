@@ -1,0 +1,21 @@
+scripts:
+  # variables (replace these placeholders with your actual values)
+  # You can run these commands via `rav run <command-name>`
+
+  local-build: docker build -f Dockerfile -t ai-compass .
+  local-run: docker run -p 8000:8000 --rm --name ai-compass -it ai-compass
+
+  # --- Docker Authenticate ---
+  configure: 
+    - gcloud auth configure-docker europe-west10-docker.pkg.dev
+    - gcloud artifacts repositories create ai-compass-repo --repository-format=docker --location=europe-west10
+
+  # --- Unified Docker Commands ---
+  push:  
+    - docker build --platform=linux/amd64 -f Dockerfile -t ai-compass-amd64 .
+    - docker tag ai-compass-amd64 europe-west10-docker.pkg.dev/ai-compass-2025/ai-compass-repo/ai-compass:latest
+    - docker tag ai-compass-amd64 europe-west10-docker.pkg.dev/ai-compass-2025/ai-compass-repo/ai-compass:v1
+    - docker push europe-west10-docker.pkg.dev/ai-compass-2025/ai-compass-repo/ai-compass --all-tags
+  
+  # --- Combined ---
+  deploy: rav run build && rav run push
